@@ -5,7 +5,17 @@ export function getMe(): Promise<MeUser> {
   return apiGet<MeUser>("/users/me");
 }
 
-export function patchMe(body: { name?: string; emailOnZeroMatches?: boolean; phoneNumber?: string }): Promise<MeUser> {
+export function patchMe(body: {
+  name?: string;
+  emailOnZeroMatches?: boolean;
+  phoneNumber?: string;
+  termsAccepted?: boolean;
+  termsAcceptedAt?: string;
+  termsVersion?: string;
+  privacyAccepted?: boolean;
+  notifyConsent?: boolean;
+  notifyConsentAt?: string;
+}): Promise<MeUser> {
   return apiSend<MeUser>("/users/me", "PATCH", body);
 }
 

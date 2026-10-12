@@ -38,7 +38,7 @@ export function CopilotComposer({
     return (
       <div
         onClick={onContinue}
-        className="copilot-public-pill group flex min-w-[240px] cursor-pointer select-none items-center justify-between gap-3.5 rounded-full px-4 py-2.5 transition-all duration-300"
+        className="copilot-public-pill group flex w-[210px] sm:w-[260px] cursor-pointer select-none items-center justify-between gap-2.5 rounded-full px-3 py-2 sm:px-4 sm:py-2.5 transition-all duration-300"
       >
         <div className="flex items-center gap-2.5">
           <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/20 bg-gradient-to-tr from-accent via-[#ce6e42] to-[#e88a59] text-[10px] font-bold text-white shadow-xs">

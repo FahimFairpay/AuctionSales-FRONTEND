@@ -31,10 +31,7 @@ export function RequireAdmin({ children }: { children?: ReactNode } = {}) {
 
 export function RedirectIfSignedIn({ children }: { children: ReactNode }) {
   const auth = useAuth();
-  if (!auth.ready) {
-    return <FairOrb state="connecting" label="Checking session" />;
-  }
-  if (auth.signedIn) {
+  if (auth.ready && auth.signedIn) {
     return <Navigate to="/app" replace />;
   }
   return <>{children}</>;

@@ -236,7 +236,7 @@
 
   .fairsales-landing .five-steps-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 20px;
   }
 
   .fairsales-landing .five-steps-sticky {
@@ -245,26 +245,64 @@
   }
 
   .fairsales-landing .five-steps-sticky h2 {
-    font-size: 34px;
+    font-size: 30px;
+    letter-spacing: -1.2px;
+  }
+
+  .fairsales-landing .five-steps-pills {
+    flex-direction: row;
+    position: sticky;
+    top: 54px;
+    z-index: 20;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 8px 2px;
+    margin: 12px 0 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .fairsales-landing .five-steps-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fairsales-landing .five-steps-pill-wrap {
+    flex-shrink: 0;
+  }
+
+  .fairsales-landing .five-steps-connector {
+    display: none;
+  }
+
+  .fairsales-landing .five-steps-pill {
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    white-space: nowrap;
+    gap: 8px;
+    transform: none !important;
   }
 
   .fairsales-landing .five-steps-flow {
-    gap: 28px;
-    padding-top: 8px;
+    gap: 20px;
+    padding-top: 16px;
     padding-bottom: 24px;
   }
 
   .fairsales-landing .five-steps-card {
     min-height: 0;
-    padding: 32px;
-    filter: none;
-    opacity: 0.8;
-    transform: none;
+    padding: 24px 20px;
+    border-radius: 20px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease,
+                background 0.3s ease;
   }
 
   .fairsales-landing .five-steps-card.is-active {
-    opacity: 1;
-    filter: none;
-    transform: none;
+    border-color: var(--step-line-active);
+    box-shadow: var(--step-shadow-active);
+    background: var(--step-glass-active);
   }
 }

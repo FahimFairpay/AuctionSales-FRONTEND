@@ -63,9 +63,10 @@ export function FiveSteps() {
           bestIndex = index;
         }
         if (narrow.matches) {
-          card.style.filter = "";
-          card.style.opacity = "";
-          card.style.transform = "";
+          card.style.filter = "none";
+          const isFocal = distance < 180;
+          card.style.opacity = isFocal ? "1" : "0.62";
+          card.style.transform = isFocal ? "scale(1.02)" : "scale(0.97)";
           return;
         }
 

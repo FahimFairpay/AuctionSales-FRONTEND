@@ -70,7 +70,9 @@ export function GuideValue() {
       const dist = stage.offsetHeight - window.innerHeight;
       if (dist > 0) target = Math.max(0, Math.min(1, -rect.top / dist));
 
-      smooth += (target - smooth) * 0.12;
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+      const lerpSpeed = isMobile ? 0.22 : 0.12;
+      smooth += (target - smooth) * lerpSpeed;
       if (Math.abs(target - smooth) < 0.0005) smooth = target;
 
       const stepPos = smooth * LAST;

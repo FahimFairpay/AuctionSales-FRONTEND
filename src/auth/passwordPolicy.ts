@@ -8,7 +8,7 @@ export type PasswordCheck = {
 
 export function checkPassword(password: string): PasswordCheck {
   return {
-    minLength: password.length >= 12,
+    minLength: password.length >= 10,
     upper: /[A-Z]/.test(password),
     lower: /[a-z]/.test(password),
     number: /\d/.test(password),
@@ -22,7 +22,7 @@ export function passwordMeetsPolicy(password: string): boolean {
 }
 
 export const PASSWORD_HINTS: Array<{ key: keyof PasswordCheck; label: string }> = [
-  { key: "minLength", label: "At least 12 characters" },
+  { key: "minLength", label: "At least 10 characters" },
   { key: "upper", label: "One uppercase letter" },
   { key: "lower", label: "One lowercase letter" },
   { key: "number", label: "One number" },

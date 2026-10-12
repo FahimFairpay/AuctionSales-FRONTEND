@@ -68,7 +68,7 @@ export function ActivityPage() {
   return (
     <div className="min-w-0 space-y-5">
       <div>
-        <div className="flex min-w-0 flex-nowrap items-center justify-between gap-2">
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
           <h1 className="min-w-0 truncate font-serif text-[28px] leading-9 tracking-[-0.03em] lg:text-[34px] lg:leading-10">
             History
           </h1>

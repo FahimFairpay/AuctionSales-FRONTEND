@@ -22,14 +22,17 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
 
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 html,
 body {
   min-height: 100%;
   max-width: 100%;
+  overflow-x: clip;
 }
 
 body {

@@ -157,15 +157,15 @@ export function LandingPage() {
             </p>
 
             <div className="hero-buttons-row">
-              <Link href={paths.publicInventory} className="btn-claude-primary">
-                <span>Browse Cars</span>
+              <Link href={paths.signUp} className="btn-hero-get-started">
+                <span>Get Started</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M7 7h10v10" />
                   <path d="M7 17 17 7" />
                 </svg>
               </Link>
 
-              {/* Ask AI Button: Custom Claude 4-point Diamond Star + FS Badge */}
+              {/* Ask AI Button: Clean Apple VisionOS liquid glass */}
               <button
                 type="button"
                 className="btn-hero-ai"
@@ -173,12 +173,6 @@ export function LandingPage() {
                 aria-label="Ask FairScout AI"
               >
                 <span>Ask AI</span>
-                <div className="ai-brand-glyph">
-                  {/* Claude signature 4-point Diamond Star */}
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" />
-                  </svg>
-                </div>
               </button>
             </div>
 
@@ -597,13 +591,22 @@ export function LandingPage() {
         <h2>
           Find your <em>next car.</em>
         </h2>
-        <Link href={paths.publicInventory} className="btn-final-cta glass-cta glass-cta-on-dark">
-          <span>Browse Cars</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M7 7h10v10" />
-            <path d="M7 17 17 7" />
-          </svg>
-        </Link>
+        <div style={{ display: "flex", gap: "16px", justifyContent: "center", alignItems: "center", flexWrap: "wrap", marginTop: "24px" }}>
+          <Link href={paths.signUp} className="btn-claude-primary">
+            <span>Create Free Account</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M7 7h10v10" />
+              <path d="M7 17 17 7" />
+            </svg>
+          </Link>
+          <Link href={paths.publicInventory} className="btn-final-cta glass-cta glass-cta-on-dark" style={{ margin: 0 }}>
+            <span>Browse Cars</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M7 7h10v10" />
+              <path d="M7 17 17 7" />
+            </svg>
+          </Link>
+        </div>
       </section>
 
       {/* ====================================================================

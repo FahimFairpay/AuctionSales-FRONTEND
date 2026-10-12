@@ -18,6 +18,12 @@ export type PublicUser = {
   role: Role | string;
   watchlistCap: number;
   emailOnZeroMatches?: boolean;
+  termsAccepted?: boolean;
+  termsAcceptedAt?: string;
+  termsVersion?: string;
+  privacyAccepted?: boolean;
+  notifyConsent?: boolean;
+  notifyConsentAt?: string;
   isActive: boolean;
   createdAt?: string;
   activeWatchlistCount?: number;

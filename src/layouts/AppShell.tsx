@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, NavLink, Outlet, useLocation } from "@/compat/router";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "@/compat/router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
 import { getMe } from "../api/users";
@@ -38,8 +38,16 @@ function navClass(active: boolean, collapsed: boolean): string {
 export function AppShell({ children }: { children?: ReactNode } = {}) {
   const auth = useAuth();
   const location = useLocation();
-  const me = useQuery({ queryKey: ["me"], queryFn: getMe });
+  const navigate = useNavigate();
+  const me = useQuery({ queryKey: ["me"], queryFn: getMe, enabled: auth.signedIn });
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Require terms & conditions consent before accessing authenticated app shell
+  useEffect(() => {
+    if (auth.ready && auth.signedIn && me.data && me.data.termsAccepted === false) {
+      navigate("/sign-up?step=3", { replace: true });
+    }
+  }, [auth.ready, auth.signedIn, me.data?.termsAccepted, navigate]);
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window !== "undefined") {
       try {

@@ -117,9 +117,9 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
             )}
           </button>
 
-          {/* Sign In button linking directly to login page */}
+          {/* Unified Sign In entry point */}
           <Link href={paths.signIn} className="opt3-signin-btn">
-            Sign in
+            Login / Register
           </Link>
         </div>
       </div>

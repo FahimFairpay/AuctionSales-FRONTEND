@@ -171,3 +171,24 @@
   width: 14px;
   height: 14px;
 }
+
+@media (max-width: 640px) {
+  .copilot-public-pill {
+    padding: 3px 6px 3px 12px !important;
+  }
+
+  .copilot-public-input {
+    font-size: 12px !important;
+    padding: 4px 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .copilot-public-send {
+    width: 28px;
+    height: 28px;
+    margin-left: 4px;
+  }
+}
+

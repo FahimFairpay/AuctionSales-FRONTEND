@@ -417,40 +417,106 @@
 }
 
 /* Ask AI Button: Claude Liquid Glass with Custom AI Diamond Glyph */
+/* Primary CTA: Apple Liquid Glass "Get Started" */
+.fairsales-landing .btn-hero-get-started {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 255, 255, 0.10) 100%
+  );
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.15px;
+  padding: 15px 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-top: 1px solid rgba(255, 255, 255, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 14px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25),
+    0 8px 28px -2px rgba(0, 0, 0, 0.45),
+    0 2px 6px 0 rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.fairsales-landing .btn-hero-get-started:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.32) 0%,
+    rgba(255, 255, 255, 0.16) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 2px 0 #ffffff,
+    inset 0 0 18px 0 rgba(255, 255, 255, 0.22),
+    0 12px 36px -2px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(255, 255, 255, 0.18);
+}
+
+.fairsales-landing .btn-hero-get-started:active {
+  transform: translateY(0);
+}
+
+.fairsales-landing .btn-hero-get-started svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fairsales-landing .btn-hero-get-started:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* Secondary CTA: Soft Frosted Glass "Ask AI" */
 .fairsales-landing .btn-hero-ai {
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff !important;
-  font-size: 13.5px;
-  font-weight: 600;
-  padding: 16px 22px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.15px;
+  padding: 15px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+  text-decoration: none;
 }
 
 .fairsales-landing .btn-hero-ai:hover {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
-.fairsales-landing .ai-brand-glyph {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--fs-claude-orange);
-}
-
-.fairsales-landing .ai-brand-glyph svg {
-  width: 18px;
-  height: 18px;
+.fairsales-landing .btn-hero-ai:active {
+  transform: translateY(0);
 }
 
 /* Hero Assurance */
@@ -1390,13 +1456,124 @@
 }
 
 @media (max-width: 640px) {
+  .fairsales-landing .hero-section {
+    padding: 88px 16px 24px 16px;
+    min-height: auto;
+  }
+
+  .fairsales-landing .hero-headline {
+    font-size: clamp(34px, 8.5vw, 46px);
+    letter-spacing: -1.2px;
+  }
+
+  .fairsales-landing .hero-subtext {
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .fairsales-landing .hero-buttons-row {
+    gap: 12px;
+    width: 100%;
+  }
+
+  .fairsales-landing .btn-hero-get-started,
+  .fairsales-landing .btn-hero-ai {
+    padding: 13px 20px;
+    font-size: 13px;
+  }
+
+  .fairsales-landing .hero-float {
+    width: 100%;
+    max-width: 100%;
+    min-height: auto;
+    padding: 18px;
+    margin-top: 14px;
+  }
+
+  .fairsales-landing .hero-bottom {
+    flex-direction: column;
+    gap: 6px;
+    font-size: 8px;
+  }
+
+  .fairsales-landing .section {
+    padding: 56px 16px;
+  }
+
+  .fairsales-landing .section-heading h2 {
+    font-size: 32px;
+    letter-spacing: -1.2px;
+  }
+
+  .fairsales-landing .section-heading-aside {
+    align-items: flex-start;
+    max-width: 100%;
+  }
+
   .fairsales-landing .car-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .fairsales-landing .proof-photos {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .fairsales-landing .contact-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .fairsales-landing .btn-contact-choose {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .fairsales-landing .guide-copy h2 {
+    font-size: 32px;
+  }
+
+  .fairsales-landing .faq-section h2 {
+    font-size: 32px;
+    letter-spacing: -1.4px;
+  }
+
+  .fairsales-landing .final-cta {
+    padding: 60px 16px;
+  }
+
+  .fairsales-landing .final-cta h2 {
+    font-size: 36px;
+    letter-spacing: -1.5px;
   }
 
   .fairsales-landing .site-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
+    padding: 28px 16px;
+  }
+
+  .fairsales-landing .footer-links {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fairsales-landing .hero-section {
+    padding: 80px 12px 20px 12px;
+  }
+
+  .fairsales-landing .section {
+    padding: 44px 12px;
+  }
+
+  .fairsales-landing .site-footer {
+    padding: 24px 12px;
   }
 }

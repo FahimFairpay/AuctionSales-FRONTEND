@@ -49,12 +49,12 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  // Dynamic width: 90% (368px) on usual/idle, 450px when focused/typing, 480px when vehicle carousel present
+  // Dynamic width: compact (220px-240px) on mobile idle, 368px on desktop idle; expands up to 450px-480px on active conversation
   const hasVehicles = useMemo(() => messages.some((m) => m.vehicles && m.vehicles.length > 0), [messages]);
   const isExpandedOrFocused = isExpanded || isFocused || input.length > 0;
   const currentWidthClass = isExpandedOrFocused
-    ? (hasVehicles ? "w-[480px] max-w-[calc(100vw-32px)]" : "w-[450px] max-w-[calc(100vw-32px)]")
-    : "w-[368px] max-w-[calc(100vw-32px)]";
+    ? (hasVehicles ? "w-[480px] max-w-[calc(100vw-24px)]" : "w-[450px] max-w-[calc(100vw-24px)]")
+    : "w-[220px] xs:w-[240px] sm:w-[368px] max-w-[calc(100vw-24px)]";
 
   // Typewriter placeholder state
   const [phraseIdx, setPhraseIdx] = useState(0);
@@ -221,7 +221,7 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
   return (
     <aside
       aria-label="FairScout.AI"
-      className={`fixed bottom-6 right-6 z-50 flex flex-col items-end select-none font-sans ${
+      className={`fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end select-none font-sans ${
         publicDock ? "copilot-public-dock" : ""
       } ${publicDock && dockHidden ? "is-hidden pointer-events-none" : "pointer-events-auto"}`}
     >

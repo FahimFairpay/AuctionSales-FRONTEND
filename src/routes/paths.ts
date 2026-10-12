@@ -1,5 +1,6 @@
 export const paths = {
   signIn: "/sign-in",
+  signUp: "/sign-up",
   forgotPassword: "/forgot-password",
   forgotConfirm: "/forgot-password/confirm",
   newPassword: "/new-password",
