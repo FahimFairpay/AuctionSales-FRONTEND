@@ -112,7 +112,7 @@ export async function streamCopilotChat(
     });
 
     if (!response.ok) {
-      throw new Error(`FairScout API returned HTTP ${response.status}`);
+      throw new Error(`FairSales API returned HTTP ${response.status}`);
     }
 
     const contentType = response.headers.get("content-type") || "";

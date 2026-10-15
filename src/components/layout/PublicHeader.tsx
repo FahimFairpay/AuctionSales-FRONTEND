@@ -37,10 +37,15 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const toggleTheme = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("fps-theme-selected", "true");
+    }
     setAppearance(isDark ? "light" : "dark");
   };
 
@@ -53,7 +58,11 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
     >
       <div className="opt3-bar-inner">
         {/* Brand Logo Pod */}
-        <Link href="/" className="brand-container" aria-label="FairSales Home">
+        <Link
+          href="/"
+          className="brand-container"
+          aria-label="FairSales Home"
+        >
           <BrandWordmark />
         </Link>
 

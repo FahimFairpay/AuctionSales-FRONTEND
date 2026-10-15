@@ -99,180 +99,6 @@
 }
 
 /* ==========================================================================
-   SITE HEADER - MORPHING ADAPTIVE HEADER
-   ========================================================================== */
-.fairsales-landing .site-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-  padding: 14px 6%;
-  box-sizing: border-box;
-  transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.fairsales-landing .header-opt3-wrap {
-  padding: 14px 6%;
-}
-
-.fairsales-landing .opt3-bar-inner {
-  width: 100%;
-  max-width: 1360px;
-  min-height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 24px;
-  border-radius: 9999px;
-  box-sizing: border-box;
-  pointer-events: auto;
-  transition: background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    backdrop-filter 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    -webkit-backdrop-filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.fairsales-landing .header-opt3-wrap.at-top .opt3-bar-inner {
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: 1px solid transparent;
-  box-shadow: none;
-}
-
-.fairsales-landing .header-opt3-wrap.scrolled .opt3-bar-inner {
-  background: var(--fs-glass-dock-bg);
-  backdrop-filter: var(--fs-glass-blur);
-  -webkit-backdrop-filter: var(--fs-glass-blur);
-  border: 1px solid var(--fs-glass-border);
-  box-shadow: var(--fs-glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-
-/* Brand Logo */
-.fairsales-landing .brand-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-}
-
-.fairsales-landing .brand-logo-pod {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--fs-claude-orange) 0%, #b35a32 100%);
-  color: #ffffff;
-  font-weight: 800;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px var(--fs-claude-orange-glow);
-}
-
-.fairsales-landing .brand-text-wrap {
-  display: flex;
-  flex-direction: column;
-}
-
-.fairsales-landing .header-opt3-wrap.at-top .brand-primary {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.6px;
-  color: #ffffff;
-}
-
-.fairsales-landing .header-opt3-wrap.scrolled .brand-primary {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.6px;
-  color: var(--fs-ink);
-}
-
-.fairsales-landing .brand-tag {
-  font-size: 8.5px;
-  letter-spacing: 1.2px;
-  color: var(--fs-claude-orange);
-  font-weight: 700;
-}
-
-/* Navigation Links */
-.fairsales-landing .opt3-nav-group {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.fairsales-landing .header-opt3-wrap.at-top .opt3-nav-link {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.85);
-  text-decoration: none;
-  transition: color 0.18s ease;
-}
-
-.fairsales-landing .header-opt3-wrap.at-top .opt3-nav-link:hover {
-  color: #ffffff;
-}
-
-.fairsales-landing .header-opt3-wrap.scrolled .opt3-nav-link {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--fs-muted);
-  text-decoration: none;
-  transition: color 0.18s ease;
-}
-
-.fairsales-landing .header-opt3-wrap.scrolled .opt3-nav-link:hover {
-  color: var(--fs-claude-orange);
-}
-
-/* Right Actions */
-.fairsales-landing .opt3-right-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-/* SVG Theme Toggle Button */
-.fairsales-landing .theme-toggle-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.fairsales-landing .header-opt3-wrap.scrolled .theme-toggle-btn {
-  border: 1px solid var(--fs-line);
-  background: var(--fs-paper-elevated);
-  color: var(--fs-ink);
-}
-
-.fairsales-landing .theme-toggle-btn:hover {
-  transform: scale(1.06);
-}
-
-.fairsales-landing .theme-toggle-btn svg {
-  width: 17px;
-  height: 17px;
-  stroke: currentColor;
-}
-
-
-/* ==========================================================================
    HERO SECTION: 100vh FULL VIEWPORT FILL
    ========================================================================== */
 .fairsales-landing .hero-section {
@@ -281,7 +107,7 @@
   min-height: 720px;
   position: relative;
   z-index: 2;
-  padding: max(110px, 14vh) 6% 30px 6%;
+  padding: max(110px, 14vh) 24px 30px 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -423,11 +249,9 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.24) 0%,
-    rgba(255, 255, 255, 0.10) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.24) 0%,
+      rgba(255, 255, 255, 0.10) 100%);
   color: #ffffff !important;
   font-size: 14px;
   font-weight: 600;
@@ -452,11 +276,9 @@
 }
 
 .fairsales-landing .btn-hero-get-started:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.32) 0%,
-    rgba(255, 255, 255, 0.16) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.16) 100%);
   border-color: rgba(255, 255, 255, 0.45);
   border-top-color: #ffffff;
   transform: translateY(-2px);
@@ -483,40 +305,102 @@
   transform: translate(2px, -2px);
 }
 
-/* Secondary CTA: Soft Frosted Glass "Ask AI" */
+/* Secondary CTA: Apple VisionOS Frosted Glass with Glowing Claude Sparkle */
 .fairsales-landing .btn-hero-ai {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.75) !important;
+  gap: 9px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  color: #ffffff !important;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.15px;
-  padding: 15px 24px;
+  padding: 15px 26px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 12px 0 rgba(217, 119, 70, 0.12),
+    0 8px 24px -2px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.fairsales-landing .btn-hero-ai::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.fairsales-landing .btn-hero-ai:hover::before {
+  left: 125%;
 }
 
 .fairsales-landing .btn-hero-ai:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(217, 119, 70, 0.5);
+  border-top-color: #ffffff;
   color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.3);
-  border-top-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    inset 0 1px 2px 0 #ffffff,
+    inset 0 0 16px 0 rgba(217, 119, 70, 0.25),
+    0 12px 32px -2px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(217, 119, 70, 0.28);
 }
 
 .fairsales-landing .btn-hero-ai:active {
   transform: translateY(0);
+}
+
+.fairsales-landing .btn-ai-sparkle-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fs-claude-orange);
+  filter: drop-shadow(0 0 6px var(--fs-claude-orange-glow));
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), filter 0.24s ease;
+}
+
+.fairsales-landing .btn-hero-ai:hover .btn-ai-sparkle-wrap {
+  transform: scale(1.15) rotate(8deg);
+  color: #ff9d6c;
+  filter: drop-shadow(0 0 10px rgba(217, 119, 70, 0.8));
+}
+
+.fairsales-landing .btn-ai-sparkle {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
 }
 
 /* Hero Assurance */
@@ -545,19 +429,20 @@
 .fairsales-landing .hero-float {
   -webkit-backdrop-filter: blur(24px) saturate(190%);
   backdrop-filter: blur(24px) saturate(190%);
-  background: rgba(20, 18, 16, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  border-radius: 10px;
-  width: 245px;
-  min-height: 284px;
+  background: rgba(20, 18, 16, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  width: 285px;
+  max-width: 310px;
   padding: 22px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   position: absolute;
-  bottom: 102px;
-  right: 6%;
+  bottom: 132px;
+  right: 5%;
+  z-index: 5;
 }
 
 .fairsales-landing .hero-float .tiny {
@@ -566,40 +451,47 @@
   color: #c5c2be;
   font-weight: 600;
   display: block;
+  text-transform: uppercase;
+  margin-bottom: 14px;
 }
 
 .fairsales-landing .hero-float strong {
-  letter-spacing: -1px;
-  margin: 16px 0 22px;
   font-family: "Manrope", sans-serif;
-  font-size: 28px;
-  font-weight: 500;
-  line-height: 1.28;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.22;
   color: #ffffff;
+  letter-spacing: -0.8px;
   display: block;
-  flex: 1;
+  margin: 0 0 16px 0;
 }
 
-.fairsales-landing .hero-float>div {
-  border-top: 1px solid rgba(255, 255, 255, 0.22);
+.fairsales-landing .hero-float div {
+  display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding-top: 16px;
-  display: flex;
+  border-top: none;
+  padding-top: 0;
 }
 
-.fairsales-landing .hero-float>div>span {
-  max-width: 90px;
-  font-size: 10px;
-  line-height: 1.5;
-  color: #d0ccc5;
+.fairsales-landing .hero-float div span {
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #d6d3cd;
 }
 
-.fairsales-landing .hero-float b {
+.fairsales-landing .hero-float div b {
+  font-family: "DM Sans", "Manrope", sans-serif;
   color: var(--fs-claude-orange);
   font-size: 36px;
-  font-weight: 600;
-  line-height: 1;
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -1.5px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 /* Hero Bottom Ticker */
@@ -624,7 +516,11 @@
   grid-template-columns: 1fr 1.6fr 0.8fr;
   align-items: center;
   gap: 50px;
-  padding: 42px 6%;
+  padding: 42px 24px;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
   display: grid;
   background: var(--fs-paper);
 }
@@ -662,7 +558,11 @@
    COMMON SECTION STYLES
    ========================================================================== */
 .fairsales-landing .section {
-  padding: 95px 6%;
+  padding: 80px 24px;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .fairsales-landing .section-heading {
@@ -808,30 +708,65 @@
   color: var(--fs-claude-orange);
 }
 
-.fairsales-landing .save-btn {
-  color: #141413;
-  background: rgba(255, 255, 255, 0.94);
-  border-radius: 50%;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  display: grid;
+.fairsales-landing .car-image-stack-btn {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  border: none;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(20, 20, 19, 0.88);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 4px;
   cursor: pointer;
-  transition: all 0.18s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  max-width: 32px;
+  height: 32px;
 }
 
-.fairsales-landing .save-btn.is-saved {
-  color: var(--fs-claude-orange);
+.fairsales-landing .car-image-stack-btn:hover {
+  max-width: 110px;
+  padding: 4px 11px;
+  background: var(--fs-claude-orange);
+  border-color: rgba(255, 255, 255, 0.45);
 }
 
-.fairsales-landing .save-btn svg {
-  width: 16px;
-  height: 16px;
+.fairsales-landing .car-image-stack-btn .stack-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.fairsales-landing .car-image-stack-btn .stack-svg {
+  width: 14px;
+  height: 14px;
+}
+
+.fairsales-landing .car-image-stack-btn .stack-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  margin-left: 0;
+}
+
+.fairsales-landing .car-image-stack-btn:hover .stack-label {
+  opacity: 1;
+  max-width: 70px;
+  margin-left: 5px;
 }
 
 .fairsales-landing .damage-tag {
@@ -849,105 +784,165 @@
 
 .fairsales-landing .car-info {
   padding: 18px;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.fairsales-landing .car-name {
-  justify-content: space-between;
-  align-items: center;
-  gap: 5px;
+.fairsales-landing .car-name-link {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: nowrap;
+  transition: color 0.18s ease;
 }
 
-.fairsales-landing .car-name h3 {
-  letter-spacing: -0.5px;
-  font-size: 15px;
+.fairsales-landing .car-name-link h3 {
+  letter-spacing: -0.3px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--fs-ink);
+  margin: 0;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex: 1 1 auto;
+  transition: color 0.18s ease;
 }
 
-.fairsales-landing .car-name svg {
-  width: 18px;
-  height: 18px;
+.fairsales-landing .car-name-link svg {
+  width: 15px;
+  height: 15px;
   color: var(--fs-muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.fairsales-landing .car-name-link:hover h3 {
+  color: var(--fs-claude-orange);
+}
+
+.fairsales-landing .car-name-link:hover svg {
+  color: var(--fs-claude-orange);
+  transform: translate(2px, -2px);
 }
 
 .fairsales-landing .car-meta {
   color: var(--fs-muted);
-  margin-top: 8px;
-  font-size: 10.5px;
+  margin-top: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.fairsales-landing .car-price {
+.fairsales-landing .car-bottom-row {
   border-top: 1px solid var(--fs-line);
-  justify-content: space-between;
+  display: flex;
   align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
   margin-top: 16px;
   padding-top: 14px;
+}
+
+.fairsales-landing .car-bottom-left {
+  flex-shrink: 0;
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 4px;
 }
 
-.fairsales-landing .car-price span {
-  color: var(--fs-muted);
-  font-size: 9.5px;
-}
-
-.fairsales-landing .car-price strong {
-  letter-spacing: -1px;
-  margin-top: 4px;
-  font-size: 26px;
+.fairsales-landing .car-auction-date {
+  font-size: 10px;
   font-weight: 600;
-  color: var(--fs-ink);
+  color: var(--fs-claude-orange);
+  line-height: 1.25;
+  margin-bottom: 2px;
   display: block;
+  white-space: nowrap;
 }
 
-.fairsales-landing .price-disclaimer {
-  color: var(--fs-muted);
-  line-height: 1.4;
-  font-size: 9.5px !important;
-  text-align: right;
-}
-
-.fairsales-landing .availability {
-  color: var(--fs-muted);
-  margin-top: 10px;
-  font-size: 9.5px;
-}
-
-.fairsales-landing .card-actions {
-  border-top: 1px solid var(--fs-line);
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 15px;
-  padding-top: 12px;
-  display: flex;
-}
-
-.fairsales-landing .card-action-view {
-  background: 0 0;
+.fairsales-landing .view-all-cars-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 0;
-  font-size: 10.5px;
-  font-weight: 600;
-  display: flex;
+  gap: 5px;
   color: var(--fs-ink);
+  font-size: 12px;
+  font-weight: 600;
   text-decoration: none;
+  white-space: nowrap;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  transition: color 0.18s ease;
 }
 
-.fairsales-landing .card-action-view:hover {
+.fairsales-landing .view-all-cars-btn:hover {
   color: var(--fs-claude-orange);
 }
 
-.fairsales-landing .card-action-save {
-  background: 0 0;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-  font-size: 10.5px;
+.fairsales-landing .view-all-cars-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  transition: transform 0.2s ease;
+}
+
+.fairsales-landing .view-all-cars-btn:hover svg {
+  transform: translateX(3px);
+}
+
+.fairsales-landing .car-pricing-cluster {
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 2px;
+}
+
+.fairsales-landing .car-pricing-cluster .price-label {
   color: var(--fs-muted);
-  border: none;
-  cursor: pointer;
+  font-size: 9.5px;
+  white-space: nowrap;
+}
+
+.fairsales-landing .car-pricing-cluster .price-figure {
+  letter-spacing: -1px;
+  margin: 1px 0 2px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--fs-ink);
+  line-height: 1;
+  display: block;
+}
+
+.fairsales-landing .car-pricing-cluster .price-disclaimer {
+  color: var(--fs-muted);
+  line-height: 1.25;
+  font-size: 9px !important;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.fairsales-landing .car-pricing-cluster .price-deadline {
+  color: var(--fs-claude-orange);
+  font-weight: 600;
+  margin-top: 3px;
+  font-size: 9px;
+  line-height: 1.25;
+  text-align: right;
 }
 
 .fairsales-landing .fine-print {
@@ -1404,25 +1399,45 @@
   }
 
   .fairsales-landing .hero-section {
-    padding: 100px 5% 24px 5%;
+    padding: 80px 24px 20px 24px;
     height: auto;
-    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .hero-layout-grid {
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: space-between;
     gap: 30px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .fairsales-landing .hero-left-content {
+    display: block;
+    width: 100%;
+    max-width: 620px;
+    text-align: left;
+    margin: 0;
+    padding: 0;
   }
 
   .fairsales-landing .hero-float {
     position: relative;
+    top: 0;
     bottom: auto;
+    left: 0;
     right: auto;
-    width: 220px;
-    max-width: 220px;
-    min-height: 284px;
-    margin-top: 10px;
+    width: 100%;
+    max-width: 100%;
+    min-height: auto;
+    margin: 0 0 24px 0;
   }
 
   .fairsales-landing .intro-strip {
@@ -1457,48 +1472,266 @@
 
 @media (max-width: 640px) {
   .fairsales-landing .hero-section {
-    padding: 88px 16px 24px 16px;
     min-height: auto;
+    height: auto;
+    padding: 122px 14px 24px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fairsales-landing .hero-bg-car {
+    object-position: 65% 50% !important;
+  }
+
+  .fairsales-landing .hero-bg-scrim {
+    background:
+      linear-gradient(180deg, rgba(11, 11, 10, 0.90) 0%, rgba(11, 11, 10, 0.52) 42%, rgba(11, 11, 10, 0.88) 100%),
+      radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.15) 0%, rgba(11, 11, 10, 0.75) 100%) !important;
+  }
+
+  /* Content fits naturally with compact flow inside header boundary */
+  .fairsales-landing .hero-layout-grid {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .fairsales-landing .hero-left-content {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    box-sizing: border-box;
+  }
+
+  .fairsales-landing .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    margin: 0 0 20px 0;
+    justify-content: flex-start;
+    max-width: 100%;
   }
 
   .fairsales-landing .hero-headline {
-    font-size: clamp(34px, 8.5vw, 46px);
+    font-size: clamp(28px, 7.5vw, 34px);
+    line-height: 1.1;
     letter-spacing: -1.2px;
+    font-weight: 700;
+    margin: 0 0 18px 0;
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .fairsales-landing .hero-headline em {
+    color: var(--fs-claude-orange);
+    font-style: italic;
   }
 
   .fairsales-landing .hero-subtext {
-    font-size: 14.5px;
-    line-height: 1.6;
-    margin-bottom: 24px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #dde0d6;
+    margin: 0 0 20px 0;
+    max-width: 100%;
+    text-align: left;
   }
 
   .fairsales-landing .hero-buttons-row {
-    gap: 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px 0;
     width: 100%;
+    max-width: 100%;
+    flex-wrap: wrap;
+    box-sizing: border-box;
   }
 
-  .fairsales-landing .btn-hero-get-started,
+  .fairsales-landing .btn-hero-get-started {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 20px;
+    height: 46px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+
   .fairsales-landing .btn-hero-ai {
-    padding: 13px 20px;
-    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 18px;
+    height: 46px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-sizing: border-box;
   }
 
+  .fairsales-landing .btn-hero-ai .btn-ai-sparkle {
+    width: 15px;
+    height: 15px;
+  }
+
+  .fairsales-landing .hero-assurance {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    font-size: 11px;
+    color: #c3c7bd;
+    margin: 0 0 20px 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    width: 100%;
+    max-width: 100%;
+    justify-content: flex-start;
+    text-align: left;
+    box-sizing: border-box;
+  }
+
+  .fairsales-landing .hero-assurance svg {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+  }
+
+  /* POTENTIAL, WITH A PLAN (sales.fairpy.com floating card) */
   .fairsales-landing .hero-float {
+    position: relative;
+    top: 0;
+    bottom: auto;
+    left: 0;
+    right: auto;
     width: 100%;
     max-width: 100%;
     min-height: auto;
-    padding: 18px;
-    margin-top: 14px;
+    padding: 16px 18px;
+    margin: 0 0 20px 0;
+    border-radius: 10px;
+    border: 0.8px solid rgba(255, 255, 255, 0.32);
+    background: rgba(20, 18, 16, 0.62);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .fairsales-landing .hero-float .tiny {
+    font-size: 8.5px;
+    letter-spacing: 1.6px;
+    color: #c5c2be;
+    font-weight: 600;
+    display: block;
+    text-transform: uppercase;
+    margin-bottom: 0;
+  }
+
+  .fairsales-landing .hero-float strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -1px;
+    margin: 12px 0 14px 0;
+    color: #ffffff;
+    display: block;
+  }
+
+  .fairsales-landing .hero-float div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: none;
+    padding-top: 0;
+    margin: 0;
+  }
+
+  .fairsales-landing .hero-float div span {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13.5px;
+    font-weight: 400;
+    line-height: 1.35;
+    color: #dde0d6;
+  }
+
+  .fairsales-landing .hero-float div b {
+    font-family: 'DM Sans', 'Manrope', sans-serif;
+    font-size: clamp(54px, 15vw, 66px);
+    font-weight: 700;
+    color: var(--fs-claude-orange);
+    line-height: 1;
+    letter-spacing: -2px;
+    display: inline-flex;
+    align-items: center;
+    transform: translateY(-10px);
   }
 
   .fairsales-landing .hero-bottom {
-    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 6px;
     font-size: 8px;
+    letter-spacing: 0.8px;
+    opacity: 0.75;
+    padding: 10px 0 0 0;
+    margin-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    flex-shrink: 0;
+  }
+
+  .fairsales-landing .intro-strip {
+    padding: 36px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .section {
-    padding: 56px 16px;
+    padding: 48px 14px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .section-heading h2 {
@@ -1514,6 +1747,12 @@
   .fairsales-landing .car-grid {
     grid-template-columns: 1fr;
     gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .fairsales-landing .proof-section {
+    padding-top: 28px !important;
   }
 
   .fairsales-landing .proof-photos {
@@ -1524,8 +1763,10 @@
   .fairsales-landing .contact-strip {
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px 16px;
+    padding: 20px 14px;
     gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .btn-contact-choose {
@@ -1543,7 +1784,9 @@
   }
 
   .fairsales-landing .final-cta {
-    padding: 60px 16px;
+    padding: 50px 14px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .final-cta h2 {
@@ -1555,7 +1798,9 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
-    padding: 28px 16px;
+    padding: 28px 14px 44px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .footer-links {
@@ -1566,14 +1811,32 @@
 
 @media (max-width: 480px) {
   .fairsales-landing .hero-section {
-    padding: 80px 12px 20px 12px;
+    padding: 122px 14px 24px 14px;
+  }
+
+  .fairsales-landing .hero-headline {
+    font-size: clamp(30px, 8.5vw, 36px);
+  }
+
+  .fairsales-landing .hero-float {
+    padding: 16px 18px;
+    margin: 0 0 20px 0;
+  }
+
+  .fairsales-landing .hero-float div b {
+    font-size: clamp(52px, 15vw, 64px);
+    transform: translateY(-10px);
   }
 
   .fairsales-landing .section {
-    padding: 44px 12px;
+    padding: 44px 14px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .site-footer {
-    padding: 24px 12px;
+    padding: 24px 14px 40px;
+    width: 100%;
+    box-sizing: border-box;
   }
 }

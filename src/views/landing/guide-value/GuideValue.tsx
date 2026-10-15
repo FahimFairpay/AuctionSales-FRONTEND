@@ -53,6 +53,7 @@ export function GuideValue() {
   const trackRef = useRef<HTMLDivElement>(null);
   const fillRef = useRef<HTMLSpanElement>(null);
   const activeRef = useRef(0);
+  const mobileProgressRef = useRef(0);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -64,14 +65,122 @@ export function GuideValue() {
     let target = 0;
     let smooth = 0;
     let frame = 0;
+    let touchStartY = 0;
+    let touchStartX = 0;
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      const isMobile = window.innerWidth < 900;
+      if (!isMobile) return;
+      const stageEl = stageRef.current;
+      if (!stageEl) return;
+
+      const headerOffset = 72;
+      const lockScrollY = Math.round(stageEl.offsetTop - headerOffset);
+      const currentScrollY = Math.round(window.scrollY);
+
+      const deltaY = touchStartY - e.touches[0].clientY;
+      const deltaX = touchStartX - e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+
+      // Horizontal swipe directly on cards
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 4) {
+        if (deltaX > 0 && mobileProgressRef.current < 1) {
+          mobileProgressRef.current = Math.min(1, mobileProgressRef.current + 0.25);
+        } else if (deltaX < 0 && mobileProgressRef.current > 0) {
+          mobileProgressRef.current = Math.max(0, mobileProgressRef.current - 0.25);
+        }
+        return;
+      }
+
+      // Check if user is at or past lock point
+      const isAtLock = Math.abs(currentScrollY - lockScrollY) <= 12;
+
+      // When scroll animation starts (deltaY > 0 moving down):
+      // DO NOT MOVE THE PAGE while animation is running (mobileProgress < 1)!
+      if ((isAtLock || currentScrollY >= lockScrollY) && deltaY > 0 && mobileProgressRef.current < 1) {
+        if (e.cancelable) e.preventDefault();
+        window.scrollTo(0, lockScrollY);
+        // Slower animation: 1100px total scroll needed
+        mobileProgressRef.current = Math.min(1, mobileProgressRef.current + deltaY / 1100);
+        return;
+      }
+
+      // When scrolling back up (deltaY < 0 moving up):
+      // DO NOT MOVE THE PAGE while reverse animation is running (mobileProgress > 0)!
+      if ((isAtLock || currentScrollY <= lockScrollY) && deltaY < 0 && mobileProgressRef.current > 0) {
+        if (e.cancelable) e.preventDefault();
+        window.scrollTo(0, lockScrollY);
+        mobileProgressRef.current = Math.max(0, mobileProgressRef.current + deltaY / 1100);
+        return;
+      }
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      const isMobile = window.innerWidth < 900;
+      if (!isMobile) return;
+      const stageEl = stageRef.current;
+      if (!stageEl) return;
+
+      const headerOffset = 72;
+      const lockScrollY = Math.round(stageEl.offsetTop - headerOffset);
+      const currentScrollY = Math.round(window.scrollY);
+      const isAtLock = Math.abs(currentScrollY - lockScrollY) <= 12;
+
+      if ((isAtLock || currentScrollY >= lockScrollY) && e.deltaY > 0 && mobileProgressRef.current < 1) {
+        e.preventDefault();
+        window.scrollTo(0, lockScrollY);
+        mobileProgressRef.current = Math.min(1, mobileProgressRef.current + e.deltaY / 1100);
+      } else if ((isAtLock || currentScrollY <= lockScrollY) && e.deltaY < 0 && mobileProgressRef.current > 0) {
+        e.preventDefault();
+        window.scrollTo(0, lockScrollY);
+        mobileProgressRef.current = Math.max(0, mobileProgressRef.current + e.deltaY / 1100);
+      }
+    };
+
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("wheel", onWheel, { passive: false });
 
     const tick = () => {
-      const rect = stage.getBoundingClientRect();
-      const dist = stage.offsetHeight - window.innerHeight;
-      if (dist > 0) target = Math.max(0, Math.min(1, -rect.top / dist));
+      const stageEl = stageRef.current;
+      const trackEl = trackRef.current;
+      if (!stageEl || !trackEl) return;
+      const rect = stageEl.getBoundingClientRect();
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 900;
 
-      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-      const lerpSpeed = isMobile ? 0.22 : 0.12;
+      if (isMobile) {
+        const headerOffset = 72;
+        const lockScrollY = Math.round(stageEl.offsetTop - headerOffset);
+        const currentScrollY = Math.round(window.scrollY);
+
+        if (currentScrollY < lockScrollY - 14) {
+          // Strictly above lock point -> hold firmly at Step 01
+          mobileProgressRef.current = 0;
+          target = 0;
+          smooth = 0;
+        } else if (currentScrollY > lockScrollY + 14 && mobileProgressRef.current >= 1) {
+          // Animation finished and page moved past lock point -> complete at 1
+          target = 1;
+        } else {
+          // Inside animation region: FREEZE PAGE POSITION at lockScrollY until finished!
+          if (mobileProgressRef.current < 1 && Math.abs(currentScrollY - lockScrollY) > 0 && currentScrollY >= lockScrollY - 6) {
+            window.scrollTo(0, lockScrollY);
+          }
+          target = mobileProgressRef.current;
+        }
+      } else {
+        const dist = Math.max(1, stageEl.offsetHeight - window.innerHeight);
+        target = Math.max(0, Math.min(1, -rect.top / dist));
+      }
+
+      // Slower, calmer, more luxurious glide
+      const lerpSpeed = 0.08;
       smooth += (target - smooth) * lerpSpeed;
       if (Math.abs(target - smooth) < 0.0005) smooth = target;
 
@@ -82,12 +191,12 @@ export function GuideValue() {
         setActive(nextActive);
       }
 
-      const cards = [...track.querySelectorAll<HTMLElement>(".guide-value-card")];
+      const cards = [...trackEl.querySelectorAll<HTMLElement>(".guide-value-card")];
       const first = cards[0];
       const second = cards[1];
       const width = first?.offsetWidth ?? 460;
       const pitch = first && second ? second.offsetLeft - first.offsetLeft : width + 72;
-      track.style.transform = `translate3d(${-width / 2 - stepPos * pitch}px, 0, 0)`;
+      trackEl.style.transform = `translate3d(${-width / 2 - stepPos * pitch}px, 0, 0)`;
 
       cards.forEach((item, index) => {
         const distance = Math.abs(index - stepPos);
@@ -102,18 +211,35 @@ export function GuideValue() {
     };
 
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("wheel", onWheel);
+    };
   }, []);
 
   const scrollToStep = (index: number) => {
     const stage = stageRef.current;
     if (!stage) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dist = stage.offsetHeight - window.innerHeight;
-    window.scrollTo({
-      top: stage.offsetTop + (index / LAST) * Math.max(dist, 0),
-      behavior: reduce ? "auto" : "smooth",
-    });
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 900;
+    if (isMobile) {
+      const headerOffset = 72;
+      mobileProgressRef.current = index / LAST;
+      setActive(index);
+      activeRef.current = index;
+      window.scrollTo({
+        top: stage.offsetTop - headerOffset,
+        behavior: reduce ? "auto" : "smooth",
+      });
+    } else {
+      const dist = Math.max(1, stage.offsetHeight - window.innerHeight);
+      window.scrollTo({
+        top: stage.offsetTop + (index / LAST) * dist,
+        behavior: reduce ? "auto" : "smooth",
+      });
+    }
   };
 
   const current = GUIDES[active];
@@ -165,13 +291,11 @@ export function GuideValue() {
         </div>
 
         <div className="guide-value-hud" aria-live="polite">
-          <span>
-            {current.num} / 05
-          </span>
+          <span className="guide-value-hud-num">{current.num}&nbsp;/&nbsp;05</span>
           <div className="guide-value-meter">
             <span ref={fillRef} />
           </div>
-          <span>{current.title}</span>
+          <span className="guide-value-hud-title">{current.title}</span>
         </div>
       </div>
     </section>

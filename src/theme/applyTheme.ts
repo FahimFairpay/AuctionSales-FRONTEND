@@ -3,11 +3,16 @@ export type Appearance = "light" | "dark" | "system";
 export const APPEARANCE_KEY = "fps-appearance";
 
 export function readAppearance(): Appearance {
+  if (typeof window === "undefined") return "dark";
+  const userSelected = localStorage.getItem("fps-theme-selected") === "true";
+  if (!userSelected && (window.location.pathname === "/" || window.location.pathname === "")) {
+    return "dark";
+  }
   const raw = localStorage.getItem(APPEARANCE_KEY);
   if (raw === "light" || raw === "dark" || raw === "system") {
     return raw;
   }
-  return "system";
+  return "dark";
 }
 
 export function resolvedTheme(appearance: Appearance): "light" | "dark" {

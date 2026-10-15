@@ -38,13 +38,13 @@ export function AuthShell({ children }: AuthShellProps) {
 
       {/* Layer 2: Compact Top Glass Header (52px) */}
       <header className="auth-shell-header">
-        {!isSignInPage ? (
-          <Link href="/" aria-label="FairSales Home" className="auth-shell-brand-link">
-            <BrandWordmark size="header" />
-          </Link>
-        ) : (
-          <div className="auth-shell-brand-spacer" />
-        )}
+        <Link
+          href="/"
+          aria-label="FairSales Home"
+          className={`auth-shell-brand-link ${isSignInPage ? "signin-header-brand" : ""}`}
+        >
+          <BrandWordmark size="header" />
+        </Link>
         <div className="auth-shell-header-actions">
           <span className="auth-shell-tagline">Buy Smart. Drive Better.</span>
         </div>

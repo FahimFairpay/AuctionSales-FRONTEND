@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { MatchedVehicle } from "../../api/copilot";
 import { Link, useNavigate } from "@/compat/router";
 import { paths } from "../../routes/paths";
@@ -9,6 +9,7 @@ import { useFavorites } from "../../features/inventory/useFavorites";
 import { ImageGallery } from "../../features/inventory/ImageGallery";
 import { expandVisImages, type VisCandidate } from "../../features/inventory/visImages";
 import { markChatNavigating } from "./useCopilotChat";
+import { AuthPromptModal } from "./AuthPromptModal";
 
 // Formats auction date & time as requested: "Tue Oct 06, 9:30am"
 export function formatCrispAuctionDateTime(dateVal?: string, timeVal?: string, dateTimeVal?: string): string {
@@ -98,19 +99,40 @@ export function formatCrispYard(branchOrLocation?: string): string {
 
 interface VehicleCardProps {
   vehicle: MatchedVehicle;
+  index?: number;
   isExpanded?: boolean;
   onToggleExpand?: () => void;
   onViewGallery?: (vehicle: MatchedVehicle) => void;
+  animate?: boolean;
 }
 
 export const VehicleCard: React.FC<VehicleCardProps> = ({
   vehicle,
+  index = 0,
   isExpanded: controlledExpanded,
   onToggleExpand,
   onViewGallery,
+  animate = false,
 }) => {
   const [internalExpanded, setInternalExpanded] = useState(false);
   const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+
+  // Freeze the animate value at mount time. The parent may pass animate={false}
+  // on subsequent renders (once it marks the card as "already animated"), but we
+  // must NOT let that cancel a transition that is already in flight.
+  const shouldAnimateRef = useRef(animate);
+  const [settled, setSettled] = useState(!shouldAnimateRef.current);
+
+  useEffect(() => {
+    // Only run the flip animation if the card was mounted with animate=true.
+    // Ignore any later prop changes to animate.
+    if (!shouldAnimateRef.current) return;
+    const timer = setTimeout(() => {
+      setSettled(true);
+    }, 60);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggleExpand = () => {
     if (onToggleExpand) {
@@ -123,6 +145,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   const [activeTab, setActiveTab] = useState<"overview" | "salvage" | "condition">("overview");
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [heartAnimating, setHeartAnimating] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   // App-wide Interested / Favorites hook
   const favorites = useFavorites();
@@ -165,6 +188,13 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    // If guest / unauthenticated: show dedicated Auth Prompt Modal instead of error toast
+    if (!getCurrentUser()) {
+      setAuthModalOpen(true);
+      return;
+    }
+
     setHeartAnimating(true);
     setTimeout(() => setHeartAnimating(false), 300);
     try {
@@ -203,7 +233,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   return (
     <>
       <article
-        className="copilot-public-bubble group relative flex flex-col shrink-0 w-[320px] overflow-hidden rounded-2xl border transition-all duration-300 text-left select-none text-[#141413] dark:text-[#f7f6f2] hover:-translate-y-0.5"
+        className={`copilot-public-bubble group relative flex flex-col shrink-0 w-[320px] overflow-hidden rounded-2xl border text-left select-none text-[#141413] dark:text-[#f7f6f2] hover:-translate-y-0.5 ${
+          shouldAnimateRef.current ? "card-perspective-flip" : ""
+        } ${settled ? "flip-settled" : "flip-initial"}`}
         style={{
           background: "var(--glass-card-bg)",
           border: "var(--glass-card-border)",
@@ -212,7 +244,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           boxShadow: "var(--glass-card-shadow)",
           color: "var(--ink)",
           scrollSnapAlign: "start",
-          transition: "background 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s ease, transform 0.25s ease",
+          transition: shouldAnimateRef.current
+            ? undefined
+            : "background 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.45s ease, box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s ease, transform 0.25s ease",
+          transitionDelay: shouldAnimateRef.current ? `${index * 140}ms` : "0ms",
         }}
       >
         {/* ======================================================== */}
@@ -559,6 +594,13 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
           onClose={() => setGalleryOpen(false)}
         />
       )}
+
+      {/* Auth Prompt Modal for unauthenticated visitors trying to save vehicle */}
+      <AuthPromptModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        stockNumber={vehicle.stockNumber}
+      />
     </>
   );
 };

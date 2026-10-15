@@ -23,10 +23,10 @@ interface CopilotDrawerProps {
 export type { CopilotDrawerHandle };
 
 const TYPEWRITER_PHRASES = [
-  "How can FairScout.AI help you today?",
-  "What are you looking for?",
-  "What can FairScout.AI do for you?",
-  "Ask anything about auction lots or inventory...",
+  "Ask FairSales anything...",
+  "Search auction inventory...",
+  "What car are you seeking?",
+  "Ask about repairs & savings...",
 ];
 
 export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>(function CopilotDrawer(
@@ -49,12 +49,13 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  // Dynamic width: compact (220px-240px) on mobile idle, 368px on desktop idle; expands up to 450px-480px on active conversation
+  const isTypingOrFocused = isFocused || input.trim().length > 0;
   const hasVehicles = useMemo(() => messages.some((m) => m.vehicles && m.vehicles.length > 0), [messages]);
-  const isExpandedOrFocused = isExpanded || isFocused || input.length > 0;
-  const currentWidthClass = isExpandedOrFocused
+  const currentWidthClass = isExpanded
     ? (hasVehicles ? "w-[480px] max-w-[calc(100vw-24px)]" : "w-[450px] max-w-[calc(100vw-24px)]")
-    : "w-[220px] xs:w-[240px] sm:w-[368px] max-w-[calc(100vw-24px)]";
+    : isTypingOrFocused
+      ? "w-[calc((100vw-24px)*0.82)] min-w-[290px] sm:w-[420px] max-w-[450px]"
+      : "w-[calc((100vw-24px)*0.63)] min-w-[216px] sm:w-[320px] max-w-[360px]";
 
   // Typewriter placeholder state
   const [phraseIdx, setPhraseIdx] = useState(0);
@@ -93,16 +94,41 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
     }
   }, [isOpen]);
 
+  // Freeze background page scroll when AI Chat answer area is expanded full-screen on mobile
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isMobile = window.innerWidth <= 640;
+    if (isExpanded && isMobile) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
+      const originalTouchAction = document.body.style.touchAction;
+
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+
+      return () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+        document.body.style.touchAction = originalTouchAction;
+      };
+    }
+  }, [isExpanded]);
+
   // Auto-minimize chat when switching navigation tabs (e.g. from Inventory to Presets or other tabs)
   useEffect(() => {
     if (prevPathnameRef.current !== location.pathname) {
       prevPathnameRef.current = location.pathname;
-      // If navigation was initiated from inside Copilot chat (e.g. clicking View Details on a vehicle), keep drawer open
+      // If navigation was initiated from inside Copilot chat (e.g. clicking View Details or arrow on a vehicle),
+      // we preserve the conversation in state/sessionStorage, but minimize to the "Continue conversation" pill
+      // so the user sees the redirected car detail page unobstructed.
       const isFromChat = typeof window !== "undefined" && sessionStorage.getItem("copilot_prevent_collapse") === "true";
       if (isFromChat) {
         try {
           sessionStorage.removeItem("copilot_prevent_collapse");
         } catch {}
+        setIsExpanded(false);
+        if (onClose) onClose();
         return;
       }
       setIsExpanded(false);
@@ -220,10 +246,12 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
 
   return (
     <aside
-      aria-label="FairScout.AI"
-      className={`fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end select-none font-sans ${
-        publicDock ? "copilot-public-dock" : ""
-      } ${publicDock && dockHidden ? "is-hidden pointer-events-none" : "pointer-events-auto"}`}
+      aria-label="FairSales"
+      className={`select-none font-sans ${
+        isExpanded
+          ? "max-sm:fixed max-sm:inset-0 max-sm:h-[100dvh] max-sm:w-full max-sm:z-[200] max-sm:flex max-sm:flex-col max-sm:justify-between max-sm:bg-white dark:max-sm:bg-[#0c0d12] max-sm:overscroll-contain sm:fixed sm:bottom-6 sm:right-6 sm:z-50 sm:flex sm:flex-col sm:items-end"
+          : "fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end"
+      } copilot-public-dock ${publicDock && dockHidden ? "is-hidden pointer-events-none" : "pointer-events-auto"}`}
     >
       {isExpanded && (
         <CopilotSheet
@@ -244,24 +272,33 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
         />
       )}
 
-      <CopilotComposer
-        publicDock={publicDock}
-        hasActiveConversation={!isExpanded && hasActiveConversation}
-        currentWidthClass={currentWidthClass}
-        input={input}
-        isFocused={isFocused}
-        inputRef={inputRef}
-        animatedPlaceholder={animatedPlaceholder}
-        onInput={setInput}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        onSubmit={handleSubmit}
-        onKeyDown={handleKeyDown}
-        onContinue={() => {
-          setIsExpanded(true);
-          if (onOpen) onOpen();
-        }}
-      />
+      <div
+        className={
+          isExpanded
+            ? "w-full max-sm:w-full max-sm:px-3 max-sm:py-2.5 max-sm:pb-[calc(env(safe-area-inset-bottom,0px)+12px)] max-sm:bg-white/95 dark:max-sm:bg-[#12131a]/95 max-sm:backdrop-blur-xl max-sm:border-t max-sm:border-slate-200/60 dark:max-sm:border-white/10"
+            : ""
+        }
+      >
+        <CopilotComposer
+          publicDock={publicDock}
+          isExpanded={isExpanded}
+          hasActiveConversation={!isExpanded && hasActiveConversation}
+          currentWidthClass={isExpanded ? currentWidthClass : currentWidthClass}
+          input={input}
+          isFocused={isFocused}
+          inputRef={inputRef}
+          animatedPlaceholder={animatedPlaceholder}
+          onInput={setInput}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onSubmit={handleSubmit}
+          onKeyDown={handleKeyDown}
+          onContinue={() => {
+            setIsExpanded(true);
+            if (onOpen) onOpen();
+          }}
+        />
+      </div>
     </aside>
   );
 });

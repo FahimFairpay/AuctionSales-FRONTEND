@@ -42,9 +42,15 @@ export default function RootLayout({
                   window.location.pathname.startsWith('/login') ||
                   window.location.pathname.startsWith('/new-password') ||
                   window.location.pathname.startsWith('/forgot-password');
-                var stored = localStorage.getItem("fps-appearance") || "system";
+                var isLanding = window.location.pathname === '/' || window.location.pathname === '';
+                var userSelected = localStorage.getItem("fps-theme-selected") === "true";
+                var stored = localStorage.getItem("fps-appearance");
+                if (!userSelected || !stored) {
+                  stored = "dark";
+                }
                 var dark =
                   isAuth ||
+                  (isLanding && !userSelected) ||
                   stored === "dark" ||
                   (stored === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
                 document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");

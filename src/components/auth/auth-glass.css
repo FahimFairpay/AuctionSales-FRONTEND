@@ -126,6 +126,19 @@
   opacity: 0.85;
 }
 
+/* Hide header brand link on desktop for sign-in since the left hero statement shows it */
+@media (min-width: 1024px) {
+  .auth-shell-brand-link.signin-header-brand {
+    display: none !important;
+  }
+}
+/* Show header brand link at top left on mobile (< 1024px) matching signup page */
+@media (max-width: 1023px) {
+  .auth-shell-brand-link.signin-header-brand {
+    display: inline-flex !important;
+  }
+}
+
 .auth-shell-header-actions {
   display: flex;
   align-items: center;

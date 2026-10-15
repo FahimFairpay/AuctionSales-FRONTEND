@@ -62,11 +62,14 @@ export function FiveSteps() {
           bestDistance = distance;
           bestIndex = index;
         }
-        if (narrow.matches) {
+        const isNarrow = window.innerWidth <= 900 || narrow.matches;
+        if (isNarrow) {
           card.style.filter = "none";
           const isFocal = distance < 180;
-          card.style.opacity = isFocal ? "1" : "0.62";
-          card.style.transform = isFocal ? "scale(1.02)" : "scale(0.97)";
+          card.style.opacity = isFocal ? "1" : "0.75";
+          card.style.transform = "none";
+          card.style.width = "100%";
+          card.style.maxWidth = "100%";
           return;
         }
 

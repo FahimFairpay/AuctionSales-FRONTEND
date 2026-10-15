@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FairSales — Mobile Hero (Locked Option 4: Centered Editorial Luxury)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --fs-claude-orange: #d97757;
+      --fs-claude-orange-glow: rgba(217, 119, 87, 0.45);
+      --fs-claude-orange-hover: #e58a6c;
+      --fs-ink: #f7f6f2;
+      --fs-paper: #0b0b0a;
+      --fs-muted: #b0ada6;
+      --fs-line: rgba(255, 255, 255, 0.12);
+    }
+
+    [data-theme="light"] {
+      --fs-claude-orange: #c4673a;
+      --fs-claude-orange-glow: rgba(196, 103, 58, 0.28);
+      --fs-claude-orange-hover: #b35a32;
+      --fs-ink: #141413;
+      --fs-paper: #faf9f5;
+      --fs-muted: #6b5f4e;
+      --fs-line: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #060709;
+      color: #f7f6f2;
+      padding: 24px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Top Control Bar */
+    .eval-header {
+      width: 100%;
+      max-width: 900px;
+      margin-bottom: 24px;
+      background: rgba(18, 20, 24, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 16px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .eval-title-wrap h1 {
+      font-size: 19px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-locked {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--fs-claude-orange);
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .eval-title-wrap p {
+      font-size: 12.5px;
+      color: #a8a59f;
+      margin-top: 3px;
+    }
+
+    .eval-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle-btn, .device-btn {
+      padding: 8px 16px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle-btn:hover, .device-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: var(--fs-claude-orange);
+    }
+
+    .device-btn.active {
+      background: var(--fs-claude-orange);
+      border-color: var(--fs-claude-orange);
+      color: #ffffff;
+    }
+
+    /* Phone Showcase Stage */
+    .stage-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .phone-viewport {
+      width: 390px;
+      height: 820px;
+      border-radius: 44px;
+      border: 4px solid #23252a;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      background: #0b0b0a;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.3s ease, height 0.3s ease;
+    }
+
+    /* Background Elements */
+    .sim-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .sim-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 60% 48%;
+    }
+
+    .sim-scrim-dark {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(11, 11, 10, 0.90) 0%, rgba(11, 11, 10, 0.52) 42%, rgba(11, 11, 10, 0.90) 100%),
+        radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.2) 0%, rgba(11, 11, 10, 0.75) 100%);
+    }
+
+    /* Top Nav */
+    .sim-nav {
+      height: 54px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(11, 11, 10, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .sim-brand {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sim-brand span { color: var(--fs-claude-orange); }
+
+    .sim-signin {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e4e0d8;
+    }
+
+    /* OPTION 4: CENTERED EDITORIAL CINEMATIC HERO CONTAINER */
+    .opt4-container {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      padding: 18px 18px 12px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      min-height: 0;
+    }
+
+    .opt4-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sim-eyebrow {
+      font-size: 10px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+    .sim-eyebrow .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--fs-claude-orange);
+      box-shadow: 0 0 10px var(--fs-claude-orange);
+    }
+
+    .sim-headline {
+      font-size: 34px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -1.3px;
+      color: #ffffff;
+      margin: 0;
+    }
+    .sim-headline em {
+      color: var(--fs-claude-orange);
+      font-style: italic;
+    }
+
+    .sim-subtext {
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: #d8d4cc;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .sim-buttons-row {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 10px;
+      width: 100%;
+      max-width: 320px;
+      margin: 4px auto 0 auto;
+    }
+
+    .sim-btn-primary {
+      height: 46px;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.1) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-top: 1px solid rgba(255, 255, 255, 0.7);
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .sim-btn-ai {
+      height: 46px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .sim-assurance {
+      font-size: 10px;
+      color: #c4c0b8;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      padding: 7px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Savings card anchored at bottom */
+    .sim-card {
+      background: rgba(18, 17, 16, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-areas:
+        "eyebrow eyebrow"
+        "title pct"
+        "sub pct";
+      grid-template-columns: 1fr auto;
+      column-gap: 14px;
+      row-gap: 3px;
+      align-items: center;
+      text-align: left;
+      margin-top: auto;
+      width: 100%;
+    }
+
+    .sim-card-eyebrow {
+      grid-area: eyebrow;
+      font-size: 8.5px;
+      letter-spacing: 1.6px;
+      color: var(--fs-claude-orange);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .sim-card-title {
+      grid-area: title;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #ffffff;
+    }
+
+    .sim-card-sub {
+      grid-area: sub;
+      font-size: 12px;
+      color: #b8b3a8;
+      margin-top: 2px;
+    }
+
+    .sim-card-pct {
+      grid-area: pct;
+      font-size: 44px;
+      font-weight: 800;
+      color: var(--fs-claude-orange);
+      line-height: 0.9;
+    }
+
+    /* Bottom strip */
+    .sim-bottom-bar {
+      padding: 10px 18px 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8px;
+      letter-spacing: 1.2px;
+      color: rgba(255, 255, 255, 0.65);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 10;
+      background: rgba(11, 11, 10, 0.65);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Control Bar -->
+  <header class="eval-header">
+    <div class="eval-title-wrap">
+      <h1>
+        <span>Mobile Hero — Option 4 (Locked)</span>
+        <span class="badge-locked">Locked Solution</span>
+      </h1>
+      <p>Centered Editorial Luxury layout locked for FairSales mobile hero viewports.</p>
+    </div>
+    <div class="eval-controls">
+      <button class="device-btn" onclick="setDevice(375, 667, this)">iPhone SE (375x667)</button>
+      <button class="device-btn active" onclick="setDevice(390, 820, this)">iPhone 14/15/16 (390x820)</button>
+      <button class="device-btn" onclick="setDevice(430, 900, this)">Pro Max (430x900)</button>
+      <button class="theme-toggle-btn" onclick="toggleTheme()">
+        <span id="theme-label">🌙 Light Mode</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Phone Stage -->
+  <div class="stage-container">
+    <div class="phone-viewport" id="viewport">
+      <div class="sim-bg">
+        <img src="/assets/secondlook_hero.jpg" alt="Hero sports car" />
+        <div class="sim-scrim-dark"></div>
+      </div>
+
+      <div class="sim-nav">
+        <div class="sim-brand">FairSales <span>↗</span></div>
+        <div class="sim-signin">Login / Register</div>
+      </div>
+
+      <!-- OPTION 4 CONTAINER -->
+      <div class="opt4-container">
+        <div class="opt4-top">
+          <div class="sim-eyebrow">
+            <span class="dot"></span>
+            <span>A DIFFERENT ROAD TO OWNERSHIP</span>
+          </div>
+          <h1 class="sim-headline">
+            Your next car.<br>
+            <em>A smarter price.</em>
+          </h1>
+          <p class="sim-subtext">
+            A curated list of wholesale cars with minor damage. Expert guidance from purchase through registration.
+          </p>
+          <div class="sim-buttons-row">
+            <div class="sim-btn-primary">Get Started ↗</div>
+            <div class="sim-btn-ai">Ask us</div>
+          </div>
+          <div class="sim-assurance">
+            🛡 Clean-title · Wholesale · Guided all the way
+          </div>
+        </div>
+
+        <div class="sim-card">
+          <span class="sim-card-eyebrow">POTENTIAL, WITH A PLAN</span>
+          <strong class="sim-card-title">Target savings<br>after repairs</strong>
+          <div class="sim-card-sub">Your car. Your smart move.</div>
+          <div class="sim-card-pct">25%</div>
+        </div>
+      </div>
+
+      <div class="sim-bottom-bar">
+        <span>SEE THE POTENTIAL. KNOW THE PROCESS.</span>
+        <span>SCROLL TO EXPLORE ↓</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      document.getElementById('theme-label').textContent = next === 'dark' ? '🌙 Light Mode' : '☀️ Dark Mode';
+    }
+
+    function setDevice(width, height, btn) {
+      const vp = document.getElementById('viewport');
+      vp.style.width = width + 'px';
+      vp.style.height = height + 'px';
+      document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>

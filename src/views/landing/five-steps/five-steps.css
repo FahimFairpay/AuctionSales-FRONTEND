@@ -13,7 +13,10 @@
     0 0 28px -6px var(--fs-claude-orange-glow);
   position: relative;
   z-index: 2;
-  padding: 24px 6% 0;
+  padding: 24px 24px 0;
+  max-width: 1360px;
+  margin: 0 auto;
+  box-sizing: border-box;
   scroll-margin-top: 96px;
 }
 
@@ -231,17 +234,31 @@
 
 @media (max-width: 900px) {
   .fairsales-landing .five-steps-split {
-    padding: 72px 5% 24px;
+    padding: 56px 14px 24px;
+    overflow: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .five-steps-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .five-steps-sticky {
     position: static;
     top: auto;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-bottom: 0;
   }
 
   .fairsales-landing .five-steps-sticky h2 {
@@ -250,16 +267,21 @@
   }
 
   .fairsales-landing .five-steps-pills {
+    display: flex;
     flex-direction: row;
-    position: sticky;
-    top: 54px;
-    z-index: 20;
+    position: relative;
+    top: auto;
+    z-index: 2;
     gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     overflow-x: auto;
-    padding: 8px 2px;
+    padding: 6px 2px 12px;
     margin: 12px 0 0;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .five-steps-pills::-webkit-scrollbar {
@@ -284,20 +306,46 @@
   }
 
   .fairsales-landing .five-steps-flow {
-    gap: 20px;
-    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 12px;
     padding-bottom: 24px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .five-steps-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     min-height: 0;
     padding: 24px 20px;
     border-radius: 20px;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.3s ease,
+    box-sizing: border-box !important;
+    transform: none !important;
+    margin: 0 !important;
+    overflow: hidden;
+    word-break: break-word;
+    transition: opacity 0.3s ease,
                 border-color 0.3s ease,
                 box-shadow 0.3s ease,
                 background 0.3s ease;
+  }
+
+  .fairsales-landing .five-steps-card h3 {
+    font-size: 24px;
+    letter-spacing: -0.5px;
+    word-break: break-word;
+  }
+
+  .fairsales-landing .five-steps-card p {
+    font-size: 15px;
+    line-height: 1.5;
+    word-break: break-word;
   }
 
   .fairsales-landing .five-steps-card.is-active {

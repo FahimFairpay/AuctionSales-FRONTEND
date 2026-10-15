@@ -1,4 +1,30 @@
-/* Public copilot dock: same liquid glass as the center pill, parked on the right. */
+/* Public & App Copilot Dock: Finalized Liquid Glass & Circumference Comet Beam */
+
+/* =====================================================================
+   BEAM ANCHOR & SPECIFIED PULSE MOTION ANIMATION
+   ===================================================================== */
+.beam-anchor {
+  position: relative;
+  display: block;
+  border-radius: 9999px;
+  padding: 0;
+  width: 100%;
+}
+
+/* pulseMotion 1.5s ease-in-out infinite alternate */
+.beam-anchor.has-pulse {
+  animation: pulseMotion 1.5s ease-in-out infinite alternate !important;
+  will-change: transform;
+}
+
+@keyframes pulseMotion {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
 
 .copilot-public-dock {
   transition:
@@ -12,143 +38,173 @@
   transform: translateY(30px);
 }
 
+/* =====================================================================
+   FINALIZED LIQUID GLASS PILLS (DARK & LIGHT THEMES)
+   ===================================================================== */
 .copilot-public-pill {
-  background: rgba(255, 255, 255, 0.96) !important;
-  backdrop-filter: blur(24px) saturate(190%) contrast(102%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(102%) !important;
-  border: 1px solid #6b5f4e !important;
-  box-shadow:
-    0 0 28px 10px rgba(107, 95, 78, 0.2),
-    0 0 64px 22px rgba(107, 95, 78, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+  position: relative;
+  min-height: 50px;
+  border-radius: 9999px !important;
+  backdrop-filter: blur(52px) saturate(220%) contrast(110%) brightness(96%) !important;
+  -webkit-backdrop-filter: blur(52px) saturate(220%) contrast(110%) brightness(96%) !important;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
 }
 
-.copilot-public-pill:focus-within {
-  background: rgba(255, 255, 255, 0.98) !important;
-  border-color: #6b5f4e !important;
-  box-shadow:
-    0 0 32px 12px rgba(107, 95, 78, 0.28),
-    0 0 72px 28px rgba(107, 95, 78, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+/* Top Curvature Liquid Glass Sheen */
+.copilot-public-pill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52%;
+  border-top-left-radius: 9999px;
+  border-top-right-radius: 9999px;
+  pointer-events: none;
+  z-index: 1;
 }
 
+/* 1. LIGHT MODE: Charcoal Titanium Glass (rgba(28, 30, 36, 0.75)) */
+:root[data-theme="light"] .copilot-public-pill,
+html:not(.dark) .copilot-public-pill {
+  background: rgba(28, 30, 36, 0.75) !important;
+  border: 1px solid rgba(0, 0, 0, 0.42) !important;
+  box-shadow:
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.40),
+    inset 0 0 14px rgba(255, 255, 255, 0.04),
+    0 20px 50px rgba(0, 0, 0, 0.40),
+    0 4px 14px rgba(0, 0, 0, 0.20) !important;
+}
+
+:root[data-theme="light"] .copilot-public-pill::before,
+html:not(.dark) .copilot-public-pill::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* 2. DARK MODE: Frosted Ice Crystal (rgba(255, 255, 255, 0.18)) */
 :root[data-theme="dark"] .copilot-public-pill,
 .dark .copilot-public-pill {
-  background: rgba(22, 24, 30, 0.9) !important;
-  border-color: rgba(255, 255, 255, 0.32) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  backdrop-filter: blur(52px) saturate(220%) brightness(78%) contrast(120%) !important;
+  -webkit-backdrop-filter: blur(52px) saturate(220%) brightness(78%) contrast(120%) !important;
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 0 26px rgba(217, 119, 87, 0.18),
-    0 16px 36px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+    inset 0 0 0 100px rgba(10, 12, 16, 0.45),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.70),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.40),
+    inset 0 0 14px rgba(255, 255, 255, 0.05),
+    0 22px 54px rgba(0, 0, 0, 0.65),
+    0 4px 16px rgba(0, 0, 0, 0.40) !important;
 }
 
-:root[data-theme="dark"] .copilot-public-pill:focus-within,
-.dark .copilot-public-pill:focus-within {
-  background: rgba(28, 30, 38, 0.94) !important;
-  border-color: rgba(217, 119, 87, 0.78) !important;
+:root[data-theme="dark"] .copilot-public-pill::before,
+.dark .copilot-public-pill::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* Focus Within Depth */
+.copilot-public-pill:focus-within {
+  border-color: rgba(255, 255, 255, 0.65) !important;
   box-shadow:
-    0 0 0 3px rgba(217, 119, 87, 0.22),
-    0 0 32px rgba(217, 119, 87, 0.32),
-    0 16px 36px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    inset 0 2px 3px rgba(255, 255, 255, 0.80),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.30),
+    0 20px 48px rgba(0, 0, 0, 0.45) !important;
 }
 
-.copilot-public-sheet {
-  /* A little less see-through than the input, with a stronger frost */
-  background: rgba(255, 255, 255, 0.84) !important;
-  backdrop-filter: blur(40px) saturate(180%) contrast(102%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(180%) contrast(102%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.78) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 8px 18px -10px rgba(40, 30, 20, 0.12),
-    0 22px 44px -18px rgba(40, 30, 20, 0.2) !important;
-  color: var(--ink, #1d1d1f);
-}
-
-.copilot-public-sheet .copilot-sheet-glare {
-  display: none;
-}
-
-.copilot-public-header {
-  background: transparent !important;
-  border-color: rgba(255, 255, 255, 0.45) !important;
-  box-shadow: none !important;
-}
-
-.copilot-public-bubble {
-  background: rgba(255, 255, 255, 0.66) !important;
-  border: 1px solid rgba(255, 255, 255, 0.8) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 10px 22px -10px rgba(40, 30, 20, 0.22) !important;
-  backdrop-filter: blur(22px) saturate(170%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
-}
-
-:root[data-theme="dark"] .copilot-public-sheet,
-.dark .copilot-public-sheet {
-  background: rgba(18, 20, 26, 0.86) !important;
-  backdrop-filter: blur(40px) saturate(180%) contrast(102%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(180%) contrast(102%) !important;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 8px 18px -10px rgba(0, 0, 0, 0.35),
-    0 22px 44px -16px rgba(0, 0, 0, 0.42) !important;
-  color: #f5f5f7;
-}
-
-:root[data-theme="dark"] .copilot-public-header,
-.dark .copilot-public-header {
-  border-color: rgba(255, 255, 255, 0.12) !important;
-}
-
-:root[data-theme="dark"] .copilot-public-bubble,
-.dark .copilot-public-bubble {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 10px 22px -10px rgba(0, 0, 0, 0.45) !important;
-  color: #f5f5f7;
-}
-
+/* =====================================================================
+   INPUT FIELD & PLACEHOLDER STYLING (CRISP WHITE ON BOTH GLASS MODES)
+   ===================================================================== */
 .copilot-public-input {
   width: 100%;
-  resize: none;
-  background: transparent;
-  border: none;
-  outline: none;
-  box-shadow: none;
-  padding: 6px 0;
-  font-size: 14px;
+  resize: none !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-size: 14.5px;
   font-weight: 500;
-  line-height: 1.45;
-  color: var(--ink, #1d1d1f);
-}
-
-:root[data-theme="dark"] .copilot-public-input,
-.dark .copilot-public-input {
-  color: #f5f5f7;
+  height: 38px !important;
+  line-height: 38px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: keep-all !important;
+  color: #ffffff !important;
+  display: block !important;
+  position: relative;
+  z-index: 2;
 }
 
 .copilot-public-input::placeholder {
-  color: var(--fs-muted, #8e8e93);
+  color: rgba(255, 255, 255, 0.75) !important;
   font-weight: 400;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 
+.dark .copilot-public-input,
+.dark .copilot-continue-text {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 10px rgba(0, 0, 0, 0.80) !important;
+}
+
+.dark .copilot-public-input::placeholder {
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.90) !important;
+}
+
+/* CONTINUE CONVERSATION PILL TEXT */
+.copilot-continue-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff !important;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+}
+
+/* EMERALD LIVE PULSE DOT */
+.copilot-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseDot 2s infinite;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.6;
+  }
+}
+
+/* =====================================================================
+   SEND / SUBMIT BUTTON
+   ===================================================================== */
 .copilot-public-send {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   margin-left: 6px;
   border: none;
   border-radius: 9999px;
-  background: linear-gradient(135deg, #d97757 0%, #b35a32 100%);
+  background: #d97757;
   color: #ffffff;
   cursor: pointer;
   flex-shrink: 0;
@@ -158,7 +214,18 @@
   pointer-events: none;
   transition:
     opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.2s ease;
+}
+
+:root[data-theme="light"] .copilot-public-send,
+html:not(.dark) .copilot-public-send {
+  background: #c4673a;
+  box-shadow: 0 4px 12px rgba(196, 103, 58, 0.35);
+}
+
+.copilot-public-send:hover {
+  filter: brightness(1.08);
 }
 
 .copilot-public-send.has-text {
@@ -172,23 +239,225 @@
   height: 14px;
 }
 
-@media (max-width: 640px) {
-  .copilot-public-pill {
-    padding: 3px 6px 3px 12px !important;
+/* =====================================================================
+   BLENDED COMPOSER (WHEN CHAT / ANSWER AREA IS OPEN)
+   Seamlessly matches the sheet's interior palette and eliminates high-contrast floating look
+   ===================================================================== */
+.copilot-sheet-composer-blended {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 9999px;
+  padding: 4px 6px 4px 16px;
+  min-height: 46px;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+:root[data-theme="light"] .copilot-sheet-composer-blended,
+html:not(.dark) .copilot-sheet-composer-blended {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+:root[data-theme="light"] .copilot-sheet-composer-blended .copilot-blended-input {
+  color: #141413 !important;
+}
+
+:root[data-theme="light"] .copilot-sheet-composer-blended .copilot-blended-input::placeholder {
+  color: #6b5f4e !important;
+}
+
+:root[data-theme="dark"] .copilot-sheet-composer-blended,
+.dark .copilot-sheet-composer-blended {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+:root[data-theme="dark"] .copilot-sheet-composer-blended .copilot-blended-input {
+  color: #f7f6f2 !important;
+}
+
+:root[data-theme="dark"] .copilot-sheet-composer-blended .copilot-blended-input::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* On Desktop when answer area is open, input area adapts the sheet's glassmorphism style */
+@media (min-width: 641px) {
+  :root[data-theme="light"] .copilot-sheet-composer-blended,
+  html:not(.dark) .copilot-sheet-composer-blended {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    backdrop-filter: blur(40px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 8px 24px rgba(40, 30, 20, 0.12) !important;
   }
 
-  .copilot-public-input {
-    font-size: 12px !important;
-    padding: 4px 0 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
-  .copilot-public-send {
-    width: 28px;
-    height: 28px;
-    margin-left: 4px;
+  :root[data-theme="dark"] .copilot-sheet-composer-blended,
+  .dark .copilot-sheet-composer-blended {
+    background: rgba(18, 20, 26, 0.92) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(40px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 12px 32px rgba(0, 0, 0, 0.55) !important;
   }
 }
 
+.copilot-blended-input {
+  width: 100%;
+  resize: none !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-size: 14.5px;
+  font-weight: 500;
+  height: 38px !important;
+  line-height: 38px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: keep-all !important;
+  display: block !important;
+}
+
+@media (max-width: 640px) {
+  .copilot-blended-input {
+    font-size: 16px !important;
+    height: 42px !important;
+    line-height: 42px !important;
+  }
+}
+
+/* =====================================================================
+   EXPANDED SHEET STYLING
+   ===================================================================== */
+.copilot-public-sheet {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(40px) saturate(180%) contrast(102%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) contrast(102%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.80) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 18px -10px rgba(40, 30, 20, 0.12),
+    0 22px 44px -18px rgba(40, 30, 20, 0.2) !important;
+  color: #1d1d1f;
+}
+
+:root[data-theme="dark"] .copilot-public-sheet,
+.dark .copilot-public-sheet {
+  background: rgba(18, 20, 26, 0.88) !important;
+  backdrop-filter: blur(40px) saturate(180%) contrast(102%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) contrast(102%) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 18px -10px rgba(0, 0, 0, 0.35),
+    0 22px 44px -16px rgba(0, 0, 0, 0.42) !important;
+  color: #f5f5f7;
+}
+
+.copilot-public-sheet .copilot-sheet-glare {
+  display: none;
+}
+
+.copilot-public-header {
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="dark"] .copilot-public-header,
+.dark .copilot-public-header {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.copilot-public-bubble {
+  background: rgba(255, 255, 255, 0.66) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 22px -10px rgba(40, 30, 20, 0.22) !important;
+  backdrop-filter: blur(22px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
+}
+
+:root[data-theme="dark"] .copilot-public-bubble,
+.dark .copilot-public-bubble {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 10px 22px -10px rgba(0, 0, 0, 0.45) !important;
+  color: #f5f5f7;
+}
+
+/* =====================================================================
+   MOBILE RESPONSIVENESS (NO iOS AUTO-ZOOM & CLEAN SAFE AREA INSETS)
+   ===================================================================== */
+@media (max-width: 640px) {
+  .copilot-public-pill {
+    padding: 4px 8px 4px 16px !important;
+    min-height: 52px !important;
+    border-radius: 9999px !important;
+  }
+
+  /* font-size: 16px is required by iOS WebKit to prevent automatic viewport zoom */
+  .copilot-public-input {
+    font-size: 16px !important;
+    padding: 0 !important;
+    height: 44px !important;
+    line-height: 44px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    word-break: keep-all !important;
+  }
+
+  .copilot-public-send {
+    width: 36px !important;
+    height: 36px !important;
+    margin-left: 6px !important;
+  }
+
+  /* Fullscreen Mobile Chat Sheet */
+  .copilot-mobile-fullscreen {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #ffffff !important;
+  }
+
+  .copilot-public-sheet {
+    background: #ffffff !important;
+  }
+
+  .copilot-public-header {
+    background: #ffffff !important;
+  }
+
+  :root[data-theme="dark"] .copilot-mobile-fullscreen,
+  .dark .copilot-mobile-fullscreen,
+  :root[data-theme="dark"] .copilot-public-sheet,
+  .dark .copilot-public-sheet,
+  :root[data-theme="dark"] .copilot-public-header,
+  .dark .copilot-public-header {
+    background: #0d0e15 !important;
+  }
+}

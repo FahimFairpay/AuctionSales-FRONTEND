@@ -17,7 +17,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [appearance, setAppearanceState] = useState<Appearance>(() =>
-    typeof window === "undefined" ? "system" : readAppearance(),
+    typeof window === "undefined" ? "dark" : readAppearance(),
   );
 
   useEffect(() => {

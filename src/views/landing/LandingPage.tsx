@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { paths } from "@/routes/paths";
 import { CopilotDrawer, type CopilotDrawerHandle } from "@/components/copilot/CopilotDrawer";
@@ -8,9 +8,13 @@ import { PublicHeader } from "@/components/layout/PublicHeader";
 import { BrandWordmark } from "@/components/layout/BrandWordmark";
 import { FiveSteps } from "./five-steps/FiveSteps";
 import { GuideValue } from "./guide-value/GuideValue";
+import { listPublicInventory } from "@/api/publicInventory";
+import { ImageGallery } from "@/features/inventory/ImageGallery";
+import { expandVisImages, type VisCandidate } from "@/features/inventory/visImages";
 
 interface CarCardItem {
   id: string;
+  stockNumber?: string;
   name: string;
   spec: string;
   price: string;
@@ -24,6 +28,7 @@ interface CarCardItem {
 const FEATURED_CARS: CarCardItem[] = [
   {
     id: "porsche-macan-2022",
+    stockNumber: "45721370",
     name: "2022 Porsche Macan",
     spec: "Base AWD · 38,400 mi · Dallas, TX",
     price: "$24,500",
@@ -35,6 +40,7 @@ const FEATURED_CARS: CarCardItem[] = [
   },
   {
     id: "bmw-330i-2023",
+    stockNumber: "36291048",
     name: "2023 BMW 330i",
     spec: "Sport Line · 24,800 mi · Denver, CO",
     price: "$19,000",
@@ -100,17 +106,52 @@ const FAQ_ITEMS = [
 ];
 
 export function LandingPage() {
-  const [savedVehicles, setSavedVehicles] = useState<Record<string, boolean>>({});
+  const [liveCars, setLiveCars] = useState<CarCardItem[]>(FEATURED_CARS);
+  const [galleryCar, setGalleryCar] = useState<{ title: string; candidates: VisCandidate[] } | null>(null);
   const [openFaqs, setOpenFaqs] = useState<Record<number, boolean>>({});
   const [isCopilotOpen, setIsCopilotOpen] = useState(false);
   const copilotRef = useRef<CopilotDrawerHandle>(null);
 
+  useEffect(() => {
+    let cancelled = false;
+    listPublicInventory({ limit: 4 })
+      .then((res) => {
+        if (cancelled || !res?.items || res.items.length === 0) return;
+        const mapped: CarCardItem[] = res.items.slice(0, 4).map((item) => {
+          const specParts: string[] = [];
+          if (item.year) specParts.push(String(item.year));
+          if (item.odometer) specParts.push(`${item.odometer.toLocaleString()} mi`);
+          if (item.branch) specParts.push(item.branch);
+          if (specParts.length === 0 && item.model) specParts.push(item.model);
+
+          const priceVal = item.buyNowPrice || item.currentBid || item.acv;
+          const formattedPrice = priceVal ? `$${priceVal.toLocaleString()}` : "$19,000";
+
+          return {
+            id: item.stockNumber,
+            stockNumber: item.stockNumber,
+            name: item.title || `${item.year || ""} ${item.make || ""} ${item.model || ""}`.trim() || "Wholesale Vehicle",
+            spec: specParts.join(" · ") || "Run & Drive · Clean Title",
+            price: formattedPrice,
+            image: item.imageUrl || "/assets/secondlook_hero.jpg",
+            titleTag: item.titleDoc ? `${item.titleDoc} focus` : "Clean title focus",
+            damageTag: item.primaryDamage ? `${item.primaryDamage} damage` : "Minor damage",
+            damageType: item.lossType || "wholesale",
+            availability: item.auctionDate || "Auction deadline not supplied",
+          };
+        });
+        setLiveCars(mapped);
+      })
+      .catch((err) => {
+        console.warn("Failed to fetch live inventory for landing, using fallback:", err);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const handleHeroAskAiClick = () => {
     copilotRef.current?.focusAndShow();
-  };
-
-  const toggleSaveHeart = (id: string) => {
-    setSavedVehicles((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const toggleFaq = (index: number) => {
@@ -165,14 +206,29 @@ export function LandingPage() {
                 </svg>
               </Link>
 
-              {/* Ask AI Button: Clean Apple VisionOS liquid glass */}
+              {/* Ask us Button: Apple VisionOS liquid glass with Claude AI sparkle */}
               <button
                 type="button"
                 className="btn-hero-ai"
                 onClick={handleHeroAskAiClick}
-                aria-label="Ask FairScout AI"
+                aria-label="Ask FairSales AI Copilot"
               >
-                <span>Ask AI</span>
+                <span className="btn-ai-sparkle-wrap">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="btn-ai-sparkle"
+                  >
+                    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z" />
+                    <path d="M19 4v4" />
+                    <path d="M21 6h-4" />
+                  </svg>
+                </span>
+                <span>Ask us</span>
               </button>
             </div>
 
@@ -189,16 +245,16 @@ export function LandingPage() {
             </div>
           </div>
 
-          {/* EXACT DITTO REPLICA: POTENTIAL, WITH A PLAN (Claude Liquid Glass) */}
+          {/* POTENTIAL, WITH A PLAN (Structure from sales.fairpy.com) */}
           <div className="hero-float">
             <span className="tiny">POTENTIAL, WITH A PLAN</span>
             <strong>
-              Your car.
-              <br />
-              Your smart move.
+              Target Savings<br />After Repairs
             </strong>
             <div>
-              <span>Target savings after repairs</span>
+              <span>
+                Your car.<br />Your smart move.
+              </span>
               <b>25%↘︎</b>
             </div>
           </div>
@@ -264,14 +320,14 @@ export function LandingPage() {
         </div>
 
         <div className="car-grid featured-grid">
-          {FEATURED_CARS.map((car) => {
-            const isSaved = !!savedVehicles[car.id];
+          {liveCars.map((car) => {
+            const carHref = `/inventory/${car.stockNumber || car.id}`;
             return (
               <article key={car.id} className="car-card">
-                <div className="car-photo">
+                <div className="car-photo group/thumb">
                   <img
                     src={car.image}
-                    alt={`${car.name} illustrative photo`}
+                    alt={`${car.name} photo`}
                     loading="lazy"
                   />
                   <span className="title-tag">
@@ -281,62 +337,62 @@ export function LandingPage() {
                     {car.titleTag}
                   </span>
 
+                  <span className="damage-tag">{car.damageTag}</span>
+
+                  {/* All Images Stack Button with Pop Modal at Bottom-Right */}
                   <button
                     type="button"
-                    className={`save-btn ${isSaved ? "is-saved" : ""}`}
-                    aria-label={`Save ${car.name}`}
-                    onClick={() => toggleSaveHeart(car.id)}
+                    aria-label="All images"
+                    className="car-image-stack-btn"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const vis = expandVisImages(car.image);
+                      const candidates: VisCandidate[] =
+                        vis.length > 0
+                          ? vis
+                          : [{ thumb: car.image, large: car.image, index: 1, set: null }];
+                      setGalleryCar({ title: car.name, candidates });
+                    }}
                   >
-                    <svg viewBox="0 0 24 24" fill={isSaved ? "currentColor" : "none"} stroke="currentColor">
-                      <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
-                    </svg>
+                    <span className="stack-icon-wrap">
+                      <svg viewBox="0 0 24 24" className="stack-svg" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                        <path d="M12 3l9 4.5-9 4.5L3 7.5 12 3z" strokeLinejoin="round" />
+                        <path d="M3 12l9 4.5L21 12" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M3 16.5L12 21l9-4.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                    <span className="stack-label">All Images</span>
                   </button>
-
-                  <span className="damage-tag">{car.damageTag}</span>
                 </div>
 
                 <div className="car-info">
-                  <div className="car-name">
+                  <Link href={carHref} className="car-name-link" title={`View ${car.name}`}>
                     <h3>{car.name}</h3>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                       <path d="M7 7h10v10" />
                       <path d="M7 17 17 7" />
                     </svg>
-                  </div>
+                  </Link>
                   <p className="car-meta">{car.spec}</p>
 
-                  <div className="car-price">
-                    <div>
-                      <span>Wholesale · Asking price</span>
-                      <strong>{car.price}</strong>
+                  <div className="car-bottom-row">
+                    <div className="car-bottom-left">
+                      <span className="car-auction-date">{car.availability}</span>
+                      <Link href={paths.publicInventory} className="view-all-cars-btn">
+                        <span>View All Cars</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                          <path d="M5 12h14" />
+                          <path d="m12 5 7 7-7 7" />
+                        </svg>
+                      </Link>
                     </div>
-                    <span className="price-disclaimer">
-                      Before fees
-                      <br />
-                      &amp; repairs
-                    </span>
-                  </div>
 
-                  <p className="availability">{car.availability}</p>
-
-                  <div className="card-actions">
-                    <Link href={paths.publicInventory} className="card-action-view">
-                      <span>View Details</span>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                      </svg>
-                    </Link>
-                    <button
-                      type="button"
-                      className="card-action-save"
-                      onClick={() => toggleSaveHeart(car.id)}
-                    >
-                      <svg viewBox="0 0 24 24" fill={isSaved ? "currentColor" : "none"} stroke="currentColor">
-                        <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
-                      </svg>
-                      <span>{isSaved ? "Saved" : "Save Car"}</span>
-                    </button>
+                    <div className="car-pricing-cluster">
+                      <span className="price-label">Wholesale · Asking price</span>
+                      <strong className="price-figure">{car.price}</strong>
+                      <span className="price-disclaimer">Before fees &amp; repairs</span>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -344,10 +400,16 @@ export function LandingPage() {
           })}
         </div>
 
+        {galleryCar ? (
+          <ImageGallery
+            title={galleryCar.title}
+            candidates={galleryCar.candidates}
+            onClose={() => setGalleryCar(null)}
+          />
+        ) : null}
+
         <p className="fine-print">
-          Sample vehicles and illustrative photos. Wholesale figures are example asking
-          prices or bids, before repairs, fees, taxes and shipping. Live inventory and actual
-          vehicle photos are pending.
+          Wholesale figures reflect active dealer inventory and auction bids before repair estimates, buyer fees, taxes, and shipping.
         </p>
       </section>
 
@@ -490,7 +552,7 @@ export function LandingPage() {
           <h2>
             Questions?
             <br />
-            <em>Ask AI.</em>
+            <em>Ask us.</em>
           </h2>
           <p>
             Understand clean titles, narrow your choices and start a quote request for a car
@@ -500,8 +562,9 @@ export function LandingPage() {
             type="button"
             className="btn-guide-ask"
             onClick={handleHeroAskAiClick}
+            aria-label="Ask FairSales"
           >
-            <span>Ask AI</span>
+            <span>Ask us</span>
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" />
             </svg>

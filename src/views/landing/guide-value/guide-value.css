@@ -224,13 +224,19 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
+  white-space: nowrap !important;
 }
 
-.fairsales-landing .guide-value-hud > span:first-child {
+.fairsales-landing .guide-value-hud > span:first-child,
+.fairsales-landing .guide-value-hud-num {
   color: var(--fs-claude-orange);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
+  min-width: 48px;
 }
 
 .fairsales-landing .guide-value-hud > span:last-child {
@@ -260,100 +266,183 @@
 
 @media (max-width: 900px) {
   .fairsales-landing .guide-value {
-    height: 250vh;
+    position: relative;
+    z-index: 2;
+    height: auto;
+    min-height: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .fairsales-landing .guide-value-pin {
-    gap: 16px;
-    padding: 76px 16px 24px;
-    height: 100dvh;
-    min-height: 100dvh;
+    position: relative;
+    top: auto;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 12px 16px 14px;
+    height: auto;
+    min-height: 0;
     box-sizing: border-box;
+    overflow: hidden;
+    background: inherit;
   }
 
   .fairsales-landing .guide-value-copy {
     width: 100%;
     max-width: 680px;
+    margin-top: 0;
+    margin-bottom: 4px;
+    flex-shrink: 0;
   }
 
   .fairsales-landing .guide-value-copy h2 {
-    font-size: 28px;
-    letter-spacing: -1.4px;
-    margin-top: 8px;
+    font-size: 26px;
+    letter-spacing: -1px;
+    margin: 4px 0 2px;
+    line-height: 1.15;
   }
 
   .fairsales-landing .guide-value-copy > p {
-    font-size: 13.5px;
-    line-height: 1.5;
-    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.45;
+    margin-top: 2px;
   }
 
   .fairsales-landing .guide-value-viewport {
-    height: 310px;
+    flex: none;
+    height: 250px;
     width: 100%;
+    margin: 6px 0;
+    overflow: hidden;
   }
 
   .fairsales-landing .guide-value-track {
-    gap: 20px;
+    gap: 16px;
+    height: 100%;
   }
 
   .fairsales-landing .guide-value-card {
-    width: min(360px, calc(100vw - 44px));
-    height: auto;
-    min-height: 270px;
-    padding: 22px 22px 18px;
+    width: min(320px, calc(100vw - 36px));
+    height: 240px;
+    min-height: 240px;
+    padding: 18px 18px 14px;
     border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .guide-value-card h3 {
-    font-size: 22px;
+    font-size: 20px;
+    margin-bottom: 4px;
   }
 
   .fairsales-landing .guide-value-card p {
-    font-size: 13.5px;
-    line-height: 1.5;
+    font-size: 13px;
+    line-height: 1.4;
   }
 
   .fairsales-landing .guide-value-hud {
     margin-top: 4px;
-    width: min(360px, calc(100vw - 44px));
+    width: min(320px, calc(100vw - 36px));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    white-space: nowrap !important;
+    gap: 8px;
+    padding: 7px 16px;
   }
 
-  .fairsales-landing .guide-value-hud > span:last-child {
-    display: none;
+  .fairsales-landing .guide-value-hud > span:first-child,
+  .fairsales-landing .guide-value-hud-num {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    display: inline-block !important;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--fs-claude-orange);
+    letter-spacing: 0.5px;
+    min-width: 48px;
+  }
+
+  .fairsales-landing .guide-value-meter {
+    width: 90px;
+    flex-shrink: 0;
+  }
+
+  .fairsales-landing .guide-value-hud > span:last-child,
+  .fairsales-landing .guide-value-hud-title {
+    display: block !important;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--fs-claude-orange);
+    text-transform: none;
+    letter-spacing: -0.2px;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+    text-align: right;
   }
 }
 
 @media (max-width: 480px) {
   .fairsales-landing .guide-value {
-    height: 220vh;
+    height: auto;
+    min-height: 0;
   }
 
   .fairsales-landing .guide-value-pin {
-    gap: 12px;
-    padding: 68px 12px 16px;
+    top: auto;
+    gap: 6px;
+    padding: 10px 14px 14px;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .guide-value-copy h2 {
     font-size: 24px;
-    letter-spacing: -1px;
+    letter-spacing: -0.8px;
   }
 
   .fairsales-landing .guide-value-viewport {
-    height: 295px;
+    height: 245px;
+    margin: 6px 0;
   }
 
   .fairsales-landing .guide-value-card {
-    width: min(320px, calc(100vw - 36px));
-    padding: 18px 18px 16px;
+    width: min(310px, calc(100vw - 28px));
+    padding: 16px 16px 12px;
+    height: 235px;
+    min-height: 235px;
+    box-sizing: border-box;
   }
 
   .fairsales-landing .guide-value-card h3 {
-    font-size: 19px;
+    font-size: 18px;
   }
 
   .fairsales-landing .guide-value-hud {
-    width: min(320px, calc(100vw - 36px));
+    width: min(310px, calc(100vw - 28px));
+    padding: 7px 12px;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+
+  .fairsales-landing .guide-value-hud-num {
+    font-size: 11px;
+    min-width: 44px;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  .fairsales-landing .guide-value-meter {
+    width: 70px;
   }
 }
 
