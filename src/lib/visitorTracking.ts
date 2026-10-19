@@ -17,8 +17,12 @@ export interface VisitorTelemetryPayload {
 
 /**
  * Returns the resolved full API endpoint URL for visitor tracking.
+ * Prefers the same-origin /api proxy route in the browser to eliminate CORS preflight latency.
  */
 export function getTrackerEndpoint(): string {
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return "/api/public/visitors/track";
+  }
   const envApiBase =
     process.env.NEXT_PUBLIC_API_BASE ||
     "https://0rjze2z0jh.execute-api.us-east-1.amazonaws.com/v1";
@@ -36,8 +40,19 @@ export function trackVisitorTelemetry(pagePath?: string): void {
     }
 
     const now = Date.now();
+    // Allow URL query ?reset=1 or ?test=1 to force reset session for instant re-testing on mobile/desktop
+    const searchStr = window.location?.search || "";
+    const isReset = /[?&](?:reset|test)=1/i.test(searchStr);
+    if (isReset) {
+      try {
+        sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      } catch {
+        // Ignore storage exceptions
+      }
+    }
+
     const storedTime = parseInt(sessionStorage.getItem(SESSION_STORAGE_KEY) || "0", 10);
-    const sessionFirstTouch = !storedTime || now - storedTime > THIRTY_MINUTES_MS;
+    const sessionFirstTouch = isReset || !storedTime || now - storedTime > THIRTY_MINUTES_MS;
 
     // Browser telemetry collection
     let timeZone = "Unknown";
@@ -74,6 +89,7 @@ export function trackVisitorTelemetry(pagePath?: string): void {
     };
 
     const endpoint = getTrackerEndpoint();
+    const fallbackEndpoint = "https://0rjze2z0jh.execute-api.us-east-1.amazonaws.com/v1/public/visitors/track";
     const body = JSON.stringify(payload);
 
     // Non-blocking asynchronous dispatch
@@ -84,10 +100,17 @@ export function trackVisitorTelemetry(pagePath?: string): void {
         body,
         keepalive: true,
       }).catch(() => {
-        // Fallback to beacon on fetch rejection if available
+        // Fallback to direct API Gateway URL if proxy route is unavailable
         if (typeof navigator !== "undefined" && navigator.sendBeacon) {
           const blob = new Blob([body], { type: "application/json" });
-          navigator.sendBeacon(endpoint, blob);
+          navigator.sendBeacon(fallbackEndpoint, blob);
+        } else {
+          fetch(fallbackEndpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body,
+            keepalive: true,
+          }).catch(() => {});
         }
       });
     } else if (typeof navigator !== "undefined" && navigator.sendBeacon) {

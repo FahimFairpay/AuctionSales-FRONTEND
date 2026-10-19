@@ -4,6 +4,7 @@ import "./globals.css";
 import "@/views/landing/landing.css";
 import "@/views/landing/glass-cta.css";
 import { Providers } from "./providers";
+import { VisitorTracker } from "@/components/VisitorTracker";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -73,6 +74,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <VisitorTracker />
         <Providers>{children}</Providers>
       </body>
     </html>
