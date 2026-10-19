@@ -2,8 +2,8 @@
  * Browser telemetry for the live site. Posts timezone, language, screen, and referrer.
  */
 const TRACKER_PATH = "/public/visitors/track";
-const SESSION_STORAGE_KEY = "fps_visitor_tracked";
-const THIRTY_MINUTES_MS = 30 * 60 * 1000;
+const STORAGE_KEY = "fps_visitor_tracked_ts";
+const SIX_HOURS_MS = 6 * 60 * 60 * 1000;
 
 export interface VisitorTelemetryPayload {
   page: string;
@@ -13,6 +13,7 @@ export interface VisitorTelemetryPayload {
   referrer: string;
   isUsLikely: boolean;
   sessionFirstTouch: boolean;
+  reset?: boolean;
 }
 
 /**
@@ -40,19 +41,25 @@ export function trackVisitorTelemetry(pagePath?: string): void {
     }
 
     const now = Date.now();
-    // Allow URL query ?reset=1 or ?test=1 to force reset session for instant re-testing on mobile/desktop
+    // Allow URL query ?reset=1 or ?test=1 to force reset cooldown for instant re-testing on mobile/desktop
     const searchStr = window.location?.search || "";
     const isReset = /[?&](?:reset|test)=1/i.test(searchStr);
     if (isReset) {
       try {
-        sessionStorage.removeItem(SESSION_STORAGE_KEY);
+        localStorage.removeItem(STORAGE_KEY);
       } catch {
         // Ignore storage exceptions
       }
     }
 
-    const storedTime = parseInt(sessionStorage.getItem(SESSION_STORAGE_KEY) || "0", 10);
-    const sessionFirstTouch = isReset || !storedTime || now - storedTime > THIRTY_MINUTES_MS;
+    let storedTime = 0;
+    try {
+      storedTime = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
+    } catch {
+      storedTime = 0;
+    }
+
+    const sessionFirstTouch = isReset || !storedTime || now - storedTime > SIX_HOURS_MS;
 
     // Browser telemetry collection
     let timeZone = "Unknown";
@@ -69,10 +76,10 @@ export function trackVisitorTelemetry(pagePath?: string): void {
     const referrer = document.referrer ? document.referrer : "direct";
     const isUsLikely = timeZone.startsWith("America/") || timeZone.startsWith("US/");
 
-    // If first touch or session expired, update timestamp
+    // If first touch or 6-hour window expired, update timestamp
     if (sessionFirstTouch) {
       try {
-        sessionStorage.setItem(SESSION_STORAGE_KEY, now.toString());
+        localStorage.setItem(STORAGE_KEY, now.toString());
       } catch {
         // Ignore quota or private-browsing storage exceptions
       }
@@ -86,6 +93,7 @@ export function trackVisitorTelemetry(pagePath?: string): void {
       referrer,
       isUsLikely,
       sessionFirstTouch,
+      ...(isReset ? { reset: true } : {}),
     };
 
     const endpoint = getTrackerEndpoint();
