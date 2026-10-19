@@ -34,7 +34,16 @@ export function PrivacyPolicyContent() {
 
       <section>
         <h4 className="font-semibold text-sm text-stone-100 mb-1">
-          4. Security of Credentials
+          4. Website Measurement
+        </h4>
+        <p>
+          FairSales uses Google Analytics to measure visits, pages, and how visitors move through the public pages. Google may set cookies named _ga and _ga_X1PJW54Z33 for that measurement. The tag does not receive your name, email address, or phone number. Buyer contact records are not sold to third-party advertisers.
+        </p>
+      </section>
+
+      <section>
+        <h4 className="font-semibold text-sm text-stone-100 mb-1">
+          5. Security of Credentials
         </h4>
         <p>
           Account access is secured by AWS Cognito identity infrastructure with cryptographically enforced SRP (Secure Remote Password) protocol and encrypted sessions. Passwords are never stored in plain text or transmitted unencrypted.

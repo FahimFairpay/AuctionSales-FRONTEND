@@ -17,5 +17,11 @@ describe("security proxy middleware", () => {
     expect(csp).toContain("default-src 'self'");
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("vis.iaai.com");
+    expect(csp).toContain("https://*.googletagmanager.com");
+    expect(csp).toContain("https://*.google-analytics.com");
+    expect(csp).toContain("https://*.analytics.google.com");
+    expect(csp).toContain("https://*.g.doubleclick.net");
+    expect(csp).toContain("https://pagead2.googlesyndication.com");
+    expect(csp).toContain("frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net");
   });
 });

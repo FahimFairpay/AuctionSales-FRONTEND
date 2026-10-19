@@ -1,10 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import "@/views/landing/landing.css";
 import "@/views/landing/glass-cta.css";
 import { Providers } from "./providers";
 import { VisitorTracker } from "@/components/VisitorTracker";
+
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -76,6 +79,7 @@ export default function RootLayout({
       <body>
         <VisitorTracker />
         <Providers>{children}</Providers>
+        {gaMeasurementId ? <GoogleAnalytics gaId={gaMeasurementId} /> : null}
       </body>
     </html>
   );
