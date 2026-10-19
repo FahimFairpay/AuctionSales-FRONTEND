@@ -7,7 +7,8 @@ const apiBase =
 
 const nextConfig: NextConfig & { agentRules?: boolean } = {
   agentRules: false,
-  output: "standalone",
+  // EC2 uses the standalone zip. Vercel builds its own Next output.
+  ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
   reactStrictMode: true,
   allowedDevOrigins: ["localhost", "127.0.0.1"],
   env: {

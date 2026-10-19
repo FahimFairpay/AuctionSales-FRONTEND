@@ -44,17 +44,14 @@ export function CopilotComposer({
         <CircumferenceBeam active={true} />
         <div
           onClick={onContinue}
-          className="copilot-public-pill relative z-10 group flex w-[220px] sm:w-[260px] cursor-pointer select-none items-center justify-between gap-2.5 rounded-full px-3.5 py-2 sm:px-4 sm:py-2.5 transition-all duration-300"
+          className="copilot-public-pill relative z-10 group flex w-[260px] cursor-pointer select-none items-center justify-between gap-2.5 rounded-full px-3.5 py-2 sm:px-4 sm:py-2.5 transition-all duration-300"
         >
           <div className="flex items-center gap-2.5 min-w-0">
             {/* Terracotta Orange FS Avatar Badge matching reference image */}
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/25 bg-gradient-to-tr from-[#c4673a] via-[#ce6e42] to-[#e88a59] text-[10px] font-bold text-white shadow-xs">
               FS
             </span>
-            <span className="copilot-continue-text whitespace-nowrap">
-              <span className="sm:hidden">Continue chat</span>
-              <span className="hidden sm:inline">Continue conversation</span>
-            </span>
+            <span className="copilot-continue-text whitespace-nowrap">Continue conversation</span>
           </div>
           <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white/70 transition-transform group-hover:-translate-y-0.5">
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none">

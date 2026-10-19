@@ -34,6 +34,14 @@ export async function proxyApiRequest(
     }
   });
 
+  // CloudFront OAC signs the origin request and overwrites Authorization.
+  // The browser sends the Cognito token in X-Fair-Token so it still arrives.
+  const fairToken = headers.get("x-fair-token");
+  if (fairToken) {
+    headers.set("authorization", fairToken);
+    headers.delete("x-fair-token");
+  }
+
   const body = ["GET", "HEAD"].includes(req.method)
     ? undefined
     : await req.arrayBuffer();

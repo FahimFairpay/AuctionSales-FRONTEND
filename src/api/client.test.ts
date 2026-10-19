@@ -26,5 +26,6 @@ describe("apiRequest", () => {
     const headers = new Headers(call[1]?.headers);
     expect(headers.get("Authorization")).toBe("raw-id-token");
     expect(headers.get("Authorization")?.startsWith("Bearer ")).toBe(false);
+    expect(headers.get("X-Fair-Token")).toBe("raw-id-token");
   });
 });

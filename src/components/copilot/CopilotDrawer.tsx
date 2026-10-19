@@ -52,7 +52,9 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
   const isTypingOrFocused = isFocused || input.trim().length > 0;
   const hasVehicles = useMemo(() => messages.some((m) => m.vehicles && m.vehicles.length > 0), [messages]);
   const currentWidthClass = isExpanded
-    ? (hasVehicles ? "w-[480px] max-w-[calc(100vw-24px)]" : "w-[450px] max-w-[calc(100vw-24px)]")
+    ? (hasVehicles
+        ? "w-[480px] max-w-[calc(100vw-24px)] max-sm:w-full max-sm:max-w-none"
+        : "w-[450px] max-w-[calc(100vw-24px)] max-sm:w-full max-sm:max-w-none")
     : isTypingOrFocused
       ? "w-[calc((100vw-24px)*0.82)] min-w-[290px] sm:w-[420px] max-w-[450px]"
       : "w-[calc((100vw-24px)*0.63)] min-w-[216px] sm:w-[320px] max-w-[360px]";
@@ -101,58 +103,38 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
     if (isExpanded && isMobile) {
       const originalBodyOverflow = document.body.style.overflow;
       const originalHtmlOverflow = document.documentElement.style.overflow;
-      const originalTouchAction = document.body.style.touchAction;
 
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
-      document.body.style.touchAction = "none";
 
       return () => {
         document.body.style.overflow = originalBodyOverflow;
         document.documentElement.style.overflow = originalHtmlOverflow;
-        document.body.style.touchAction = originalTouchAction;
       };
     }
   }, [isExpanded]);
 
-  // Auto-minimize chat when switching navigation tabs (e.g. from Inventory to Presets or other tabs)
+  // The answer sheet stays up across scroll and route changes.
+  // A car-card arrow (or View Details) sets this flag, then opens the car page.
   useEffect(() => {
-    if (prevPathnameRef.current !== location.pathname) {
-      prevPathnameRef.current = location.pathname;
-      // If navigation was initiated from inside Copilot chat (e.g. clicking View Details or arrow on a vehicle),
-      // we preserve the conversation in state/sessionStorage, but minimize to the "Continue conversation" pill
-      // so the user sees the redirected car detail page unobstructed.
-      const isFromChat = typeof window !== "undefined" && sessionStorage.getItem("copilot_prevent_collapse") === "true";
-      if (isFromChat) {
-        try {
-          sessionStorage.removeItem("copilot_prevent_collapse");
-        } catch {}
-        setIsExpanded(false);
-        if (onClose) onClose();
-        return;
-      }
-      setIsExpanded(false);
-      if (onClose) onClose();
-    }
+    if (prevPathnameRef.current === location.pathname) return;
+    prevPathnameRef.current = location.pathname;
+    const openedCar =
+      typeof window !== "undefined" && sessionStorage.getItem("copilot_prevent_collapse") === "true";
+    if (!openedCar) return;
+    try {
+      sessionStorage.removeItem("copilot_prevent_collapse");
+    } catch {}
+    setIsExpanded(false);
+    if (onClose) onClose();
   }, [location.pathname, onClose]);
 
-  // Auto-minimize when user switches browser tab or minimizes window
+  // Keep the latest message in the feed. Scroll the feed only — never the page.
   useEffect(() => {
-    const handleVisibility = () => {
-      if (document.hidden) {
-        setIsExpanded(false);
-        if (onClose) onClose();
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibility);
-    return () => document.removeEventListener("visibilitychange", handleVisibility);
-  }, [onClose]);
-
-  // Scroll to bottom on new messages
-  useEffect(() => {
-    if (isExpanded) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
+    if (!isExpanded) return;
+    const feed = messagesEndRef.current?.closest(".copilot-feed");
+    if (!(feed instanceof HTMLElement) || !feed.classList.contains("is-scrollable")) return;
+    feed.scrollTop = feed.scrollHeight;
   }, [messages, isExpanded]);
 
   // Close header conversation menu when clicking outside
@@ -170,7 +152,7 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
 
   // Typewriter animation loop: holds each phrase for 14 seconds
   useEffect(() => {
-    if (input.length > 0) return;
+    if (input.length > 0 || isFocused) return;
 
     const currentPhrase = TYPEWRITER_PHRASES[phraseIdx];
     let timeout: NodeJS.Timeout;
@@ -193,7 +175,7 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
     }
 
     return () => clearTimeout(timeout);
-  }, [charIdx, isDeleting, phraseIdx, input]);
+  }, [charIdx, isDeleting, phraseIdx, input, isFocused]);
 
   const animatedPlaceholder = useMemo(() => {
     if (input) return "";
@@ -249,9 +231,9 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
       aria-label="FairSales"
       className={`select-none font-sans ${
         isExpanded
-          ? "max-sm:fixed max-sm:inset-0 max-sm:h-[100dvh] max-sm:w-full max-sm:z-[200] max-sm:flex max-sm:flex-col max-sm:justify-between max-sm:bg-white dark:max-sm:bg-[#0c0d12] max-sm:overscroll-contain sm:fixed sm:bottom-6 sm:right-6 sm:z-50 sm:flex sm:flex-col sm:items-end"
+          ? "max-sm:fixed max-sm:inset-0 max-sm:z-[400] max-sm:flex max-sm:h-auto max-sm:w-full max-sm:flex-col max-sm:overflow-hidden max-sm:bg-white dark:max-sm:bg-[#0d0e15] max-sm:overscroll-contain sm:fixed sm:bottom-6 sm:right-6 sm:z-50 sm:flex sm:flex-col sm:items-end"
           : "fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end"
-      } copilot-public-dock ${publicDock && dockHidden ? "is-hidden pointer-events-none" : "pointer-events-auto"}`}
+      } copilot-public-dock ${isExpanded ? "is-expanded" : ""} ${publicDock && dockHidden ? "is-hidden pointer-events-none" : "pointer-events-auto"}`}
     >
       {isExpanded && (
         <CopilotSheet
@@ -275,7 +257,7 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
       <div
         className={
           isExpanded
-            ? "w-full max-sm:w-full max-sm:px-3 max-sm:py-2.5 max-sm:pb-[calc(env(safe-area-inset-bottom,0px)+12px)] max-sm:bg-white/95 dark:max-sm:bg-[#12131a]/95 max-sm:backdrop-blur-xl max-sm:border-t max-sm:border-slate-200/60 dark:max-sm:border-white/10"
+            ? "copilot-composer-bar w-full max-sm:w-full max-sm:shrink-0 max-sm:px-3 max-sm:py-2.5 max-sm:pb-[calc(env(safe-area-inset-bottom,0px)+12px)] max-sm:bg-white dark:max-sm:bg-[#0d0e15] max-sm:border-t max-sm:border-slate-200/80 dark:max-sm:border-white/10"
             : ""
         }
       >

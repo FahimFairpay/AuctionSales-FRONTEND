@@ -1,4 +1,4 @@
-import { apiRequest } from "./client";
+import { apiRequest, withAuthHeaders } from "./client";
 import { apiBaseUrl } from "../config";
 import { getIdToken } from "../auth/session";
 
@@ -103,11 +103,10 @@ export async function streamCopilotChat(
     const token = await getIdToken();
     const response = await fetch(`${apiBaseUrl}/copilot/chat`, {
       method: "POST",
-      headers: {
+      headers: withAuthHeaders(token, {
         "Content-Type": "application/json",
         Accept: "text/event-stream, application/json",
-        Authorization: token,
-      },
+      }),
       body: JSON.stringify({ messages, stream: true }),
     });
 

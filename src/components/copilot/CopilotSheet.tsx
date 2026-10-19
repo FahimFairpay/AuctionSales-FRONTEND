@@ -17,6 +17,7 @@ import type { MatchedVehicle } from "../../api/copilot";
 import type { ChatMessage, ConversationThread } from "./useCopilotChat";
 import { getCurrentUser } from "../../auth/session";
 import { BorderBeam } from "border-beam";
+import { useConversationFeed } from "./useConversationFeed";
 
 /** Formats timestamps into relative time ("Just now", "2m ago", "1h ago", "Yesterday", "Sep 30") */
 function formatRelativeTime(timestamp: number): string {
@@ -71,7 +72,7 @@ const CopilotVehicleCarousel: React.FC<CopilotVehicleCarouselProps> = ({
 
   return (
     <div
-      className="carousel-perspective-track mt-2.5 -mx-1 flex w-[calc(100%+8px)] gap-3.5 overflow-x-auto pb-3 pt-1 px-1 scroll-smooth select-none [scrollbar-width:thin] [scrollbar-color:rgba(0,0,0,0.18)_transparent] dark:[scrollbar-color:rgba(255,255,255,0.22)_transparent]"
+      className="copilot-vehicle-row carousel-perspective-track mt-2.5 -mx-1 flex w-[calc(100%+8px)] gap-3.5 overflow-x-auto pb-3 pt-1 px-1 scroll-smooth select-none [scrollbar-width:thin] [scrollbar-color:rgba(0,0,0,0.18)_transparent] dark:[scrollbar-color:rgba(255,255,255,0.22)_transparent]"
       style={{
         scrollSnapType: "x mandatory",
         perspective: "1200px",
@@ -273,6 +274,8 @@ export function CopilotSheet({
   const markTextCompleted = useCallback((id: string) => {
     setCompletedTextMsgIds((prev) => new Set(prev).add(id));
   }, []);
+
+  const { feedRef, scrollable } = useConversationFeed(`${messages.length}:${loading ? 1 : 0}`);
 
   return (
     <BorderBeam
@@ -485,7 +488,11 @@ export function CopilotSheet({
       </div>
 
       {/* Conversation Feed */}
-      <div className="relative z-10 flex-1 overflow-y-auto p-3.5 space-y-3.5 overscroll-contain max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden sm:scrollbar-thin">
+      <div
+        ref={feedRef}
+        className={`copilot-feed relative z-10 min-h-0 flex-1 ${scrollable ? "is-scrollable" : ""}`}
+      >
+        <div className="copilot-feed-inner p-3.5 space-y-3.5">
         {messages.length === 0 ? (
           /* Clean, translucent prompt invitation when in a fresh new conversation */
           <div className="flex h-full flex-col items-center justify-center text-center px-4 py-8">
@@ -585,6 +592,7 @@ export function CopilotSheet({
         {loading && <CopilotThoughtStream />}
 
         <div ref={messagesEndRef} />
+        </div>
       </div>
     </div>
     </BorderBeam>

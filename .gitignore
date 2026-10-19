@@ -11,6 +11,7 @@
 
 # Next.js build output
 /.next/
+.vercel
 /out/
 /build
 /dist
@@ -39,3 +40,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+.env*

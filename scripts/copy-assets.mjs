@@ -27,6 +27,9 @@ function copyDirSync(src, dest) {
 }
 
 try {
+  if (process.env.VERCEL) {
+    console.log('[copy-assets] Vercel serves public/ itself. EC2 asset copy skipped.');
+  } else {
   console.log('[copy-assets] Injecting public & static assets into .next for deployment...');
 
   // 1. .next/public
@@ -43,6 +46,7 @@ try {
   }
 
   console.log('[copy-assets] Successfully injected assets into .next build directories!');
+  }
 } catch (err) {
   console.error('[copy-assets] Error copying assets:', err);
 }

@@ -8,6 +8,16 @@ type Envelope<T> = {
   data?: T;
 };
 
+/** Survives CloudFront OAC, which replaces Authorization with its own signature. */
+export const FAIR_TOKEN_HEADER = "X-Fair-Token";
+
+export function withAuthHeaders(token: string, extra?: HeadersInit): Headers {
+  const headers = new Headers(extra);
+  headers.set("Authorization", token);
+  headers.set(FAIR_TOKEN_HEADER, token);
+  return headers;
+}
+
 async function parseBody(response: Response): Promise<Envelope<unknown>> {
   const text = await response.text();
   if (!text) {
@@ -22,8 +32,7 @@ async function parseBody(response: Response): Promise<Envelope<unknown>> {
 
 export async function apiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
   const token = await getIdToken();
-  const headers = new Headers(init.headers);
-  headers.set("Authorization", token);
+  const headers = withAuthHeaders(token, init.headers);
   if (init.body !== undefined && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
