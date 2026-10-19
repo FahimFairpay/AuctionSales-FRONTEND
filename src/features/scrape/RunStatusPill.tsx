@@ -1,6 +1,5 @@
 "use client";
 
-import { Link } from "@/compat/router";
 import type { ScrapeRun } from "../../types/api";
 import { Pill } from "../../components/Pill";
 
@@ -34,13 +33,5 @@ export function RunStatusPill({ run }: { run: ScrapeRun }) {
       <Pill tone={isHeartbeatStale(run) ? "warning" : tone}>{status}</Pill>
       {isHeartbeatStale(run) ? <Pill tone="warning">Heartbeat stale</Pill> : null}
     </span>
-  );
-}
-
-export function RunLink({ id, children }: { id: string; children: string }) {
-  return (
-    <Link to={`/admin/scrape-runs/${encodeURIComponent(id)}`} className="text-accent">
-      {children}
-    </Link>
   );
 }

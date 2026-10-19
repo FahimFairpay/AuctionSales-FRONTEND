@@ -11,94 +11,27 @@ import {
 import { getCurrentUser } from "../../auth/session";
 import { sendPublicCopilotChat } from "../../api/publicCopilot";
 import { SHOWCASE_INVENTORY } from "../../features/inventory/showcaseData";
+import {
+  clearGuestSession,
+  isBrowserReload,
+  loadGuestSession,
+  loadSavedThreads,
+  persistGuestSession,
+  persistThreads,
+  THIRTY_DAYS_MS,
+} from "./copilotStorage";
+import type { ChatMessage, ConversationThread } from "./copilotTypes";
 
-export interface ChatMessage {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  vehicles?: MatchedVehicle[];
-  timestamp: number;
-}
+export type { ChatMessage, ConversationThread };
+export { isBrowserReload };
 
-export interface ConversationThread {
-  id: string;
-  title: string;
-  createdAt: number;
-  messages: ChatMessage[];
-}
 
-const STORAGE_KEY = "fairsales_ai_threads_v1";
-const GUEST_STORAGE_KEY = "fairsales_ai_guest_thread_v1";
-const GUEST_INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
-const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
-
-interface GuestSessionData {
-  messages: ChatMessage[];
-  lastActiveAt: number;
-}
-
-function loadGuestSession(): ChatMessage[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw =
-      localStorage.getItem(GUEST_STORAGE_KEY) ||
-      localStorage.getItem("fairscout_ai_guest_thread_v1");
-    if (!raw) return [];
-    const parsed: GuestSessionData = JSON.parse(raw);
-    if (parsed && Array.isArray(parsed.messages) && typeof parsed.lastActiveAt === "number") {
-      if (Date.now() - parsed.lastActiveAt < GUEST_INACTIVITY_LIMIT_MS) {
-        return parsed.messages;
-      }
-    }
-    localStorage.removeItem(GUEST_STORAGE_KEY);
-    localStorage.removeItem("fairscout_ai_guest_thread_v1");
-    return [];
-  } catch {
-    return [];
-  }
-}
-
-function persistGuestSession(messages: ChatMessage[]) {
-  if (typeof window === "undefined") return;
-  try {
-    const data: GuestSessionData = {
-      messages,
-      lastActiveAt: Date.now(),
-    };
-    localStorage.setItem(GUEST_STORAGE_KEY, JSON.stringify(data));
-  } catch {}
-}
-
-function clearGuestSession() {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.removeItem(GUEST_STORAGE_KEY);
-  } catch {}
-}
 
 // In-memory active session thread ID:
 // - Persists during SPA route & tab navigation (e.g. moving between /app/inventory and /app/presets).
 // - Naturally resets to null upon browser hard refresh (F5 / full page reload).
 let inMemoryActiveThreadId: string | null = null;
 
-export function isBrowserReload(): boolean {
-  if (typeof window === "undefined" || typeof performance === "undefined") return false;
-  // If navigating via chat redirect, this is explicitly a route navigation, NOT a reload
-  try {
-    if (sessionStorage.getItem("fairsales_ai_navigating_from_chat") === "true") {
-      return false;
-    }
-  } catch {}
-  try {
-    const navEntries = performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
-    if (navEntries && navEntries.length > 0) {
-      return navEntries[0].type === "reload";
-    }
-    return (performance as any).navigation?.type === 1;
-  } catch {
-    return false;
-  }
-}
 
 /**
  * Signals that navigation was initiated from inside Copilot chat (e.g. clicking View Details or arrow).
@@ -148,33 +81,6 @@ function getInitialActiveThreadId(): string | null {
   return inMemoryActiveThreadId;
 }
 
-function loadSavedThreads(): ConversationThread[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw =
-      localStorage.getItem(STORAGE_KEY) ||
-      localStorage.getItem("fairscout_ai_threads_v1");
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    const now = Date.now();
-    // 30-day filter for thread history
-    return parsed.filter((t: ConversationThread) => !t.createdAt || now - t.createdAt < THIRTY_DAYS_MS);
-  } catch {
-    return [];
-  }
-}
-
-function persistThreads(threads: ConversationThread[]) {
-  if (typeof window === "undefined") return;
-  try {
-    const now = Date.now();
-    const valid = threads
-      .filter((t) => !t.createdAt || now - t.createdAt < THIRTY_DAYS_MS)
-      .slice(0, 20); // Keep last 20 active within 30 days
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(valid));
-  } catch {}
-}
 
 export function useCopilotChat() {
   const [threads, setThreads] = useState<ConversationThread[]>(() => {

@@ -1,0 +1,307 @@
+/* ==========================================================================
+   SECTION 2: INVENTORY / FEATURED CARS
+   ========================================================================== */
+.fairsales-landing .car-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  display: grid;
+}
+
+.fairsales-landing .car-card {
+  border: 1px solid var(--fs-line);
+  background: var(--fs-paper-elevated);
+  border-radius: 8px;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.fairsales-landing .car-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.fairsales-landing .car-photo {
+  height: 195px;
+  position: relative;
+  background: #252422;
+  overflow: hidden;
+}
+
+.fairsales-landing .car-photo img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.35s ease;
+}
+
+.fairsales-landing .car-card:hover .car-photo img {
+  transform: scale(1.03);
+}
+
+.fairsales-landing .title-tag {
+  background: rgba(255, 255, 255, 0.94);
+  color: #141413;
+  border-radius: 4px;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 9px;
+  font-size: 9.5px;
+  font-weight: 600;
+  display: flex;
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.fairsales-landing .title-tag svg {
+  width: 12px;
+  height: 12px;
+  color: var(--fs-claude-orange);
+}
+
+.fairsales-landing .car-image-stack-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(20, 20, 19, 0.88);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  max-width: 32px;
+  height: 32px;
+}
+
+.fairsales-landing .car-image-stack-btn:hover {
+  max-width: 110px;
+  padding: 4px 11px;
+  background: var(--fs-claude-orange);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.fairsales-landing .car-image-stack-btn .stack-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.fairsales-landing .car-image-stack-btn .stack-svg {
+  width: 14px;
+  height: 14px;
+}
+
+.fairsales-landing .car-image-stack-btn .stack-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  margin-left: 0;
+}
+
+.fairsales-landing .car-image-stack-btn:hover .stack-label {
+  opacity: 1;
+  max-width: 70px;
+  margin-left: 5px;
+}
+
+.fairsales-landing .damage-tag {
+  color: #ffffff;
+  background: rgba(20, 20, 19, 0.88);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 9.5px;
+  font-weight: 600;
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  backdrop-filter: blur(8px);
+}
+
+.fairsales-landing .car-info {
+  padding: 18px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.fairsales-landing .car-name-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: nowrap;
+  transition: color 0.18s ease;
+}
+
+.fairsales-landing .car-name-link h3 {
+  letter-spacing: -0.3px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--fs-ink);
+  margin: 0;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex: 1 1 auto;
+  transition: color 0.18s ease;
+}
+
+.fairsales-landing .car-name-link svg {
+  width: 15px;
+  height: 15px;
+  color: var(--fs-muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.fairsales-landing .car-name-link:hover h3 {
+  color: var(--fs-claude-orange);
+}
+
+.fairsales-landing .car-name-link:hover svg {
+  color: var(--fs-claude-orange);
+  transform: translate(2px, -2px);
+}
+
+.fairsales-landing .car-meta {
+  color: var(--fs-muted);
+  margin-top: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fairsales-landing .car-bottom-row {
+  border-top: 1px solid var(--fs-line);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+}
+
+.fairsales-landing .car-bottom-left {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.fairsales-landing .car-auction-date {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--fs-claude-orange);
+  line-height: 1.25;
+  margin-bottom: 2px;
+  display: block;
+  white-space: nowrap;
+}
+
+.fairsales-landing .view-all-cars-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--fs-ink);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  transition: color 0.18s ease;
+}
+
+.fairsales-landing .view-all-cars-btn:hover {
+  color: var(--fs-claude-orange);
+}
+
+.fairsales-landing .view-all-cars-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  transition: transform 0.2s ease;
+}
+
+.fairsales-landing .view-all-cars-btn:hover svg {
+  transform: translateX(3px);
+}
+
+.fairsales-landing .car-pricing-cluster {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 2px;
+}
+
+.fairsales-landing .car-pricing-cluster .price-label {
+  color: var(--fs-muted);
+  font-size: 9.5px;
+  white-space: nowrap;
+}
+
+.fairsales-landing .car-pricing-cluster .price-figure {
+  letter-spacing: -1px;
+  margin: 1px 0 2px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--fs-ink);
+  line-height: 1;
+  display: block;
+}
+
+.fairsales-landing .car-pricing-cluster .price-disclaimer {
+  color: var(--fs-muted);
+  line-height: 1.25;
+  font-size: 9px !important;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.fairsales-landing .car-pricing-cluster .price-deadline {
+  color: var(--fs-claude-orange);
+  font-weight: 600;
+  margin-top: 3px;
+  font-size: 9px;
+  line-height: 1.25;
+  text-align: right;
+}
+
+.fairsales-landing .fine-print {
+  color: var(--fs-muted);
+  max-width: 820px;
+  margin-top: 24px;
+  font-size: 10.5px;
+  line-height: 1.7;
+}
+

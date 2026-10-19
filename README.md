@@ -1,4 +1,4 @@
-# FairPy Sales — Web v2 (Next.js 16)
+# FairPy Sales — nextjs-web
 
 High-performance Next.js 16 (App Router + Turbopack) frontend for **FairPy Sales** automotive auction discovery and wholesale lead intelligence.
 

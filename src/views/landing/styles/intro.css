@@ -1,0 +1,138 @@
+/* ==========================================================================
+   SECTION 1: INTRO STRIP
+   ========================================================================== */
+.fairsales-landing .intro-strip {
+  border-bottom: 1px solid var(--fs-line);
+  grid-template-columns: 1fr 1.6fr 0.8fr;
+  align-items: center;
+  gap: 50px;
+  padding: 42px 24px;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  background: var(--fs-paper);
+}
+
+.fairsales-landing .intro-strip>span {
+  letter-spacing: -0.6px;
+  font-size: 21px;
+  line-height: 1.45;
+  color: var(--fs-ink);
+}
+
+.fairsales-landing .intro-strip b {
+  color: var(--fs-claude-orange);
+  font-weight: 600;
+}
+
+.fairsales-landing .intro-strip p {
+  color: var(--fs-muted);
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+
+.fairsales-landing .intro-link {
+  justify-self: end;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.fairsales-landing .intro-link svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ==========================================================================
+   COMMON SECTION STYLES
+   ========================================================================== */
+.fairsales-landing .section {
+  padding: 80px 24px;
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fairsales-landing .section-heading {
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 50px;
+  margin-bottom: 42px;
+  display: flex;
+}
+
+.fairsales-landing .section-heading h2 {
+  margin-top: 18px;
+  font-size: 50px;
+  color: var(--fs-ink);
+}
+
+.fairsales-landing .section-heading>p,
+.fairsales-landing .section-heading-aside p {
+  color: var(--fs-muted);
+  max-width: 320px;
+  padding-bottom: 4px;
+  font-size: 13.5px;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.fairsales-landing .section-heading-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 18px;
+  max-width: 320px;
+  padding-bottom: 4px;
+}
+
+.fairsales-landing .section-heading-aside p {
+  align-self: stretch;
+}
+
+.fairsales-landing .browse-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #000000;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.18s ease;
+}
+
+[data-theme="dark"] .fairsales-landing .browse-all-link,
+.dark .fairsales-landing .browse-all-link {
+  color: #ffffff;
+}
+
+.fairsales-landing .browse-all-link:hover {
+  color: var(--fs-claude-orange);
+}
+
+.fairsales-landing .browse-all-link svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  flex-shrink: 0;
+}
+
+.fairsales-landing .eyebrow {
+  letter-spacing: 2px;
+  align-items: center;
+  gap: 9px;
+  font-size: 10.5px;
+  font-weight: 700;
+  display: flex;
+}
+
+.fairsales-landing .eyebrow.dark {
+  color: var(--fs-muted);
+}
+

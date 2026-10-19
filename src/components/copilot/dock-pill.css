@@ -1,0 +1,241 @@
+/* Public & App Copilot Dock: Finalized Liquid Glass & Circumference Comet Beam */
+
+/* =====================================================================
+   BEAM ANCHOR & SPECIFIED PULSE MOTION ANIMATION
+   ===================================================================== */
+.beam-anchor {
+  position: relative;
+  display: block;
+  border-radius: 9999px;
+  padding: 0;
+  width: 100%;
+}
+
+/* pulseMotion 1.5s ease-in-out infinite alternate */
+.beam-anchor.has-pulse {
+  animation: pulseMotion 1.5s ease-in-out infinite alternate !important;
+  will-change: transform;
+}
+
+@keyframes pulseMotion {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+.copilot-public-dock {
+  transition:
+    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.copilot-public-dock.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(30px);
+}
+
+/* =====================================================================
+   FINALIZED LIQUID GLASS PILLS (DARK & LIGHT THEMES)
+   ===================================================================== */
+.copilot-public-pill {
+  position: relative;
+  min-height: 50px;
+  border-radius: 9999px !important;
+  backdrop-filter: blur(52px) saturate(220%) contrast(110%) brightness(96%) !important;
+  -webkit-backdrop-filter: blur(52px) saturate(220%) contrast(110%) brightness(96%) !important;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+/* Top Curvature Liquid Glass Sheen */
+.copilot-public-pill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52%;
+  border-top-left-radius: 9999px;
+  border-top-right-radius: 9999px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 1. LIGHT MODE: Charcoal Titanium Glass (rgba(28, 30, 36, 0.75)) */
+:root[data-theme="light"] .copilot-public-pill,
+html:not(.dark) .copilot-public-pill {
+  background: rgba(28, 30, 36, 0.75) !important;
+  border: 1px solid rgba(0, 0, 0, 0.42) !important;
+  box-shadow:
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.40),
+    inset 0 0 14px rgba(255, 255, 255, 0.04),
+    0 20px 50px rgba(0, 0, 0, 0.40),
+    0 4px 14px rgba(0, 0, 0, 0.20) !important;
+}
+
+:root[data-theme="light"] .copilot-public-pill::before,
+html:not(.dark) .copilot-public-pill::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* 2. DARK MODE: Frosted Ice Crystal (rgba(255, 255, 255, 0.18)) */
+:root[data-theme="dark"] .copilot-public-pill,
+.dark .copilot-public-pill {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  backdrop-filter: blur(52px) saturate(220%) brightness(78%) contrast(120%) !important;
+  -webkit-backdrop-filter: blur(52px) saturate(220%) brightness(78%) contrast(120%) !important;
+  box-shadow:
+    inset 0 0 0 100px rgba(10, 12, 16, 0.45),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.70),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.40),
+    inset 0 0 14px rgba(255, 255, 255, 0.05),
+    0 22px 54px rgba(0, 0, 0, 0.65),
+    0 4px 16px rgba(0, 0, 0, 0.40) !important;
+}
+
+:root[data-theme="dark"] .copilot-public-pill::before,
+.dark .copilot-public-pill::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+/* Focus Within Depth */
+.copilot-public-pill:focus-within {
+  border-color: rgba(255, 255, 255, 0.65) !important;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.80),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.30),
+    0 20px 48px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* =====================================================================
+   INPUT FIELD & PLACEHOLDER STYLING (CRISP WHITE ON BOTH GLASS MODES)
+   ===================================================================== */
+.copilot-public-input {
+  width: 100%;
+  resize: none !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-size: 14.5px;
+  font-weight: 500;
+  height: 38px !important;
+  line-height: 38px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: keep-all !important;
+  color: #ffffff !important;
+  display: block !important;
+  position: relative;
+  z-index: 2;
+}
+
+.copilot-public-input::placeholder {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-weight: 400;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.dark .copilot-public-input,
+.dark .copilot-continue-text {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 10px rgba(0, 0, 0, 0.80) !important;
+}
+
+.dark .copilot-public-input::placeholder {
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.90) !important;
+}
+
+/* CONTINUE CONVERSATION PILL TEXT */
+.copilot-continue-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff !important;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+}
+
+/* EMERALD LIVE PULSE DOT */
+.copilot-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseDot 2s infinite;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.6;
+  }
+}
+
+/* =====================================================================
+   SEND / SUBMIT BUTTON
+   ===================================================================== */
+.copilot-public-send {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-left: 6px;
+  border: none;
+  border-radius: 9999px;
+  background: #d97757;
+  color: #ffffff;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(217, 119, 87, 0.35);
+  opacity: 0;
+  transform: scale(0.7);
+  pointer-events: none;
+  transition:
+    opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.2s ease;
+}
+
+:root[data-theme="light"] .copilot-public-send,
+html:not(.dark) .copilot-public-send {
+  background: #c4673a;
+  box-shadow: 0 4px 12px rgba(196, 103, 58, 0.35);
+}
+
+.copilot-public-send:hover {
+  filter: brightness(1.08);
+}
+
+.copilot-public-send.has-text {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.copilot-public-send svg {
+  width: 14px;
+  height: 14px;
+}
+

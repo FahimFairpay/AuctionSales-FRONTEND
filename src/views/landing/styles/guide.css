@@ -1,0 +1,121 @@
+/* ==========================================================================
+   SECTION 7: YOUR CO-PILOT (AI GUIDE)
+   ========================================================================== */
+.fairsales-landing .guide-section {
+  background: var(--fs-paper-elevated);
+  border-top: 1px solid var(--fs-line);
+  border-bottom: 1px solid var(--fs-line);
+  grid-template-columns: 0.65fr 1.2fr 1fr;
+  align-items: center;
+  gap: 45px;
+  display: grid;
+}
+
+.fairsales-landing .guide-orb-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fairsales-landing .guide-orb {
+  aspect-ratio: 1;
+  color: #ffffff;
+  background: radial-gradient(circle at 35% 30%, #fff0e6, var(--fs-claude-orange) 65%, #9e431e);
+  border-radius: 50%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 210px;
+  width: 100%;
+  display: flex;
+  box-shadow: inset 0 0 35px rgba(255, 255, 255, 0.4), 0 16px 40px var(--fs-claude-orange-glow);
+}
+
+.fairsales-landing .guide-orb svg {
+  width: 44px;
+  height: 44px;
+}
+
+.fairsales-landing .guide-orb span {
+  letter-spacing: 1.6px;
+  margin-top: 18px;
+  font-size: 8.5px;
+  font-weight: 800;
+}
+
+.fairsales-landing .guide-copy h2 {
+  font-size: 44px;
+}
+
+.fairsales-landing .guide-copy p {
+  color: var(--fs-muted);
+  max-width: 320px;
+  margin-top: 18px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.fairsales-landing .btn-guide-ask {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--fs-claude-orange);
+  color: #ffffff;
+  padding: 14px 24px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px var(--fs-claude-orange-glow);
+}
+
+.fairsales-landing .btn-guide-ask:hover {
+  background: var(--fs-claude-orange-hover);
+  transform: translateY(-2px);
+}
+
+.fairsales-landing .btn-guide-ask svg {
+  width: 17px;
+  height: 17px;
+}
+
+.fairsales-landing .guide-suggestions button {
+  text-align: left;
+  background: var(--fs-paper);
+  border: 1px solid var(--fs-line);
+  border-radius: 6px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  color: var(--fs-ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fairsales-landing .guide-suggestions button:hover {
+  border-color: var(--fs-claude-orange);
+  color: var(--fs-claude-orange);
+  transform: translateX(4px);
+}
+
+.fairsales-landing .guide-suggestions button svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.fairsales-landing .guide-suggestions small {
+  color: var(--fs-muted);
+  font-size: 8.5px;
+  display: block;
+}
+

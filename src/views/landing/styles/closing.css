@@ -1,0 +1,81 @@
+/* ==========================================================================
+   SECTION 9: FINAL CTA
+   ========================================================================== */
+.fairsales-landing .final-cta {
+  text-align: center;
+  color: #ffffff;
+  background: #171513;
+  padding: 85px 20px 90px;
+}
+
+.fairsales-landing .final-cta>span {
+  letter-spacing: 2px;
+  color: var(--fs-claude-orange);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.fairsales-landing .final-cta h2 {
+  margin: 25px 0 32px;
+  font-size: 60px;
+  color: #ffffff !important;
+}
+
+.fairsales-landing .final-cta em {
+  color: var(--fs-claude-orange);
+}
+
+.fairsales-landing .btn-final-cta {
+  gap: 14px;
+  padding: 16px 28px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.fairsales-landing .btn-final-cta svg {
+  width: 19px;
+  height: 19px;
+}
+
+/* ==========================================================================
+   SECTION 10: MINIMALIST FOOTER
+   ========================================================================== */
+.fairsales-landing .site-footer {
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  padding: 38px 6%;
+  display: flex;
+  background: var(--fs-paper);
+  border-top: 1px solid var(--fs-line);
+}
+
+.fairsales-landing .footer-logo {
+  text-decoration: none;
+}
+
+.fairsales-landing .site-footer p {
+  color: var(--fs-muted);
+  font-size: 11px;
+}
+
+.fairsales-landing .footer-links {
+  color: var(--fs-muted);
+  align-items: center;
+  gap: 20px;
+  font-size: 10px;
+  display: flex;
+}
+
+.fairsales-landing .footer-links button {
+  color: inherit;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.fairsales-landing .footer-links button:hover {
+  color: var(--fs-claude-orange);
+}
+

@@ -1,6 +1,5 @@
 /**
- * visitorTracking.ts: Real-time browser telemetry & deduplicated visitor tracking for Next.js 16 (web-v2).
- * Captures timezone, language, screen resolution, and referrer, routing to /public/visitors/track.
+ * Browser telemetry for the live site. Posts timezone, language, screen, and referrer.
  */
 const TRACKER_PATH = "/public/visitors/track";
 const SESSION_STORAGE_KEY = "fps_visitor_tracked";
@@ -22,7 +21,6 @@ export interface VisitorTelemetryPayload {
 export function getTrackerEndpoint(): string {
   const envApiBase =
     process.env.NEXT_PUBLIC_API_BASE ||
-    process.env.VITE_API_BASE ||
     "https://0rjze2z0jh.execute-api.us-east-1.amazonaws.com/v1";
   const base = envApiBase.replace(/\/+$/, "");
   return base ? `${base}${TRACKER_PATH}` : TRACKER_PATH;

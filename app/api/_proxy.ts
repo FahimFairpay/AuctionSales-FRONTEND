@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 const API_BASE = (
   process.env.API_BASE ||
   process.env.NEXT_PUBLIC_API_BASE ||
-  process.env.VITE_API_BASE ||
   ""
 ).replace(/\/+$/, "");
 
@@ -34,8 +33,7 @@ export async function proxyApiRequest(
     }
   });
 
-  // CloudFront OAC signs the origin request and overwrites Authorization.
-  // The browser sends the Cognito token in X-Fair-Token so it still arrives.
+  // Prefer the token the browser sent in X-Fair-Token.
   const fairToken = headers.get("x-fair-token");
   if (fairToken) {
     headers.set("authorization", fairToken);

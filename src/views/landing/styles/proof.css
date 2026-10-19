@@ -1,0 +1,141 @@
+/* ==========================================================================
+   SECTION 5: 04 / PROOF, IN THE DETAILS (SAVINGS & EVIDENCE)
+   ========================================================================== */
+.fairsales-landing .proof-placeholder {
+  grid-template-columns: 1.4fr 1fr;
+  align-items: center;
+  gap: 40px;
+  display: grid;
+}
+
+.fairsales-landing .proof-photos {
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  display: grid;
+}
+
+.fairsales-landing .photo-box {
+  background: var(--fs-paper-elevated);
+  border: 1px dashed var(--fs-line);
+  border-radius: 8px;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 230px;
+  padding: 24px;
+  display: flex;
+}
+
+.fairsales-landing .photo-box span {
+  letter-spacing: 1px;
+  color: var(--fs-claude-orange);
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+.fairsales-landing .photo-box strong {
+  letter-spacing: -0.5px;
+  color: var(--fs-muted);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.fairsales-landing .proof-copy h3 {
+  letter-spacing: -0.5px;
+  margin: 16px 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--fs-ink);
+}
+
+.fairsales-landing .proof-copy p {
+  color: var(--fs-muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.fairsales-landing .proof-link {
+  align-items: center;
+  gap: 14px;
+  margin-top: 22px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  color: var(--fs-claude-orange);
+  text-decoration: none;
+}
+
+.fairsales-landing .proof-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ==========================================================================
+   SECTION 6: 05 / PEOPLE BEHIND THE PROCESS (TRUST)
+   ========================================================================== */
+.fairsales-landing .trust-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  display: grid;
+}
+
+.fairsales-landing .trust-grid>div {
+  border-top: 1px solid var(--fs-line);
+  padding-top: 25px;
+}
+
+.fairsales-landing .trust-grid svg {
+  color: var(--fs-claude-orange);
+  width: 24px;
+  height: 24px;
+}
+
+.fairsales-landing .trust-grid h3 {
+  margin: 18px 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--fs-ink);
+}
+
+.fairsales-landing .trust-grid p {
+  color: var(--fs-muted);
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+
+.fairsales-landing .contact-strip {
+  background: var(--fs-paper-elevated);
+  border: 1px solid var(--fs-line);
+  border-radius: 8px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  margin-top: 40px;
+  padding: 28px 32px;
+  display: flex;
+}
+
+.fairsales-landing .contact-strip b {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--fs-ink);
+}
+
+.fairsales-landing .contact-strip p {
+  color: var(--fs-muted);
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.fairsales-landing .btn-contact-choose {
+  gap: 12px;
+  padding: 14px 22px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.fairsales-landing .btn-contact-choose svg {
+  width: 17px;
+  height: 17px;
+}
+

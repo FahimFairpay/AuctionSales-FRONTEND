@@ -1,0 +1,410 @@
+/* ==========================================================================
+   HERO SECTION: 100vh FULL VIEWPORT FILL
+   ========================================================================== */
+.fairsales-landing .hero-section {
+  height: 100vh;
+  min-height: 100dvh;
+  min-height: 720px;
+  position: relative;
+  z-index: 2;
+  padding: max(110px, 14vh) 24px 30px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: #0b0b0a;
+  color: #ffffff;
+}
+
+/* Full-bleed Luxury Sports Car Background */
+.fairsales-landing .hero-bg-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fairsales-landing .hero-bg-car {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 59%;
+}
+
+.fairsales-landing .hero-bg-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 11, 10, 0.95) 0%, rgba(13, 13, 12, 0.62) 48%, rgba(10, 10, 9, 0.22) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(11, 11, 10, 0.85) 100%);
+}
+
+.fairsales-landing .hero-layout-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  gap: 48px;
+  flex: 1;
+}
+
+.fairsales-landing .hero-left-content {
+  max-width: 620px;
+  width: 100%;
+}
+
+/* Eyebrow */
+.fairsales-landing .hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 24px;
+}
+
+.fairsales-landing .eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--fs-claude-orange);
+  box-shadow: 0 0 10px var(--fs-claude-orange);
+  flex-shrink: 0;
+}
+
+/* Headline */
+.fairsales-landing .hero-headline {
+  font-size: clamp(42px, 5.2vw, 68px);
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -1.8px;
+  color: #ffffff !important;
+  margin-bottom: 24px;
+}
+
+.fairsales-landing .hero-headline em {
+  color: var(--fs-claude-orange);
+}
+
+.fairsales-landing .hero-subtext {
+  font-size: 15.5px;
+  line-height: 1.8;
+  color: #dde0d6;
+  margin-bottom: 32px;
+  max-width: 520px;
+}
+
+/* Buttons Row */
+.fairsales-landing .hero-buttons-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+/* Claude Primary CTA (Replaces green with Claude Orange) */
+.fairsales-landing .btn-claude-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  background: var(--fs-claude-orange);
+  color: #ffffff !important;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 16px 24px;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 6px 20px var(--fs-claude-orange-glow);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.fairsales-landing .btn-claude-primary:hover {
+  background: var(--fs-claude-orange-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px var(--fs-claude-orange-glow);
+}
+
+.fairsales-landing .btn-claude-primary svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+
+/* Ask AI Button: Claude Liquid Glass with Custom AI Diamond Glyph */
+/* Primary CTA: Apple Liquid Glass "Get Started" */
+.fairsales-landing .btn-hero-get-started {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.24) 0%,
+      rgba(255, 255, 255, 0.10) 100%);
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.15px;
+  padding: 15px 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-top: 1px solid rgba(255, 255, 255, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 0 14px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25),
+    0 8px 28px -2px rgba(0, 0, 0, 0.45),
+    0 2px 6px 0 rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.fairsales-landing .btn-hero-get-started:hover {
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.16) 100%);
+  border-color: rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 2px 0 #ffffff,
+    inset 0 0 18px 0 rgba(255, 255, 255, 0.22),
+    0 12px 36px -2px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(255, 255, 255, 0.18);
+}
+
+.fairsales-landing .btn-hero-get-started:active {
+  transform: translateY(0);
+}
+
+.fairsales-landing .btn-hero-get-started svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fairsales-landing .btn-hero-get-started:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* Secondary CTA: Apple VisionOS Frosted Glass with Glowing Claude Sparkle */
+.fairsales-landing .btn-hero-ai {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.15px;
+  padding: 15px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 12px 0 rgba(217, 119, 70, 0.12),
+    0 8px 24px -2px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.fairsales-landing .btn-hero-ai::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.fairsales-landing .btn-hero-ai:hover::before {
+  left: 125%;
+}
+
+.fairsales-landing .btn-hero-ai:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(217, 119, 70, 0.5);
+  border-top-color: #ffffff;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 2px 0 #ffffff,
+    inset 0 0 16px 0 rgba(217, 119, 70, 0.25),
+    0 12px 32px -2px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(217, 119, 70, 0.28);
+}
+
+.fairsales-landing .btn-hero-ai:active {
+  transform: translateY(0);
+}
+
+.fairsales-landing .btn-ai-sparkle-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fs-claude-orange);
+  filter: drop-shadow(0 0 6px var(--fs-claude-orange-glow));
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), filter 0.24s ease;
+}
+
+.fairsales-landing .btn-hero-ai:hover .btn-ai-sparkle-wrap {
+  transform: scale(1.15) rotate(8deg);
+  color: #ff9d6c;
+  filter: drop-shadow(0 0 10px rgba(217, 119, 70, 0.8));
+}
+
+.fairsales-landing .btn-ai-sparkle {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+/* Hero Assurance */
+.fairsales-landing .hero-assurance {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: #c3c7bd;
+  flex-wrap: wrap;
+}
+
+.fairsales-landing .hero-assurance svg {
+  width: 15px;
+  height: 15px;
+  color: var(--fs-claude-orange);
+}
+
+.fairsales-landing .dot-sep {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================================================
+   DITTO REPLICA: POTENTIAL, WITH A PLAN (Claude Liquid Glass Floating Card)
+   ========================================================================== */
+.fairsales-landing .hero-float {
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  backdrop-filter: blur(24px) saturate(190%);
+  background: rgba(20, 18, 16, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  width: 285px;
+  max-width: 310px;
+  padding: 22px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 132px;
+  right: 5%;
+  z-index: 5;
+}
+
+.fairsales-landing .hero-float .tiny {
+  letter-spacing: 1.6px;
+  font-size: 8.5px;
+  color: #c5c2be;
+  font-weight: 600;
+  display: block;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.fairsales-landing .hero-float strong {
+  font-family: "Manrope", sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.22;
+  color: #ffffff;
+  letter-spacing: -0.8px;
+  display: block;
+  margin: 0 0 16px 0;
+}
+
+.fairsales-landing .hero-float div {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: none;
+  padding-top: 0;
+}
+
+.fairsales-landing .hero-float div span {
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #d6d3cd;
+}
+
+.fairsales-landing .hero-float div b {
+  font-family: "DM Sans", "Manrope", sans-serif;
+  color: var(--fs-claude-orange);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -1.5px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Hero Bottom Ticker */
+.fairsales-landing .hero-bottom {
+  letter-spacing: 1.8px;
+  justify-content: space-between;
+  font-size: 8.5px;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 12px 0 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+

@@ -10,92 +10,8 @@ import { ImageGallery } from "../../features/inventory/ImageGallery";
 import { expandVisImages, type VisCandidate } from "../../features/inventory/visImages";
 import { markChatNavigating } from "./useCopilotChat";
 import { AuthPromptModal } from "./AuthPromptModal";
+import { VehicleCardSpecs } from "./VehicleCardSpecs";
 
-// Formats auction date & time as requested: "Tue Oct 06, 9:30am"
-export function formatCrispAuctionDateTime(dateVal?: string, timeVal?: string, dateTimeVal?: string): string {
-  const combined = dateTimeVal || dateVal || "";
-  const trimmed = combined.trim();
-  if (!trimmed || trimmed.toLowerCase().includes("upcoming")) return "Upcoming";
-
-  // 1. Strip timezone suffix like "CDT", "EDT", "PDT", "CST", "EST", "PST", "MST", "UTC", "GMT", etc.
-  const cleaned = trimmed
-    .replace(/\s+(?:CDT|EDT|PDT|MDT|CST|EST|PST|MST|UTC|GMT|[A-Z]{3,4})\s*$/i, "")
-    .trim();
-
-  // 2. Direct match for IAAI style: 'Tue Oct 06, 9:30am', 'Tue Oct 6, 9:30 AM', 'Tue Oct 06 9:30am'
-  const iaaiMatch = cleaned.match(
-    /^([A-Za-z]{3})\s+([A-Za-z]{3})\s+(\d{1,2})(?:,\s*|\s+)(\d{1,2}(?::\d{2})?)\s*([AaPp][Mm])?$/i
-  );
-  if (iaaiMatch) {
-    const [, wday, mon, day, timeDigits, ampm] = iaaiMatch;
-    const formattedDay = day.padStart(2, "0");
-    const capitalizedWday = wday.charAt(0).toUpperCase() + wday.slice(1, 3).toLowerCase();
-    const capitalizedMon = mon.charAt(0).toUpperCase() + mon.slice(1, 3).toLowerCase();
-    let timeStr = timeDigits;
-    if (ampm) {
-      timeStr = `${timeDigits}${ampm.toLowerCase()}`;
-    }
-    return `${capitalizedWday} ${capitalizedMon} ${formattedDay}, ${timeStr}`;
-  }
-
-  // 3. Match 'Day Mon DD' without time
-  const dayMonMatch = cleaned.match(/^([A-Za-z]{3})\s+([A-Za-z]{3})\s+(\d{1,2})$/i);
-  if (dayMonMatch) {
-    const [, wday, mon, day] = dayMonMatch;
-    const formattedDay = day.padStart(2, "0");
-    const capitalizedWday = wday.charAt(0).toUpperCase() + wday.slice(1, 3).toLowerCase();
-    const capitalizedMon = mon.charAt(0).toUpperCase() + mon.slice(1, 3).toLowerCase();
-    if (timeVal) {
-      const cleanTime = timeVal.trim().toLowerCase().replace(/\s+/g, "");
-      return `${capitalizedWday} ${capitalizedMon} ${formattedDay}, ${cleanTime}`;
-    }
-    return `${capitalizedWday} ${capitalizedMon} ${formattedDay}`;
-  }
-
-  // 4. Handle "Tomorrow" / "Today"
-  if (cleaned.toLowerCase().startsWith("tomorrow") || cleaned.toLowerCase().startsWith("today")) {
-    const isTomorrow = cleaned.toLowerCase().startsWith("tomorrow");
-    const target = new Date();
-    if (isTomorrow) target.setDate(target.getDate() + 1);
-    const weekday = target.toLocaleDateString("en-US", { weekday: "short" });
-    const month = target.toLocaleDateString("en-US", { month: "short" });
-    const day = String(target.getDate()).padStart(2, "0");
-    let extractedTime = timeVal ? timeVal.trim().toLowerCase().replace(/\s+/g, "") : "";
-    const timeMatch = cleaned.match(/(\d{1,2}(?::\d{2})?\s*[AaPp][Mm])/i);
-    if (!extractedTime && timeMatch) {
-      extractedTime = timeMatch[1].toLowerCase().replace(/\s+/g, "");
-    }
-    return extractedTime ? `${weekday} ${month} ${day}, ${extractedTime}` : `${weekday} ${month} ${day}`;
-  }
-
-  // 5. Standard Date parse (ISO or 'MM/DD/YYYY HH:MM AM')
-  const parsed = new Date(cleaned);
-  if (!isNaN(parsed.getTime()) && parsed.getFullYear() > 2000) {
-    const weekday = parsed.toLocaleDateString("en-US", { weekday: "short" });
-    const month = parsed.toLocaleDateString("en-US", { month: "short" });
-    const day = String(parsed.getDate()).padStart(2, "0");
-    let extractedTime = "";
-    if (cleaned.includes("T") || cleaned.includes(":") || timeVal) {
-      try {
-        const rawTime = parsed.toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: true,
-        });
-        extractedTime = rawTime.replace(/\s*([AP]M)/i, (_, p) => p.toLowerCase());
-      } catch {}
-    }
-    return extractedTime ? `${weekday} ${month} ${day}, ${extractedTime}` : `${weekday} ${month} ${day}`;
-  }
-
-  return cleaned;
-}
-
-export function formatCrispYard(branchOrLocation?: string): string {
-  if (!branchOrLocation) return "Online";
-  const clean = branchOrLocation.split(",")[0].trim();
-  return clean || "Online";
-}
 
 interface VehicleCardProps {
   vehicle: MatchedVehicle;
@@ -446,113 +362,15 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
               </div>
             </div>
 
-            {/* 12 Spec Rows (4 per tab) - Uniform Calm Typography */}
-            <div className="flex flex-col gap-1.5 p-3 min-h-[110px]">
-              {activeTab === "overview" && (
-                <>
-                  <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">
-                      {vehicle.hasActiveBids ? "Current Bid" : "Opening Bid"}
-                    </span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                      ${bid.toLocaleString()} {vehicle.hasActiveBids === false ? "(Pre-Bid)" : ""}
-                    </span>
-                  </div>
 
-                  <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Est. ACV</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                      ${acv.toLocaleString()}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Arbitrage Spread</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                      {calculatedSpread > 0
-                        ? `+$${calculatedSpread.toLocaleString()} (${spreadPct})`
-                        : "N/A"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-2 text-[11.5px]">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5] shrink-0">Date & Yard</span>
-                    <span
-                      className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right truncate text-[11px]"
-                      title={`${vehicle.auctionDate || vehicle.auctionDateTime || "Upcoming"} • ${vehicle.branch || vehicle.location || "Online"}`}
-                    >
-                      {formatCrispAuctionDateTime(vehicle.auctionDate, vehicle.auctionTime, vehicle.auctionDateTime)} • {formatCrispYard(vehicle.branch || vehicle.location)}
-                    </span>
-                  </div>
-                </>
-              )}
-
-              {activeTab === "salvage" && (
-                <>
-                  <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Primary Damage</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                      {vehicle.primaryDamage || "Normal Wear"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Secondary Damage</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                      {vehicle.secondaryDamage || "None"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Title / Document</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right truncate max-w-[170px]" title={vehicle.titleDoc || vehicle.titleType || "Salvage Certificate"}>
-                      {vehicle.titleDoc || vehicle.titleType || "Salvage Certificate"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-[11.5px]">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Loss & Seller Type</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right truncate max-w-[170px]" title={`${vehicle.lossType || "Collision"} • ${vehicle.sellerType || "Insurance Co"}`}>
-                      {vehicle.lossType || "Collision"} • {vehicle.sellerType || "Insurance Co"}
-                    </span>
-                  </div>
-                </>
-              )}
-
-              {activeTab === "condition" && (
-                <>
-                  <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Score</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                      {vehicle.vehicleScore || vehicle.score || 50} / 50
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Start Code & Key</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                      {vehicle.startCode || vehicle.startStatus || "Run & Drive"} • {vehicle.keyStatus || "Key Present"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Odometer</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                      {typeof vehicle.odometer === "number"
-                        ? `${vehicle.odometer.toLocaleString()} mi`
-                        : vehicle.odometer || "Verified Low"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 text-[11.5px]">
-                    <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Airbags</span>
-                    <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                      {vehicle.airbags || "Intact (Not Deployed)"}
-                    </span>
-                  </div>
-                </>
-              )}
-            </div>
+            <VehicleCardSpecs
+              activeTab={activeTab}
+              vehicle={vehicle}
+              bid={bid}
+              acv={acv}
+              calculatedSpread={calculatedSpread}
+              spreadPct={spreadPct}
+            />
 
             {/* Action CTA: Circular Edges & Enhanced Glassmorphism */}
             <div className="p-3 pt-0">

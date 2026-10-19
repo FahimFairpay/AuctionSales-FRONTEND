@@ -8,7 +8,7 @@ type Envelope<T> = {
   data?: T;
 };
 
-/** Survives CloudFront OAC, which replaces Authorization with its own signature. */
+/** Sent beside Authorization so the proxy can restore the Cognito token. */
 export const FAIR_TOKEN_HEADER = "X-Fair-Token";
 
 export function withAuthHeaders(token: string, extra?: HeadersInit): Headers {

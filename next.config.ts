@@ -1,26 +1,11 @@
 import type { NextConfig } from "next";
 
-const apiBase =
-  process.env.NEXT_PUBLIC_API_BASE ||
-  process.env.VITE_API_BASE ||
-  "";
-
 const nextConfig: NextConfig & { agentRules?: boolean } = {
   agentRules: false,
   // EC2 uses the standalone zip. Vercel builds its own Next output.
   ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
   reactStrictMode: true,
   allowedDevOrigins: ["localhost", "127.0.0.1"],
-  env: {
-    NEXT_PUBLIC_AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION || process.env.VITE_AWS_REGION || "",
-    NEXT_PUBLIC_USER_POOL_ID: process.env.NEXT_PUBLIC_USER_POOL_ID || process.env.VITE_USER_POOL_ID || "",
-    NEXT_PUBLIC_USER_POOL_CLIENT_ID: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID || process.env.VITE_USER_POOL_CLIENT_ID || "",
-    NEXT_PUBLIC_API_BASE: process.env.NEXT_PUBLIC_API_BASE || process.env.VITE_API_BASE || "",
-    VITE_AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION || process.env.VITE_AWS_REGION || "",
-    VITE_USER_POOL_ID: process.env.NEXT_PUBLIC_USER_POOL_ID || process.env.VITE_USER_POOL_ID || "",
-    VITE_USER_POOL_CLIENT_ID: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID || process.env.VITE_USER_POOL_CLIENT_ID || "",
-    VITE_API_BASE: process.env.NEXT_PUBLIC_API_BASE || process.env.VITE_API_BASE || "",
-  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "vis.iaai.com" },
@@ -47,15 +32,6 @@ const nextConfig: NextConfig & { agentRules?: boolean } = {
       { source: "/admin/scrape-runs", destination: "/admin/schedules", permanent: true },
       { source: "/admin/scrape-runs/:scrapeRunId", destination: "/admin/schedules/:scrapeRunId", permanent: true },
       { source: "/admin/scrape-recipe", destination: "/admin/settings", permanent: true },
-    ];
-  },
-  async rewrites() {
-    if (!apiBase) return [];
-    return [
-      {
-        source: "/api-proxy/:path*",
-        destination: `${apiBase}/api/:path*`,
-      },
     ];
   },
 };

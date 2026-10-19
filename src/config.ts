@@ -1,24 +1,9 @@
 const ENV_LOOKUP = {
-  AWS_REGION:
-    process.env.NEXT_PUBLIC_AWS_REGION ||
-    process.env.VITE_AWS_REGION ||
-    process.env.AWS_REGION ||
-    "",
-  USER_POOL_ID:
-    process.env.NEXT_PUBLIC_USER_POOL_ID ||
-    process.env.VITE_USER_POOL_ID ||
-    process.env.USER_POOL_ID ||
-    "",
+  AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION || process.env.AWS_REGION || "",
+  USER_POOL_ID: process.env.NEXT_PUBLIC_USER_POOL_ID || process.env.USER_POOL_ID || "",
   USER_POOL_CLIENT_ID:
-    process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID ||
-    process.env.VITE_USER_POOL_CLIENT_ID ||
-    process.env.USER_POOL_CLIENT_ID ||
-    "",
-  API_BASE:
-    process.env.NEXT_PUBLIC_API_BASE ||
-    process.env.VITE_API_BASE ||
-    process.env.API_BASE ||
-    "",
+    process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID || process.env.USER_POOL_CLIENT_ID || "",
+  API_BASE: process.env.NEXT_PUBLIC_API_BASE || process.env.API_BASE || "",
 } as const;
 
 export type RequiredEnvKey = keyof typeof ENV_LOOKUP;
@@ -42,7 +27,7 @@ export function requireConfig(): void {
   const missing = missingEnvNames();
   if (missing.length > 0) {
     throw new Error(
-      `FairPy is missing environment variables: ${missing.map((m) => `NEXT_PUBLIC_${m} / VITE_${m}`).join(", ")}. Fill each value in .env.local from stack outputs.`
+      `FairPy is missing environment variables: ${missing.map((m) => `NEXT_PUBLIC_${m}`).join(", ")}. Fill each value in .env.local.`
     );
   }
 }

@@ -1,0 +1,187 @@
+/* ==========================================================================
+   SEGMENTED MODE SWITCHER PILL (Sign In / Sign Up)
+   ========================================================================== */
+
+.auth-segmented-switch {
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--auth-tab-track-bg);
+  border: 1px solid var(--auth-glass-card-border);
+  margin-bottom: 18px;
+}
+
+.auth-segmented-tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--auth-tab-inactive-text);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+  text-decoration: none;
+}
+
+.auth-segmented-tab.active {
+  background: var(--auth-tab-active-bg);
+  color: var(--auth-tab-active-text);
+  box-shadow: var(--auth-tab-active-shadow);
+}
+
+/* ==========================================================================
+   GLASS INPUT FIELDS & PILLS
+   ========================================================================== */
+
+.auth-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.auth-field-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  color: var(--auth-text-body);
+}
+
+.auth-input-pill-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  background: var(--auth-input-bg);
+  border: 1px solid var(--auth-input-border);
+  transition: all 0.2s ease;
+}
+
+.auth-input-pill-wrap:focus-within {
+  border-color: var(--auth-input-border-focus);
+  box-shadow: var(--auth-input-glow-focus);
+}
+
+.auth-input-icon-lead {
+  position: absolute;
+  left: 13px;
+  width: 16px;
+  height: 16px;
+  color: var(--auth-text-muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-input-pill {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px 0 38px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 13.5px;
+  color: var(--auth-input-text);
+  letter-spacing: -0.1px;
+}
+
+.auth-input-pill::placeholder {
+  color: var(--auth-input-placeholder);
+}
+
+.auth-input-pill.has-trail {
+  padding-right: 40px;
+}
+
+.auth-input-action-trail {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--auth-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.18s ease;
+}
+
+.auth-input-action-trail:hover {
+  color: var(--auth-text-heading);
+}
+
+/* Country prefix badge for mobile */
+.auth-phone-prefix-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  height: 42px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--auth-text-muted);
+  border-right: 1px solid var(--auth-input-border);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px 0 0 12px;
+  user-select: none;
+}
+
+/* ==========================================================================
+   PRIMARY LIQUID GLASS CTA (CLEAN & NEAT, NO ORANGE FILL, ORANGE ONLY ON SHADOW)
+   ========================================================================== */
+
+.btn-auth-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: var(--auth-btn-primary-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.15px;
+  border: 1px solid var(--auth-btn-primary-border);
+  border-top: 1px solid var(--auth-btn-primary-border-top);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
+    var(--auth-btn-primary-glow);
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.btn-auth-primary:hover:not(:disabled) {
+  background: var(--auth-btn-primary-hover);
+  border-color: var(--auth-btn-primary-border-hover);
+  border-top-color: rgba(255, 255, 255, 0.70);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.50),
+    var(--auth-btn-primary-hover-glow);
+}
+
+.btn-auth-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    inset 0 1.5px 3px 0 rgba(0, 0, 0, 0.30),
+    0 0 12px rgba(217, 119, 87, 0.30);
+}
+
+.btn-auth-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+

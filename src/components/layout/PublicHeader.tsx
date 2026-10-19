@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTheme } from "@/theme/ThemeProvider";
 import { paths } from "@/routes/paths";
 import "./public-header.css";
+import "./public-header-narrow.css";
 import { BrandWordmark } from "./BrandWordmark";
 
 interface PublicHeaderProps {
