@@ -6,8 +6,10 @@ import "@/views/landing/landing.css";
 import "@/views/landing/glass-cta.css";
 import { Providers } from "./providers";
 import { VisitorTracker } from "@/components/VisitorTracker";
+import { MicrosoftClarity } from "@/components/analytics/MicrosoftClarity";
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const clarityProjectId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -79,6 +81,7 @@ export default function RootLayout({
       <body>
         <VisitorTracker />
         <Providers>{children}</Providers>
+        {clarityProjectId ? <MicrosoftClarity projectId={clarityProjectId} /> : null}
         {gaMeasurementId ? <GoogleAnalytics gaId={gaMeasurementId} /> : null}
       </body>
     </html>

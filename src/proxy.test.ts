@@ -23,5 +23,7 @@ describe("security proxy middleware", () => {
     expect(csp).toContain("https://*.g.doubleclick.net");
     expect(csp).toContain("https://pagead2.googlesyndication.com");
     expect(csp).toContain("frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net");
+    expect(csp).toContain("https://*.clarity.ms");
+    expect(csp).toContain("https://c.bing.com");
   });
 });
