@@ -7,7 +7,10 @@ describe("Route Paths and Compatibility Router", () => {
     expect(paths.preset("abc-123")).toBe("/app/presets/abc-123");
     expect(paths.presetEdit("abc-123")).toBe("/app/presets/abc-123/edit");
     expect(paths.adminUser("usr-1")).toBe("/admin/users/usr-1");
+    expect(paths.adminCrawler).toBe("/admin/schedules");
     expect(paths.adminCrawlerRun("crawl-99")).toBe("/admin/schedules/crawl-99");
+    expect(paths.adminSettings).toBe("/admin/settings");
+    expect(paths.adminRecipe).toBe("/admin/settings");
   });
 
   it("handles historyLog query parameter construction", () => {

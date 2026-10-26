@@ -8,6 +8,7 @@ import { InventoryThumb } from "./InventoryThumb";
 import { formatFactLine, visibleTopics, type DisplayTopic } from "./displayTopics";
 import { fieldLabel, type CardFieldId } from "./cardFields";
 import { HeartFavoriteButton } from "./HeartFavoriteButton";
+import { SourceCornerLabel } from "./SourceGlassPill";
 
 export function InventoryLotList({
   items,
@@ -20,7 +21,7 @@ export function InventoryLotList({
   items: InventoryItem[];
   query: InventoryQuery;
   fields: CardFieldId[];
-  isFavorite?: (stockNumber: string) => boolean;
+  isFavorite?: (stockNumber: string, source?: string) => boolean;
   onToggleFavorite?: (item: InventoryItem) => void;
   hrefFor?: (stockNumber: string) => string;
 }) {
@@ -63,6 +64,14 @@ export function InventoryLotList({
                       {heading}
                     </p>
                   </div>
+                  <div className="absolute top-2 left-2 z-10 flex items-center gap-1">
+                    <SourceCornerLabel source={item.source} />
+                    {item.gallery && item.gallery.length > 0 ? (
+                      <span className="rounded-full px-1.5 py-0.5 text-[9px] font-semibold text-white" style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)" }}>
+                        {item.gallery.length}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
                 {/* Facts below image in 2-col grid */}
                 {facets.length > 0 ? (
@@ -79,7 +88,7 @@ export function InventoryLotList({
                 <div className="absolute top-2 right-2 z-10">
                   <HeartFavoriteButton
                     stockNumber={item.stockNumber}
-                    isFavorite={isFavorite(item.stockNumber)}
+                    isFavorite={isFavorite(item.stockNumber, item.source)}
                     onToggle={() => onToggleFavorite(item)}
                     size="md"
                     className="rounded-full bg-black/40 text-white backdrop-blur-md hover:bg-black/60 shadow-sm"
@@ -150,7 +159,7 @@ export function InventoryLotRow({
   query: InventoryQuery;
   topics: DisplayTopic[];
   columns: string;
-  isFavorite?: (stockNumber: string) => boolean;
+  isFavorite?: (stockNumber: string, source?: string) => boolean;
   onToggleFavorite?: (item: InventoryItem) => void;
   hrefFor?: (stockNumber: string) => string;
 }) {
@@ -174,11 +183,19 @@ export function InventoryLotRow({
             className="h-[100px] w-[160px] rounded-[6px]"
           />
         </Link>
+        <div className="pointer-events-none absolute top-1.5 left-1.5 z-10 flex items-center gap-1">
+          <SourceCornerLabel source={item.source} />
+          {item.gallery && item.gallery.length > 0 ? (
+            <span className="rounded-full px-1 py-0.5 text-[8px] font-semibold text-white" style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)" }}>
+              {item.gallery.length}
+            </span>
+          ) : null}
+        </div>
         {isFavorite && onToggleFavorite ? (
           <div className="absolute top-1.5 right-1.5 z-10">
             <HeartFavoriteButton
               stockNumber={item.stockNumber}
-              isFavorite={isFavorite(item.stockNumber)}
+              isFavorite={isFavorite(item.stockNumber, item.source)}
               onToggle={() => onToggleFavorite(item)}
               size="sm"
               className="rounded-full bg-black/40 text-white backdrop-blur-md hover:bg-black/60 shadow-sm"
@@ -189,8 +206,14 @@ export function InventoryLotRow({
       {topics.map((topic) => (
         <div key={topic.id} className="min-w-0 space-y-0.5">
           {topic.id === "vehicle" ? (
-            item.detailLink ? (
-              <a href={item.detailLink} target="_blank" rel="noreferrer" className={titleClass} title="Vehicle">
+            item.outboundAuctionUrl || item.detailLink ? (
+              <a
+                href={item.outboundAuctionUrl || item.detailLink}
+                target="_blank"
+                rel="noreferrer"
+                className={titleClass}
+                title="Vehicle"
+              >
                 {heading}
               </a>
             ) : (

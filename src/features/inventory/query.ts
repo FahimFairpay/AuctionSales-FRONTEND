@@ -3,6 +3,7 @@ import {
   type RecipeFilters,
   type RecipeListKey,
 } from "../../types/filters";
+import type { AuctionSource } from "../../types/api";
 
 export const PAGE_SIZES = [10, 25, 50, 100] as const;
 export type PageSize = (typeof PAGE_SIZES)[number];
@@ -37,6 +38,7 @@ export type InventoryQuery = {
   scoreMax?: string;
   buyNowMin?: string;
   buyNowMax?: string;
+  source?: AuctionSource | "ALL";
 };
 
 type RangeQueryKey = "yearMin" | "yearMax" | "odoMin" | "odoMax" | "scoreMin" | "scoreMax";
@@ -63,6 +65,10 @@ export function parseInventorySearch(search: string): InventoryQuery {
   const cursor = params.get("cursor")?.trim();
   if (cursor) {
     query.cursor = cursor;
+  }
+  const src = params.get("source")?.trim().toUpperCase();
+  if (src === "IAAI" || src === "COPART" || src === "ALL") {
+    query.source = src as AuctionSource | "ALL";
   }
   for (const key of RECIPE_LIST_KEYS) {
     const raw = params.get(key);
@@ -91,6 +97,9 @@ export function toInventorySearch(query: InventoryQuery, includeCursor = true): 
   }
   if (includeCursor && query.cursor) {
     params.set("cursor", query.cursor);
+  }
+  if (query.source && query.source !== "ALL") {
+    params.set("source", query.source);
   }
   for (const key of RECIPE_LIST_KEYS) {
     const values = query[key];
@@ -143,6 +152,9 @@ export function inventoryFacetCount(query: InventoryQuery): number {
     if (query[key]) {
       count += 1;
     }
+  }
+  if (query.source === "IAAI" || query.source === "COPART") {
+    count += 1;
   }
   return count;
 }

@@ -15,6 +15,7 @@ import { CrawlHistoryDialog } from "../../features/scrape/CrawlHistoryDialog";
 import { CrawlScheduleDialog, PlusButton, scheduleLabel } from "../../features/scrape/CrawlScheduleDialog";
 import { RecipeButton } from "../../features/scrape/RecipeSheet";
 import { RecipePinModal } from "../../features/scrape/RecipePinModal";
+import { houseLabel } from "../../features/inventory/SourceGlassPill";
 import type { CrawlSchedule } from "../../types/api";
 
 export function ScrapeRunListPage() {
@@ -32,7 +33,7 @@ export function ScrapeRunListPage() {
   }
 
   const save = useMutation({
-    mutationFn: (body: { name: string; enabled?: boolean; cronExpression: string; timezone: string }) =>
+    mutationFn: (body: Omit<CrawlSchedule, "scheduleId">) =>
       editor && editor !== "new"
         ? patchCrawlSchedule(editor.scheduleId, body)
         : createCrawlSchedule({ ...body, enabled: body.enabled ?? true }),
@@ -57,12 +58,19 @@ export function ScrapeRunListPage() {
 
   const columns: Array<Column<CrawlSchedule>> = [
     { key: "name", header: "Schedule", cell: (row) => row.name },
+    {
+      key: "provider",
+      header: "Provider",
+      cell: (row) => <span className="text-sm text-ink">{houseLabel(row.source)}</span>,
+    },
     { key: "when", header: "When", cell: (row) => scheduleLabel(row) },
     {
       key: "status",
       header: "Status",
       cell: (row) => (
-        <span className={row.enabled ? "text-success" : "text-danger"}>{row.enabled ? "Enabled" : "Disabled"}</span>
+        <span className={row.enabled ? "text-success font-medium text-xs" : "text-danger font-medium text-xs"}>
+          {row.enabled ? "Active" : "Disabled"}
+        </span>
       ),
     },
     {

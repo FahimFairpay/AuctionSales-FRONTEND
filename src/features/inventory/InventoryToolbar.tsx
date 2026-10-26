@@ -114,8 +114,9 @@ export function InventoryToolbar({
         />
       </label>
 
-      {/* 2. ICONS & CONTROLS ON RIGHT */}
+      {/* Filters, interested, and list tools. Auction house lives in the filter sheet. */}
       <div className="flex items-center gap-2 shrink-0">
+
         {/* FILTERS */}
         {recipe ? <InventoryFilterPill recipe={recipe} query={query} onChange={onChange} /> : null}
 

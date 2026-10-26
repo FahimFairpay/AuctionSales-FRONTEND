@@ -8,6 +8,7 @@ import { getCurrentUser } from "../../auth/session";
 import { useFavorites } from "../../features/inventory/useFavorites";
 import { ImageGallery } from "../../features/inventory/ImageGallery";
 import { expandVisImages, type VisCandidate } from "../../features/inventory/visImages";
+import { SourceCornerLabel } from "../../features/inventory/SourceGlassPill";
 import { markChatNavigating } from "./useCopilotChat";
 import { AuthPromptModal } from "./AuthPromptModal";
 import { VehicleCardSpecs } from "./VehicleCardSpecs";
@@ -65,7 +66,8 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
 
   // App-wide Interested / Favorites hook
   const favorites = useFavorites();
-  const isInterested = favorites.isFavorite(vehicle.stockNumber);
+  const isInterested = favorites.isFavorite(vehicle.stockNumber, vehicle.source);
+  const isCopart = String(vehicle.source || "").toUpperCase() === "COPART";
 
   // Derived Title and Subtitle
   const makeModel = `${vehicle.year ? vehicle.year + " " : ""}${vehicle.make || ""} ${vehicle.model || ""}`.trim().toUpperCase() || `LOT #${vehicle.stockNumber}`;
@@ -83,6 +85,20 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   const heroImage = vehicle.imageUrl || vehicle.imageThumbnailUrl || (vehicle.imageUrls && vehicle.imageUrls[0]) || "";
   
   const shots = useMemo<VisCandidate[]>(() => {
+    if (isCopart && Array.isArray(vehicle.gallery) && vehicle.gallery.length > 0) {
+      return vehicle.gallery.flatMap((shot, idx) => {
+        if (typeof shot === "string" && shot) {
+          return [{ thumb: shot, large: shot, index: idx + 1, set: null }];
+        }
+        if (shot && typeof shot === "object") {
+          const large = shot.hd || shot.large || shot.thumb || "";
+          const thumb = shot.thumb || large;
+          if (!thumb && !large) return [];
+          return [{ thumb, large: large || thumb, index: idx + 1, set: null }];
+        }
+        return [];
+      });
+    }
     if (heroImage) {
       const expanded = expandVisImages(heroImage);
       if (expanded.length > 0) return expanded;
@@ -99,7 +115,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       return [{ thumb: heroImage, large: heroImage, index: 1, set: null }];
     }
     return [];
-  }, [heroImage, vehicle.imageUrls]);
+  }, [heroImage, isCopart, vehicle.gallery, vehicle.imageUrls]);
 
   const handleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -116,6 +132,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     try {
       await favorites.toggle(vehicle.stockNumber, {
         stockNumber: vehicle.stockNumber,
+        source: vehicle.source,
         title: makeModel,
         imageUrl: heroImage,
         branch: vehicle.branch || vehicle.location,
@@ -260,7 +277,9 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             </div>
           )}
 
-          {/* Interested / Favorite Heart Button Overlay */}
+          <div className="absolute top-2 left-2 z-10">
+            <SourceCornerLabel source={vehicle.source} />
+          </div>
           <button
             type="button"
             onClick={handleFavorite}

@@ -40,6 +40,9 @@ export function RecipePinModal({
     setPending(true);
     try {
       const recipe: PublicRecipe = await unlockAdminRecipe(p);
+      try {
+        sessionStorage.setItem("fps_unlocked_recipe", JSON.stringify(recipe));
+      } catch {}
       onClose();
       navigate(paths.adminRecipe, { state: { recipe, mode: "preview" } });
     } catch (err) {

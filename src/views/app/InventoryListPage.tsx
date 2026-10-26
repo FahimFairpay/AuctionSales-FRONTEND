@@ -17,7 +17,7 @@ import { FilterSaveModal } from "../../features/inventory/FilterSaveModal";
 import { InventoryLotList } from "../../features/inventory/InventoryLotRow";
 import { InventoryToolbar } from "../../features/inventory/InventoryToolbar";
 import { PhonePromptModal } from "../../features/inventory/PhonePromptModal";
-import { useFavorites } from "../../features/inventory/useFavorites";
+import { favoriteKey, useFavorites } from "../../features/inventory/useFavorites";
 import {
   DEFAULT_CARD_FIELDS,
   loadCardFields,
@@ -94,6 +94,7 @@ export function InventoryListPage() {
     (item: InventoryItem) => {
       const lotData: Partial<FavoriteItem> = {
         stockNumber: item.stockNumber,
+        source: item.source,
         title: item.title,
         imageUrl: item.imageUrl,
         vin: item.vin,
@@ -116,13 +117,14 @@ export function InventoryListPage() {
 
   const items = useMemo(() => {
     if (!onlyInterested) return rawItems;
-    const favMap = new Map(favorites.favorites.map((f) => [f.stockNumber, f]));
-    const currentFavs = rawItems.filter((it) => favMap.has(it.stockNumber));
-    const currentStockSet = new Set(currentFavs.map((it) => it.stockNumber));
+    const favMap = new Map(favorites.favorites.map((f) => [favoriteKey(f.stockNumber, f.source), f]));
+    const currentFavs = rawItems.filter((it) => favMap.has(favoriteKey(it.stockNumber, it.source)));
+    const currentStockSet = new Set(currentFavs.map((it) => favoriteKey(it.stockNumber, it.source)));
     const extraFavs: InventoryItem[] = favorites.favorites
-      .filter((f) => !currentStockSet.has(f.stockNumber))
+      .filter((f) => !currentStockSet.has(favoriteKey(f.stockNumber, f.source)))
       .map((f) => ({
         stockNumber: f.stockNumber,
+        source: (f.source === "COPART" ? "COPART" : "IAAI"),
         title: f.title,
         imageUrl: f.imageUrl,
         vin: f.vin,

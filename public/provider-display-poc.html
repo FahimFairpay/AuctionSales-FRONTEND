@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Provider display — five options</title>
+  <style>
+    :root {
+      --canvas: #100f0e;
+      --surface: #1c1b19;
+      --ink: #f4efe8;
+      --muted: #a3988c;
+      --hairline: rgba(255,255,255,0.08);
+      --accent: #c4673a;
+      --copart: #d7c4a8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font: 15px/1.45 "Segoe UI", system-ui, sans-serif;
+    }
+    header, main { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
+    header { padding: 40px 0 8px; }
+    h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-weight: 500; font-size: 34px; letter-spacing: -0.03em; }
+    header p { max-width: 62ch; color: var(--muted); }
+    section { padding: 28px 0 8px; border-top: 1px solid var(--hairline); }
+    .kicker { margin: 0; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+    h2 { margin: 6px 0 4px; font-family: Georgia, serif; font-weight: 500; font-size: 22px; }
+    .why { margin: 0 0 16px; color: var(--muted); max-width: 68ch; }
+    .row { display: flex; flex-wrap: wrap; gap: 16px; }
+    .card {
+      width: 320px;
+      overflow: hidden;
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      background: var(--surface);
+    }
+    .photo {
+      position: relative;
+      height: 168px;
+      background:
+        radial-gradient(120px 70px at 58% 62%, #f7f4ef 0 42%, transparent 43%),
+        linear-gradient(180deg, #3a342e 0%, #221e1b 55%, #141210 100%);
+    }
+    .photo::after {
+      content: "";
+      position: absolute;
+      left: 18%;
+      right: 22%;
+      bottom: 28px;
+      height: 46px;
+      border-radius: 16px 18px 8px 8px;
+      background: linear-gradient(180deg, #fbfaf7, #d9d3cb);
+      box-shadow: 0 10px 0 -6px #0e0d0c;
+    }
+    .body { padding: 12px 14px 14px; }
+    .title { margin: 0; font-family: Georgia, serif; font-size: 16px; letter-spacing: -0.02em; }
+    .meta { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    .facts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .fact { color: var(--muted); font-size: 12px; }
+
+    .solid {
+      position: absolute; top: 10px; left: 10px; z-index: 1;
+      padding: 3px 7px; border-radius: 4px;
+      background: rgba(12,10,8,0.82); color: #fff;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    }
+    .solid.copart { color: var(--copart); }
+
+    .house-inline { color: var(--accent); font-weight: 600; }
+    .house-inline.copart { color: var(--copart); }
+
+    .rail { border-left: 3px solid var(--accent); }
+    .rail.copart { border-left-color: var(--copart); }
+    .rail-name { font-size: 11px; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .rail.copart .rail-name { color: var(--copart); }
+
+    .mono {
+      position: absolute; top: 10px; left: 10px; z-index: 1;
+      width: 22px; height: 22px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--accent); color: #fff;
+      font-size: 12px; font-weight: 700;
+    }
+    .mono.copart { background: #efe6da; color: #1c1917; }
+
+    .chip {
+      display: inline-flex; align-items: center; height: 22px;
+      padding: 0 8px; border-radius: 999px;
+      border: 1px solid rgba(196,103,58,0.7);
+      background: rgba(196,103,58,0.12);
+      color: #e7b39a; font-size: 11px; font-weight: 600;
+    }
+    .chip.copart {
+      border-color: rgba(215,196,168,0.55);
+      background: rgba(215,196,168,0.1);
+      color: var(--copart);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>How the house can read</h1>
+    <p>The glass capsule is off the inventory photos. These five treatments put IAAI and Copart where they stay readable. Each pair uses the same lot so the difference is only the mark.</p>
+  </header>
+  <main>
+    <section>
+      <p class="kicker">01</p>
+      <h2>Solid corner</h2>
+      <p class="why">A small filled label on the photo. Dark enough to read on a white car, short enough to stay out of the shot.</p>
+      <div class="row">
+        <article class="card">
+          <div class="photo"><span class="solid">IAAI</span></div>
+          <div class="body">
+            <p class="title">2023 Chevrolet Trailblazer FWD RS</p>
+            <p class="meta">Stock #45857740</p>
+            <div class="facts"><span class="fact">2023</span><span class="fact">37,350 mi</span><span class="fact">Rear</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="photo"><span class="solid copart">Copart</span></div>
+          <div class="body">
+            <p class="title">2021 Honda Accord Sport</p>
+            <p class="meta">Lot #48291033</p>
+            <div class="facts"><span class="fact">2021</span><span class="fact">61,204 mi</span><span class="fact">Front</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <p class="kicker">02</p>
+      <h2>Beside the stock number</h2>
+      <p class="why">The photo stays clear. The house sits in the line you already read for the stock number.</p>
+      <div class="row">
+        <article class="card">
+          <div class="photo"></div>
+          <div class="body">
+            <p class="title">2023 Chevrolet Trailblazer FWD RS</p>
+            <p class="meta"><span class="house-inline">IAAI</span> · Stock #45857740</p>
+            <div class="facts"><span class="fact">2023</span><span class="fact">37,350 mi</span><span class="fact">Rear</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="photo"></div>
+          <div class="body">
+            <p class="title">2021 Honda Accord Sport</p>
+            <p class="meta"><span class="house-inline copart">Copart</span> · Lot #48291033</p>
+            <div class="facts"><span class="fact">2021</span><span class="fact">61,204 mi</span><span class="fact">Front</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <p class="kicker">03</p>
+      <h2>Color rail</h2>
+      <p class="why">A list scans by color before it scans by words. Terracotta is IAAI. Sand is Copart. The name is still written under the title.</p>
+      <div class="row">
+        <article class="card rail">
+          <div class="photo"></div>
+          <div class="body">
+            <p class="rail-name">IAAI</p>
+            <p class="title">2023 Chevrolet Trailblazer FWD RS</p>
+            <p class="meta">Stock #45857740</p>
+          </div>
+        </article>
+        <article class="card rail copart">
+          <div class="photo"></div>
+          <div class="body">
+            <p class="rail-name">Copart</p>
+            <p class="title">2021 Honda Accord Sport</p>
+            <p class="meta">Lot #48291033</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <p class="kicker">04</p>
+      <h2>Monogram</h2>
+      <p class="why">One letter on the photo, the full name in the stock line. The mark is a stamp, not a caption.</p>
+      <div class="row">
+        <article class="card">
+          <div class="photo"><span class="mono">I</span></div>
+          <div class="body">
+            <p class="title">2023 Chevrolet Trailblazer FWD RS</p>
+            <p class="meta"><span class="house-inline">IAAI</span> · Stock #45857740</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="photo"><span class="mono copart">C</span></div>
+          <div class="body">
+            <p class="title">2021 Honda Accord Sport</p>
+            <p class="meta"><span class="house-inline copart">Copart</span> · Lot #48291033</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <p class="kicker">05</p>
+      <h2>Fact chip</h2>
+      <p class="why">The same pill language as the filter sheet, placed with year and mileage. Nothing is drawn on the photo.</p>
+      <div class="row">
+        <article class="card">
+          <div class="photo"></div>
+          <div class="body">
+            <p class="title">2023 Chevrolet Trailblazer FWD RS</p>
+            <p class="meta">Stock #45857740</p>
+            <div class="facts">
+              <span class="chip">IAAI</span>
+              <span class="fact">2023</span>
+              <span class="fact">37,350 mi</span>
+            </div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="photo"></div>
+          <div class="body">
+            <p class="title">2021 Honda Accord Sport</p>
+            <p class="meta">Lot #48291033</p>
+            <div class="facts">
+              <span class="chip copart">Copart</span>
+              <span class="fact">2021</span>
+              <span class="fact">61,204 mi</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

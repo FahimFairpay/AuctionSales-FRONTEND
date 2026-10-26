@@ -6,6 +6,10 @@ import { listFavorites, toggleFavorite } from "../../api/inventory";
 import { useToast } from "../../components/Toast";
 import type { FavoriteItem } from "../../types/api";
 
+export function favoriteKey(stockNumber: string, source?: string) {
+  return `${(source || "IAAI").toUpperCase()}:${stockNumber}`;
+}
+
 export function useFavorites({ onPhoneRequired }: { onPhoneRequired?: () => void } = {}) {
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
@@ -24,7 +28,7 @@ export function useFavorites({ onPhoneRequired }: { onPhoneRequired?: () => void
       : (raw?.items ?? raw?.favorites ?? []);
     for (const item of items) {
       if (item.stockNumber) {
-        set.add(item.stockNumber);
+        set.add(favoriteKey(item.stockNumber, item.source));
       }
     }
     return set;
@@ -45,12 +49,19 @@ export function useFavorites({ onPhoneRequired }: { onPhoneRequired?: () => void
 
       queryClient.setQueryData<{ items: FavoriteItem[] }>(["favorites"], (old) => {
         const current = old?.items ?? [];
-        const exists = current.some((it) => it.stockNumber === stockNumber);
+        const exists = current.some(
+          (it) => favoriteKey(it.stockNumber, it.source) === favoriteKey(stockNumber, lotData?.source),
+        );
         if (exists) {
-          return { items: current.filter((it) => it.stockNumber !== stockNumber) };
+          return {
+            items: current.filter(
+              (it) => favoriteKey(it.stockNumber, it.source) !== favoriteKey(stockNumber, lotData?.source),
+            ),
+          };
         } else {
           const newItem: FavoriteItem = {
             stockNumber,
+            source: lotData?.source,
             title: lotData?.title || `Stock #${stockNumber}`,
             imageUrl: lotData?.imageUrl,
             vin: lotData?.vin,
@@ -94,7 +105,8 @@ export function useFavorites({ onPhoneRequired }: { onPhoneRequired?: () => void
     },
   });
 
-  const isFavorite = (stockNumber: string) => favoriteStockNumbers.has(stockNumber);
+  const isFavorite = (stockNumber: string, source?: string) =>
+    favoriteStockNumbers.has(favoriteKey(stockNumber, source));
 
   const toggle = (stockNumber: string, lotData?: Partial<FavoriteItem>) => {
     return mutation.mutateAsync({ stockNumber, lotData });

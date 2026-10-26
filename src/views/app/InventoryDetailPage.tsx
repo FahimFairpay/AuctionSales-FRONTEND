@@ -6,8 +6,10 @@ import { Link, useLocation, useParams } from "@/compat/router";
 import { getInventoryItem } from "../../api/inventory";
 import { Card } from "../../components/Card";
 import { FairOrb } from "../../components/orb/FairOrb";
+import { ImageGallery } from "../../components/ImageGallery";
 import { CARD_GROUPS, formatCardValue } from "../../features/inventory/cardFields";
 import { InventoryThumb } from "../../features/inventory/InventoryThumb";
+import { SourceCornerLabel } from "../../features/inventory/SourceGlassPill";
 import { PhonePromptModal } from "../../features/inventory/PhonePromptModal";
 import { useFavorites } from "../../features/inventory/useFavorites";
 import { paths } from "../../routes/paths";
@@ -43,7 +45,7 @@ export function InventoryDetailPage() {
   }
   const row = item.data;
   const heading = row.title || row.stockNumber;
-  const isFav = favorites.isFavorite(row.stockNumber);
+  const isFav = favorites.isFavorite(row.stockNumber, row.source);
 
   return (
     <div className="space-y-3 lg:max-h-[calc(100dvh-7.5rem)] lg:overflow-hidden">
@@ -53,26 +55,41 @@ export function InventoryDetailPage() {
         </svg>
         Inventory
       </Link>
-      <h1 className="text-balance font-serif text-[28px] leading-9 tracking-[-0.03em] lg:text-[40px] lg:leading-[1.15]">
-        {row.detailLink ? (
-          <a href={row.detailLink} target="_blank" rel="noreferrer" className="text-ink hover:text-accent">
-            {heading}
-          </a>
-        ) : (
-          heading
-        )}
-      </h1>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-balance font-serif text-[28px] leading-9 tracking-[-0.03em] lg:text-[40px] lg:leading-[1.15]">
+          {row.outboundAuctionUrl || row.detailLink ? (
+            <a
+              href={row.outboundAuctionUrl || row.detailLink}
+              target="_blank"
+              rel="noreferrer"
+              className="text-ink hover:text-accent"
+            >
+              {heading}
+            </a>
+          ) : (
+            heading
+          )}
+        </h1>
+      </div>
       <div className="grid min-h-0 gap-5 lg:grid-cols-[minmax(24rem,0.95fr)_minmax(0,1.05fr)] lg:items-start">
         <div className="relative group/thumb overflow-hidden rounded-[8px]">
-          <InventoryThumb
-            src={row.imageUrl}
-            title={row.title}
-            className="aspect-[16/10] w-full rounded-[8px] border border-hairline lg:aspect-auto lg:h-[min(420px,48vh)] lg:max-h-[min(420px,48vh)]"
-          />
+          {row.gallery && row.gallery.length > 0 ? (
+            <ImageGallery gallery={row.gallery} vehicleTitle={heading} primaryFallbackUrl={row.imageUrl} />
+          ) : (
+            <InventoryThumb
+              src={row.imageUrl}
+              title={row.title}
+              className="aspect-[16/10] w-full rounded-[8px] border border-hairline lg:aspect-auto lg:h-[min(420px,48vh)] lg:max-h-[min(420px,48vh)]"
+            />
+          )}
+          <div className="absolute top-2 left-2 z-10">
+            <SourceCornerLabel source={row.source} />
+          </div>
           <button
             type="button"
             onClick={() => {
               void favorites.toggle(row.stockNumber, {
+                source: row.source,
                 title: row.title,
                 imageUrl: row.imageUrl,
                 vin: row.vin,

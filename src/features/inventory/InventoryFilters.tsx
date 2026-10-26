@@ -17,12 +17,18 @@ import {
   listFiltersFromRecipe,
   type InventoryQuery,
 } from "./query";
+import { ProviderChoice } from "./SourceGlassPill";
 
 const RANGE_SPECS: Array<{ kind: RangeKind; label: string; step: number }> = [
   { kind: "year", label: "Year", step: 1 },
   { kind: "odo", label: "Odometer", step: 500 },
   { kind: "score", label: "Score", step: 1 },
 ];
+
+const activePill =
+  "inline-flex h-8 items-center rounded-full border border-accent/70 bg-accent/10 px-3 text-[13px] font-medium text-accent backdrop-blur-sm shadow-[0_0_8px_0_rgba(217,119,87,.25)] transition-all duration-[120ms] select-none";
+const idlePill =
+  "inline-flex h-8 items-center rounded-full border border-hairline/60 bg-surface-muted/40 px-3 text-[13px] font-medium text-muted backdrop-blur-sm hover:text-ink hover:border-hairline hover:bg-surface-muted/70 transition-all duration-[120ms] select-none";
 
 export function InventoryFilterPill({
   recipe,
@@ -136,6 +142,15 @@ export function InventoryFilterPill({
           </div>
         </div>
 
+        <div className="mt-5">
+          <p className="mb-2 text-xs font-medium text-ink">Provider</p>
+          <ProviderChoice
+            includeAll
+            value={query.source}
+            onChange={(next) => onChange({ ...query, source: next, cursor: undefined })}
+          />
+        </div>
+
         {/* List facets — glassy pills */}
         {listKeys.length > 0 ? (
           <div className="mt-5 flex flex-wrap gap-6">
@@ -169,10 +184,7 @@ export function InventoryFilterPill({
                                 : [...current, option],
                             });
                           }}
-                          className={active
-                            ? "inline-flex h-8 items-center rounded-full border border-accent/70 bg-accent/10 px-3 text-[13px] font-medium text-accent backdrop-blur-sm shadow-[0_0_8px_0_rgba(217,119,87,.25)] transition-all duration-[120ms] select-none"
-                            : "inline-flex h-8 items-center rounded-full border border-hairline/60 bg-surface-muted/40 px-3 text-[13px] font-medium text-muted backdrop-blur-sm hover:text-ink hover:border-hairline hover:bg-surface-muted/70 transition-all duration-[120ms] select-none"
-                          }
+                          className={active ? activePill : idlePill}
                         >
                           {option}
                         </button>

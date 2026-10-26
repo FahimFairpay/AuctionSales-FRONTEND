@@ -34,6 +34,8 @@ describe("inventory query", () => {
   it("counts facets without the search box", () => {
     expect(inventoryFacetCount({ limit: 25, modelContains: "kia" })).toBe(0);
     expect(inventoryFacetCount({ limit: 25, vehicleTypes: ["SUVs"], yearMin: "2020" })).toBe(2);
+    expect(inventoryFacetCount({ limit: 25, source: "COPART" })).toBe(1);
+    expect(inventoryFacetCount({ limit: 25, source: "ALL" })).toBe(0);
   });
 
   it("exposes 25 50 100 and drops the cursor when page size changes", () => {
@@ -41,5 +43,22 @@ describe("inventory query", () => {
     const next = toInventorySearch({ limit: 100, cursor: "page-2", yearMin: "2020" }, false);
     expect(next.get("cursor")).toBeNull();
     expect(next.get("limit")).toBe("100");
+  });
+
+  it("parses and serializes multi-source auction filters (IAAI / COPART / ALL)", () => {
+    const copartParsed = parseInventorySearch("?limit=25&source=copart");
+    expect(copartParsed.source).toBe("COPART");
+    const copartSearch = toInventorySearch(copartParsed);
+    expect(copartSearch.get("source")).toBe("COPART");
+
+    const iaaiParsed = parseInventorySearch("?limit=25&source=iaai");
+    expect(iaaiParsed.source).toBe("IAAI");
+    const iaaiSearch = toInventorySearch(iaaiParsed);
+    expect(iaaiSearch.get("source")).toBe("IAAI");
+
+    const allParsed = parseInventorySearch("?limit=25&source=ALL");
+    expect(allParsed.source).toBe("ALL");
+    const allSearch = toInventorySearch(allParsed);
+    expect(allSearch.get("source")).toBeNull(); // Omitted when ALL to keep URLs clean
   });
 });

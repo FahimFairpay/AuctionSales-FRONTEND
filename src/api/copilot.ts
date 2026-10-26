@@ -9,6 +9,8 @@ export interface CopilotMessage {
 
 export interface MatchedVehicle {
   stockNumber: string;
+  source?: string;
+  gallery?: Array<{ sequence?: number; thumb?: string; large?: string; hd?: string }> | string[];
   year?: number;
   make?: string;
   model?: string;

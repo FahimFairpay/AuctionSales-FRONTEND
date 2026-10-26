@@ -11,6 +11,7 @@ const nextConfig: NextConfig & { agentRules?: boolean } = {
       { protocol: "https", hostname: "vis.iaai.com" },
       { protocol: "https", hostname: "images.iaai.com" },
       { protocol: "https", hostname: "*.s3.amazonaws.com" },
+      { protocol: "https", hostname: "cs.copart.com" },
     ],
     formats: ["image/avif", "image/webp"],
   },

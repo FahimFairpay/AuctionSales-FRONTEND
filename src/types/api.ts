@@ -1,6 +1,7 @@
 import type { RecipeFilters } from "./filters";
 
 export type Role = "Admin" | "User";
+export type AuctionSource = "IAAI" | "COPART";
 export type RunStatus =
   | "PROCESSING"
   | "SCRAPED"
@@ -198,7 +199,16 @@ export type InventoryItem = {
   sellerType?: string;
   acv?: number;
   region?: string;
+  state?: string;
+  source?: AuctionSource;
+  sourceId?: string;
+  gallery?: Array<{ sequence?: number; thumb?: string; large?: string; hd?: string }> | string[];
+  outboundAuctionUrl?: string;
+  titleCategory?: "CLEAN" | "SALVAGE";
+  cleanTitle?: boolean;
 };
+
+export type InventoryLotItem = InventoryItem;
 
 export type FailureItem = {
   kind: "desk" | "scrape";
@@ -262,7 +272,36 @@ export type CrawlSchedule = {
   enabled: boolean;
   cronExpression: string;
   timezone: string;
+  source?: AuctionSource;
+  recipeId?: string;
+  eventBridgeScheduleName?: string;
+  createdAt?: string;
+  lastRunAt?: string;
 };
+
+export type AdminSchedule = CrawlSchedule;
+
+export interface CopartRecipeRules {
+  source: "COPART";
+  yearMin: number;
+  maxOdometer: number;
+  allowedDocTypes: string[];
+  prohibitedDamageTypes: string[];
+  cleanTitleOnly: boolean;
+  requiresRunsDrives: boolean;
+  requiresKeys: boolean;
+  prohibitedFuelTypes: string[];
+  prohibitedBodyStyles: string[];
+  maxRetailTier?: number;
+}
+
+export interface IaaiRecipeRules {
+  source: "IAAI";
+  facets: Record<string, string[]>;
+  rangeFilters: Record<string, { min?: number; max?: number }>;
+}
+
+export type ScrapeRecipe = CopartRecipeRules | IaaiRecipeRules;
 
 export type RecipeWriteResult = {
   recipeVersion?: string;
@@ -277,6 +316,7 @@ export type ExecutionLog = ActivityLog;
 
 export type FavoriteItem = {
   stockNumber: string;
+  source?: AuctionSource | string;
   title: string;
   imageUrl?: string;
   vin?: string;
@@ -291,6 +331,7 @@ export type FavoriteItem = {
 
 export type ToggleFavoriteResponse = {
   stockNumber: string;
+  source?: string;
   isFavorite: boolean;
   savedAt?: string;
   removedAt?: string;

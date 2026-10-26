@@ -6,6 +6,7 @@ import { Field } from "../../components/Field";
 import { Input } from "../../components/Input";
 import type { CrawlSchedule } from "../../types/api";
 import { SchedulePanel, cronToSchedule, schedulePreview, scheduleToCron, type ScheduleDraft } from "../watchlists/SchedulePanel";
+import { ProviderChoice } from "../inventory/SourceGlassPill";
 
 export function CrawlScheduleDialog({
   open,
@@ -20,12 +21,22 @@ export function CrawlScheduleDialog({
   pending: boolean;
   error: string;
   onClose: () => void;
-  onSave: (body: { name: string; enabled?: boolean; cronExpression: string; timezone: string }) => void;
+  onSave: (body: {
+    name: string;
+    source?: "IAAI" | "COPART";
+    enabled: boolean;
+    cronExpression: string;
+    timezone: string;
+    recipeId?: string;
+  }) => void;
 }) {
   const [name, setName] = useState(initial?.name || "");
+  const [source, setSource] = useState<"IAAI" | "COPART">(initial?.source || "COPART");
   const [draft, setDraft] = useState<ScheduleDraft>(() => cronToSchedule(initial));
+
   useEffect(() => {
     setName(initial?.name || "");
+    setSource(initial?.source || "COPART");
     setDraft(cronToSchedule(initial));
   }, [initial, open]);
 
@@ -40,15 +51,24 @@ export function CrawlScheduleDialog({
       onConfirm={() =>
         onSave({
           name: name.trim(),
+          source,
+          recipeId: `RECIPE#${source}`,
           cronExpression: scheduleToCron(draft),
           timezone: "America/Chicago",
-          ...(initial ? {} : { enabled: true }),
+          enabled: initial ? initial.enabled : true,
         })
       }
     >
-      <Field label="Name" htmlFor="schedule-name">
-        <Input id="schedule-name" value={name} onChange={(event) => setName(event.target.value)} />
-      </Field>
+      <div className="space-y-3">
+        <Field label="Name" htmlFor="schedule-name">
+          <Input id="schedule-name" value={name} onChange={(event) => setName(event.target.value)} />
+        </Field>
+
+        <Field label="Provider" htmlFor="schedule-source">
+          <ProviderChoice value={source} onChange={(next) => next && setSource(next)} />
+        </Field>
+      </div>
+
       <div className="mt-4">
         <SchedulePanel value={draft} onChange={setDraft} />
       </div>

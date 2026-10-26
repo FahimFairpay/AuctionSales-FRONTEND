@@ -64,6 +64,10 @@ export function NavLink({
 
 export type To = string | number | { pathname?: string; search?: string; hash?: string };
 
+let globalNavState: any = null;
+let globalNavTarget: string | null = null;
+const NAV_STATE_SESSION_PREFIX = "fps_nav_state_";
+
 export function useNavigate() {
   const router = useNextRouter();
 
@@ -82,6 +86,19 @@ export function useNavigate() {
         ? to
         : `${to.pathname || ""}${to.search || ""}${to.hash || ""}`;
 
+    if (options?.state !== undefined) {
+      globalNavState = options.state;
+      globalNavTarget = pathStr.split("?")[0].split("#")[0];
+      if (typeof window !== "undefined") {
+        try {
+          sessionStorage.setItem(
+            `${NAV_STATE_SESSION_PREFIX}${globalNavTarget}`,
+            JSON.stringify(options.state)
+          );
+        } catch {}
+      }
+    }
+
     if (options?.replace) {
       router.replace(pathStr);
     } else {
@@ -95,15 +112,30 @@ export function useLocation() {
   const searchParams = useNextSearchParams();
   const search = searchParams?.toString() ? `?${searchParams.toString()}` : "";
 
+  const state = useMemo(() => {
+    if (globalNavTarget && pathname === globalNavTarget && globalNavState !== null) {
+      return globalNavState;
+    }
+    if (typeof window !== "undefined") {
+      try {
+        const item = sessionStorage.getItem(`${NAV_STATE_SESSION_PREFIX}${pathname}`);
+        if (item) {
+          return JSON.parse(item);
+        }
+      } catch {}
+    }
+    return null;
+  }, [pathname]);
+
   return useMemo(
     () => ({
       pathname,
       search,
       hash: typeof window !== "undefined" ? window.location.hash : "",
-      state: null,
+      state,
       key: "default",
     }),
-    [pathname, search]
+    [pathname, search, state]
   );
 }
 

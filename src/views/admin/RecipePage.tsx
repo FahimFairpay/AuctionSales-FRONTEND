@@ -1,18 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "@/compat/router";
+import { unlockAdminRecipe } from "../../api/scrape";
 import { Button } from "../../components/Button";
 import { Dialog } from "../../components/Dialog";
+import { PinBoxInput } from "../../components/PinBoxInput";
 import { RangeSlider } from "../../components/RangeSlider";
+import { Spinner } from "../../components/Spinner";
 import { formatWhen } from "../../date/chicago";
 import { RecipeSaveModal } from "../../features/scrape/RecipeSaveModal";
 import { RecipePinChangeModal } from "../../features/scrape/RecipePinChangeModal";
+import { serializeCatalog } from "../../features/scrape/RecipeEditor";
 import { IAAI_OPTIONS, IAAI_RANGE_BOUNDS, fmtRange } from "../../features/scrape/iaaiOptions";
 import { hydrateFormState, type RecipeFormState } from "../../features/watchlists/formState";
 import { paths } from "../../routes/paths";
-import type { PublicRecipe } from "../../types/api";
+import type { CopartRecipeRules, PublicRecipe } from "../../types/api";
 import { RECIPE_BOOL_KEYS, RECIPE_LABELS, type RecipeListKey, type RecipeRangeKey } from "../../types/filters";
+
+const DEFAULT_COPART_RULES: CopartRecipeRules = {
+  source: "COPART",
+  yearMin: 2018,
+  maxOdometer: 85000,
+  allowedDocTypes: ["CT", "CLEAN TITLE", "CLEAR"],
+  prohibitedDamageTypes: ["WATER/FLOOD", "BIOHAZARD/CHEMICAL", "STRIPPED", "BURN"],
+  cleanTitleOnly: true,
+  requiresRunsDrives: true,
+  requiresKeys: true,
+  prohibitedFuelTypes: ["COMPRESSED NATURAL GAS", "PROPANE GAS"],
+  prohibitedBodyStyles: ["COMMERCIAL TRUCK", "BUS", "TRAILER"],
+};
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 const TOTAL = 6;
@@ -165,11 +182,18 @@ function ReviewGroup({ label, editStep, lists, ranges, state, onEdit, readonly }
 
 // ─── Preview mode: read-only display of recipe ───────────────────────────────
 
-function RecipePreview({ recipe, state, onEdit, onChangePinOpen }: {
+function RecipePreview({
+  recipe,
+  state,
+  onEdit,
+  onChangePinOpen,
+  onLock,
+}: {
   recipe: PublicRecipe;
   state: RecipeFormState;
   onEdit: () => void;
   onChangePinOpen: () => void;
+  onLock: () => void;
 }) {
   const navigate = useNavigate();
   const boolActive = RECIPE_BOOL_KEYS.filter((k) => state[k] as boolean);
@@ -197,6 +221,7 @@ function RecipePreview({ recipe, state, onEdit, onChangePinOpen }: {
         </div>
         {/* Actions */}
         <div className="flex flex-wrap items-center gap-2">
+          <Button variant="ghost" onClick={onLock}>Lock</Button>
           <Button variant="secondary" onClick={onChangePinOpen}>Change PIN</Button>
           <Button onClick={onEdit}>Edit recipe</Button>
         </div>
@@ -227,7 +252,99 @@ function RecipePreview({ recipe, state, onEdit, onChangePinOpen }: {
   );
 }
 
+function CopartRecipeEditor({
+  rules,
+  onChange,
+  onSave,
+  saving,
+}: {
+  rules: CopartRecipeRules;
+  onChange: (next: CopartRecipeRules) => void;
+  onSave: () => void;
+  saving: boolean;
+}) {
+  return (
+    <div className="space-y-6 rounded-[12px] border border-hairline bg-surface p-6 shadow-sm">
+      <div className="border-b border-hairline pb-4">
+        <h2 className="font-serif text-xl text-ink">Copart 13-Rule Pre-Filtering Criteria</h2>
+        <p className="mt-1 text-xs text-muted">
+          These rules execute in ECS on ~135,000 raw Copart listings in under 2 seconds, retaining clean vehicles.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-muted mb-1">Minimum Model Year</label>
+          <input
+            type="number"
+            value={rules.yearMin}
+            onChange={(e) => onChange({ ...rules, yearMin: Number(e.target.value) })}
+            className="h-9 w-full rounded-[6px] border border-hairline bg-surface px-3 text-sm text-ink focus:border-accent focus:outline-none"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-muted mb-1">Maximum Odometer (Miles)</label>
+          <input
+            type="number"
+            value={rules.maxOdometer}
+            onChange={(e) => onChange({ ...rules, maxOdometer: Number(e.target.value) })}
+            className="h-9 w-full rounded-[6px] border border-hairline bg-surface px-3 text-sm text-ink focus:border-accent focus:outline-none"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-3 pt-2">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={rules.cleanTitleOnly}
+            onChange={(e) => onChange({ ...rules, cleanTitleOnly: e.target.checked })}
+            className="h-4 w-4 rounded border-hairline text-accent"
+          />
+          <span className="text-sm text-ink font-medium">Clean Title Only (Doc Type: CT / CLEAR)</span>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={rules.requiresRunsDrives}
+            onChange={(e) => onChange({ ...rules, requiresRunsDrives: e.target.checked })}
+            className="h-4 w-4 rounded border-hairline text-accent"
+          />
+          <span className="text-sm text-ink font-medium">Require Runs & Drives (Start Code: RUNS)</span>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={rules.requiresKeys}
+            onChange={(e) => onChange({ ...rules, requiresKeys: e.target.checked })}
+            className="h-4 w-4 rounded border-hairline text-accent"
+          />
+          <span className="text-sm text-ink font-medium">Require Keys Present (hasKeyFlag: YES)</span>
+        </label>
+      </div>
+
+      <div className="pt-4 border-t border-hairline flex justify-end">
+        <Button onClick={onSave} disabled={saving}>
+          {saving ? <Spinner /> : "Save Copart Recipe"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main RecipePage ──────────────────────────────────────────────────────────
+
+const RECIPE_SESSION_KEY = "fps_unlocked_recipe";
+
+function getStoredRecipe(): PublicRecipe | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(RECIPE_SESSION_KEY);
+    return raw ? (JSON.parse(raw) as PublicRecipe) : null;
+  } catch {
+    return null;
+  }
+}
 
 export function RecipePage() {
   const location = useLocation();
@@ -236,32 +353,136 @@ export function RecipePage() {
   const passedRecipe = locState?.recipe ?? null;
   const initialMode = locState?.mode === "preview" ? "preview" : "edit";
 
-  const [recipe] = useState<PublicRecipe | null>(passedRecipe);
-  const [state, setState] = useState<RecipeFormState>(
-    passedRecipe ? hydrateFormState(passedRecipe.filters) : (null as unknown as RecipeFormState),
-  );
-  const [mode, setMode] = useState<"preview" | "edit">(passedRecipe ? initialMode : "edit");
+  const [recipe, setRecipe] = useState<PublicRecipe | null>(() => passedRecipe ?? getStoredRecipe());
+  const [state, setState] = useState<RecipeFormState | null>(() => {
+    const rec = passedRecipe ?? getStoredRecipe();
+    return rec ? hydrateFormState(rec.filters) : null;
+  });
+  const [mode, setMode] = useState<"preview" | "edit">(() => (passedRecipe || getStoredRecipe() ? initialMode : "edit"));
   const [step, setStep] = useState<Step>(1);
   const [saveOpen, setSaveOpen] = useState(false);
   const [pinOpen, setPinOpen] = useState(false);
   const [backOpen, setBackOpen] = useState(false);
-  const [recipeVersion, setRecipeVersion] = useState(passedRecipe?.recipeVersion ?? "");
+  const [recipeVersion, setRecipeVersion] = useState(() => (passedRecipe ?? getStoredRecipe())?.recipeVersion ?? "");
   const [dirty, setDirty] = useState(false);
+  const [providerTab, setProviderTab] = useState<"IAAI" | "COPART">("IAAI");
+  const [copartRules, setCopartRules] = useState<CopartRecipeRules>(DEFAULT_COPART_RULES);
+  const [savingCopart, setSavingCopart] = useState(false);
+
+  // In-page unlock state when locked
+  const [unlockPin, setUnlockPin] = useState("");
+  const [unlockError, setUnlockError] = useState("");
+  const [unlocking, setUnlocking] = useState(false);
+
+  useEffect(() => {
+    if (passedRecipe) {
+      setRecipe(passedRecipe);
+      setState(hydrateFormState(passedRecipe.filters));
+      setRecipeVersion(passedRecipe.recipeVersion ?? "");
+      if (locState?.mode === "preview" || locState?.mode === "edit") {
+        setMode(locState.mode);
+      }
+      try {
+        sessionStorage.setItem(RECIPE_SESSION_KEY, JSON.stringify(passedRecipe));
+      } catch {}
+    }
+  }, [passedRecipe, locState?.mode]);
+
+  async function handleUnlock(pinVal?: string) {
+    const p = pinVal ?? unlockPin;
+    if (p.length < 6) {
+      setUnlockError("Enter all 6 digits.");
+      return;
+    }
+    setUnlockError("");
+    setUnlocking(true);
+    try {
+      const unl = await unlockAdminRecipe(p);
+      setRecipe(unl);
+      setState(hydrateFormState(unl.filters));
+      setRecipeVersion(unl.recipeVersion ?? "");
+      setMode("preview");
+      try {
+        sessionStorage.setItem(RECIPE_SESSION_KEY, JSON.stringify(unl));
+      } catch {}
+    } catch (err) {
+      setUnlockError(err instanceof Error ? err.message : "Invalid PIN.");
+      setUnlockPin("");
+    } finally {
+      setUnlocking(false);
+    }
+  }
+
+  function handleLock() {
+    try {
+      sessionStorage.removeItem(RECIPE_SESSION_KEY);
+    } catch {}
+    setRecipe(null);
+    setState(null);
+    setUnlockPin("");
+    setUnlockError("");
+  }
 
   if (!recipe || !state) {
     return (
-      <div className="space-y-4">
-        <h1 className="font-serif text-[28px] leading-9 tracking-[-0.03em] break-words lg:text-[34px] lg:leading-10">Settings</h1>
-        <p className="text-sm text-muted">
-          Go to{" "}<button type="button" className="text-accent hover:underline" onClick={() => navigate(paths.adminCrawler)}>Schedules</button>{" "}and click the Recipe icon to unlock.
-        </p>
+      <div className="space-y-6">
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <div>
+            <h1 className="font-serif text-[28px] leading-9 tracking-[-0.03em] break-words lg:text-[34px] lg:leading-10">Settings</h1>
+            <p className="mt-0.5 text-sm text-muted">Scrape recipe configuration &amp; filters.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate(paths.adminCrawler)}
+            className="text-xs text-muted hover:text-ink flex items-center gap-1.5"
+          >
+            ← Back to Schedules
+          </button>
+        </div>
+
+        <div className="mx-auto mt-6 max-w-sm rounded-[12px] border border-hairline bg-surface p-7 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <rect x="5" y="3.5" width="14" height="17" rx="2" />
+                <path d="M8 8h8M8 12h8M8 16h5" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="font-serif text-xl text-ink">Unlock recipe</h2>
+              <p className="text-xs text-muted">Enter your 6-digit PIN to view and edit.</p>
+            </div>
+          </div>
+
+          <div className="mt-6 space-y-5">
+            <PinBoxInput
+              value={unlockPin}
+              onChange={setUnlockPin}
+              onComplete={(p) => void handleUnlock(p)}
+              autoFocus
+              label="Recipe PIN"
+            />
+            {unlockError ? (
+              <p className="rounded-[8px] border border-danger/30 bg-danger/10 px-3 py-2 text-sm text-danger">
+                {unlockError}
+              </p>
+            ) : null}
+            <Button
+              className="w-full"
+              disabled={unlocking || unlockPin.length < 6}
+              onClick={() => void handleUnlock()}
+            >
+              {unlocking ? <Spinner /> : "Unlock recipe"}
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }
 
   function patch(next: Partial<RecipeFormState>) {
     setDirty(true);
-    setState((c) => ({ ...c, ...next }));
+    setState((c) => (c ? { ...c, ...next } : c));
   }
 
   function handleBack() {
@@ -271,15 +492,68 @@ export function RecipePage() {
   // ── Preview mode ──────────────────────────────────────────────────────────
   if (mode === "preview") {
     return (
-      <>
-        <RecipePreview
-          recipe={recipe}
-          state={state}
-          onEdit={() => { setStep(1); setMode("edit"); }}
-          onChangePinOpen={() => setPinOpen(true)}
-        />
-        <RecipePinChangeModal open={pinOpen} onClose={() => setPinOpen(false)} onChanged={() => setPinOpen(false)} />
-      </>
+      <div className="space-y-4">
+        {/* Top Provider Tab Switcher */}
+        <div className="inline-flex p-0.5 rounded-[8px] border border-hairline bg-surface">
+          <button
+            type="button"
+            onClick={() => setProviderTab("IAAI")}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              providerTab === "IAAI"
+                ? "border border-accent/70 bg-accent/10 text-accent shadow-[0_0_8px_0_rgba(217,119,87,.25)]"
+                : "text-muted hover:text-ink hover:bg-surface-muted"
+            }`}
+          >
+            IAAI Recipe (Search Facets)
+          </button>
+          <button
+            type="button"
+            onClick={() => setProviderTab("COPART")}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+              providerTab === "COPART"
+                ? "border border-accent/70 bg-accent/10 text-accent shadow-[0_0_8px_0_rgba(217,119,87,.25)]"
+                : "text-muted hover:text-ink hover:bg-surface-muted"
+            }`}
+          >
+            Copart Recipe (13 Vectorized Rules)
+          </button>
+        </div>
+
+        {providerTab === "COPART" ? (
+          <CopartRecipeEditor
+            rules={copartRules}
+            onChange={setCopartRules}
+            onSave={async () => {
+              setSavingCopart(true);
+              try {
+                const res = await fetch("/api/admin/recipes?source=copart", {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ rules: copartRules }),
+                });
+                if (res.ok) alert("Copart 13-Rule Pre-filter recipe saved successfully!");
+                else alert("Failed to save Copart recipe.");
+              } catch (e: any) {
+                alert("Error saving Copart recipe: " + e.message);
+              } finally {
+                setSavingCopart(false);
+              }
+            }}
+            saving={savingCopart}
+          />
+        ) : (
+          <>
+            <RecipePreview
+              recipe={recipe}
+              state={state}
+              onEdit={() => { setStep(1); setMode("edit"); }}
+              onChangePinOpen={() => setPinOpen(true)}
+              onLock={handleLock}
+            />
+            <RecipePinChangeModal open={pinOpen} onClose={() => setPinOpen(false)} onChanged={() => setPinOpen(false)} />
+          </>
+        )}
+      </div>
     );
   }
 
@@ -441,8 +715,28 @@ export function RecipePage() {
         </div>
       </div>
 
-      <RecipeSaveModal open={saveOpen} state={state} onClose={() => setSaveOpen(false)}
-        onSaved={(version) => { setRecipeVersion(version); setDirty(false); setMode("preview"); }} />
+      <RecipeSaveModal
+        open={saveOpen}
+        state={state}
+        onClose={() => setSaveOpen(false)}
+        onSaved={(version) => {
+          setRecipeVersion(version);
+          setDirty(false);
+          setMode("preview");
+          if (recipe) {
+            const updatedRecipe: PublicRecipe = {
+              ...recipe,
+              recipeVersion: version,
+              filters: serializeCatalog(state),
+              updatedAt: new Date().toISOString(),
+            };
+            setRecipe(updatedRecipe);
+            try {
+              sessionStorage.setItem(RECIPE_SESSION_KEY, JSON.stringify(updatedRecipe));
+            } catch {}
+          }
+        }}
+      />
       <RecipePinChangeModal open={pinOpen} onClose={() => setPinOpen(false)} onChanged={() => setPinOpen(false)} />
       <Dialog open={backOpen} title="Leave without saving?" confirmLabel="Discard" cancelLabel="Stay" danger
         onClose={() => setBackOpen(false)} onConfirm={() => { setDirty(false); setMode("preview"); }}>
