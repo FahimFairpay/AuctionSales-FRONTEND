@@ -10,17 +10,21 @@ export function InventoryThumb({
   className = "",
   compact = false,
   shots,
+  loadShots,
 }: {
   src?: string;
   title?: string;
   className?: string;
   compact?: boolean;
   shots?: VisCandidate[];
+  loadShots?: () => Promise<VisCandidate[]>;
 }) {
   const [failed, setFailed] = useState(false);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fetched, setFetched] = useState<VisCandidate[] | null>(null);
   const generated = useMemo(() => (src ? expandVisImages(src) : []), [src]);
-  const photos = shots && shots.length > 0 ? shots : generated;
+  const photos = fetched && fetched.length > 0 ? fetched : shots && shots.length > 0 ? shots : generated;
   const initial = (title || "?").slice(0, 1).toUpperCase();
   if (!src || failed) {
     return (
@@ -32,7 +36,7 @@ export function InventoryThumb({
   return (
     <span className={`group/thumb relative block overflow-hidden ${className}`}>
       <img src={src} alt="" className="h-full w-full object-cover" onError={() => setFailed(true)} />
-      {photos.length > 0 ? (
+      {photos.length > 0 || loadShots ? (
         <button
           type="button"
           aria-label="All images"
@@ -42,7 +46,19 @@ export function InventoryThumb({
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
-            setOpen(true);
+            if (photos.length > 0) {
+              setOpen(true);
+              return;
+            }
+            if (!loadShots || loading) return;
+            setLoading(true);
+            void loadShots()
+              .then((next) => {
+                const ready = next.length > 0 ? next : src ? [{ thumb: src, large: src, index: 1, set: null }] : [];
+                setFetched(ready);
+                setOpen(true);
+              })
+              .finally(() => setLoading(false));
           }}
         >
           <span className={`inline-flex shrink-0 items-center justify-center ${compact ? "h-6 w-6" : "h-8 w-8"}`}>

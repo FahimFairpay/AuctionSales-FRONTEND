@@ -2,6 +2,7 @@
 
 import { Link } from "@/compat/router";
 import { InventoryThumb } from "../../../features/inventory/InventoryThumb";
+import { loadLotShots } from "../../../features/inventory/loadLotShots";
 import { Pill } from "../../../components/Pill";
 import { formatClock } from "../../../date/chicago";
 import { paths } from "../../../routes/paths";
@@ -40,7 +41,12 @@ export function LiveLotsStrip({ items }: { items: InventoryItem[] }) {
               to={paths.inventoryItem(item.stockNumber)}
               className="group block overflow-hidden rounded-[8px] border border-hairline bg-surface hover:border-accent/40"
             >
-              <InventoryThumb src={item.imageUrl} title={item.title} className="aspect-[16/10] w-full" />
+              <InventoryThumb
+                src={item.imageUrl}
+                title={item.title}
+                className="aspect-[16/10] w-full"
+                loadShots={() => loadLotShots(item.stockNumber, "app")}
+              />
               <div className="space-y-0.5 px-2.5 py-2">
                 <p className="line-clamp-2 font-serif text-[14px] leading-5 tracking-[-0.02em] text-ink group-hover:text-accent">
                   {item.title || item.stockNumber}

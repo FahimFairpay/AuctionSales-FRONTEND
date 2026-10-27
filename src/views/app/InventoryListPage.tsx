@@ -15,6 +15,7 @@ import { CustomizeListModal } from "../../features/inventory/CustomizeListModal"
 import { FilterLoadModal } from "../../features/inventory/FilterLoadModal";
 import { FilterSaveModal } from "../../features/inventory/FilterSaveModal";
 import { InventoryLotList } from "../../features/inventory/InventoryLotRow";
+import { loadLotShots } from "../../features/inventory/loadLotShots";
 import { InventoryToolbar } from "../../features/inventory/InventoryToolbar";
 import { PhonePromptModal } from "../../features/inventory/PhonePromptModal";
 import { favoriteKey, useFavorites } from "../../features/inventory/useFavorites";
@@ -26,6 +27,7 @@ import {
 } from "../../features/inventory/cardFields";
 import {
   inventoryHasFilters,
+  inventoryLoadedCount,
   PAGE_SIZES,
   parseInventorySearch,
   toInventorySearch,
@@ -50,6 +52,7 @@ export function InventoryListPage() {
   } | null>(null);
   const [onlyInterested, setOnlyInterested] = useState(false);
   const [fields, setFields] = useState<CardFieldId[]>([...DEFAULT_CARD_FIELDS]);
+  const [loaded, setLoaded] = useState(0);
 
   const favorites = useFavorites({
     onPhoneRequired: () => setPhonePromptOpen(true),
@@ -75,6 +78,7 @@ export function InventoryListPage() {
   useEffect(() => {
     setDraft(query.modelContains || "");
     setCursors([]);
+    setLoaded(0);
   }, [params, query.modelContains]);
 
   useEffect(() => {
@@ -112,7 +116,13 @@ export function InventoryListPage() {
   );
 
   const rawItems: InventoryItem[] = page.data?.items ?? [];
-  const total = page.data?.total;
+  const pageLength = rawItems.length;
+
+  useEffect(() => {
+    if (pageLength === 0) return;
+    setLoaded((current) => inventoryLoadedCount(current, pageIndex, query.limit, pageLength));
+  }, [pageIndex, pageLength, query.limit]);
+
   const filtered = inventoryHasFilters(query);
 
   const items = useMemo(() => {
@@ -144,10 +154,8 @@ export function InventoryListPage() {
         <div className="min-w-0">
           <h1 className="font-serif text-[28px] leading-9 tracking-[-0.03em] break-words lg:text-[34px] lg:leading-10">
             Inventory
-            {total != null ? (
-              <span className="ml-2 text-muted">({total})</span>
-            ) : items.length > 0 ? (
-              <span className="ml-2 text-muted">({items.length})</span>
+            {loaded > 0 ? (
+              <span className="ml-2 text-muted tabular">({loaded})</span>
             ) : null}
           </h1>
           <p className="mt-1 text-sm text-muted">Live auction lots.</p>
@@ -210,7 +218,24 @@ export function InventoryListPage() {
           fields={fields}
           isFavorite={favorites.isFavorite}
           onToggleFavorite={handleToggleFavorite}
+          loadGallery={(stockNumber) => loadLotShots(stockNumber, "app")}
         />
+      ) : null}
+      {loaded > 0 ? (
+        <div className="flex items-center justify-end gap-3">
+          <span className="text-sm text-muted tabular">{loaded}</span>
+          <PageStepper
+            page={pageIndex}
+            hasPrev={cursors.length > 0}
+            hasNext={Boolean(page.data?.nextCursor)}
+            pending={page.isFetching}
+            onPrev={() => setCursors((s) => s.slice(0, -1))}
+            onNext={() => {
+              const next = page.data?.nextCursor;
+              if (next) setCursors((s) => [...s, next]);
+            }}
+          />
+        </div>
       ) : null}
       <CustomizeListModal
         open={customOpen}

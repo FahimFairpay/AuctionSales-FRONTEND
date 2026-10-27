@@ -14,6 +14,7 @@ export interface PublicInventoryQuery {
   sort?: "score" | "bid_asc" | "bid_desc" | "year_desc" | "spread_desc";
   page?: number;
   limit?: number;
+  cursor?: string;
 }
 
 export function toPublicInventorySearch(query: PublicInventoryQuery): string {
@@ -30,6 +31,7 @@ export function toPublicInventorySearch(query: PublicInventoryQuery): string {
   if (query.sort) params.set("sort", query.sort);
   if (query.page) params.set("page", String(query.page));
   if (query.limit) params.set("limit", String(query.limit));
+  if (query.cursor) params.set("cursor", query.cursor);
   return params.toString();
 }
 

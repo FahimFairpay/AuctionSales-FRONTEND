@@ -5,7 +5,7 @@ import type { InventoryItem } from "../../types/api";
 import { paths } from "../../routes/paths";
 import { toInventorySearch, type InventoryQuery } from "./query";
 import { InventoryThumb } from "./InventoryThumb";
-import { galleryShots } from "./visImages";
+import { galleryShots, type VisCandidate } from "./visImages";
 import { formatFactLine, visibleTopics, type DisplayTopic } from "./displayTopics";
 import { fieldLabel, type CardFieldId } from "./cardFields";
 import { HeartFavoriteButton } from "./HeartFavoriteButton";
@@ -18,6 +18,7 @@ export function InventoryLotList({
   isFavorite,
   onToggleFavorite,
   hrefFor = paths.inventoryItem,
+  loadGallery,
 }: {
   items: InventoryItem[];
   query: InventoryQuery;
@@ -25,6 +26,7 @@ export function InventoryLotList({
   isFavorite?: (stockNumber: string, source?: string) => boolean;
   onToggleFavorite?: (item: InventoryItem) => void;
   hrefFor?: (stockNumber: string) => string;
+  loadGallery?: (stockNumber: string) => Promise<VisCandidate[]>;
 }) {
   const topics = visibleTopics(fields);
   const rest = topics.filter((topic) => topic.id !== "vehicle").length;
@@ -41,6 +43,7 @@ export function InventoryLotList({
         {items.map((item) => {
           const stockTo = stockHref(item.stockNumber);
           const heading = item.title || item.stockNumber;
+          const loadShots = loadGallery ? () => loadGallery(item.stockNumber) : undefined;
           const facets = topics
             .flatMap((t) => t.fields)
             .map((id) => ({ line: formatFactLine(item, id), id }))
@@ -57,6 +60,7 @@ export function InventoryLotList({
                     src={item.imageUrl}
                     title={item.title}
                     shots={galleryShots(item.gallery)}
+                    loadShots={loadShots}
                     compact
                     className="aspect-[16/9] w-full"
                   />
@@ -111,6 +115,7 @@ export function InventoryLotList({
                   isFavorite={isFavorite}
                   onToggleFavorite={onToggleFavorite}
                   hrefFor={hrefFor}
+                  loadGallery={loadGallery}
                 />
               </li>
             ))}
@@ -151,6 +156,7 @@ export function InventoryLotRow({
   isFavorite,
   onToggleFavorite,
   hrefFor = paths.inventoryItem,
+  loadGallery,
 }: {
   item: InventoryItem;
   query: InventoryQuery;
@@ -159,11 +165,13 @@ export function InventoryLotRow({
   isFavorite?: (stockNumber: string, source?: string) => boolean;
   onToggleFavorite?: (item: InventoryItem) => void;
   hrefFor?: (stockNumber: string) => string;
+  loadGallery?: (stockNumber: string) => Promise<VisCandidate[]>;
 }) {
   const suffix = toInventorySearch(query, false).toString();
   const base = hrefFor(item.stockNumber);
   const stockTo = suffix ? `${base}?${suffix}` : base;
   const heading = item.title || item.stockNumber;
+  const loadShots = loadGallery ? () => loadGallery(item.stockNumber) : undefined;
   const titleClass =
     "text-balance font-serif text-[15px] leading-5 tracking-[-0.02em] text-ink hover:text-accent";
   return (
@@ -177,6 +185,7 @@ export function InventoryLotRow({
             src={item.imageUrl}
             title={item.title}
             shots={galleryShots(item.gallery)}
+            loadShots={loadShots}
             compact
             className="h-[100px] w-[160px] rounded-[6px]"
           />

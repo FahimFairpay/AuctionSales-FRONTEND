@@ -139,6 +139,15 @@ export function listFiltersFromRecipe(recipe: RecipeFilters): RecipeListKey[] {
   return RECIPE_LIST_KEYS.filter((key) => Array.isArray(recipe[key]) && (recipe[key] || []).length > 0);
 }
 
+export function inventoryReachedCount(pageIndex: number, pageSize: number, pageLength: number): number {
+  if (pageLength <= 0 || pageSize <= 0) return 0;
+  return Math.max(0, pageIndex - 1) * pageSize + pageLength;
+}
+
+export function inventoryLoadedCount(loaded: number, pageIndex: number, pageSize: number, pageLength: number): number {
+  return Math.max(0, loaded, inventoryReachedCount(pageIndex, pageSize, pageLength));
+}
+
 export function inventoryHasFilters(query: InventoryQuery): boolean {
   return Boolean(query.modelContains) || inventoryFacetCount(query) > 0;
 }
