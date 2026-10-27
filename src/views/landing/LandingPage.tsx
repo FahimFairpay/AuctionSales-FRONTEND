@@ -60,8 +60,8 @@ export function LandingPage() {
             </p>
 
             <div className="hero-buttons-row">
-              <Link href={paths.signUp} className="btn-hero-get-started">
-                <span>Get Started</span>
+              <Link href={paths.publicInventory} className="btn-hero-get-started">
+                <span>Browse cars</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M7 7h10v10" />
                   <path d="M7 17 17 7" />
@@ -144,8 +144,8 @@ export function LandingPage() {
           Start with a curated wholesale car. Get an expert opinion and a personalized
           road-ready quote before you make a decision.
         </p>
-        <Link href={paths.publicInventory} className="intro-link glass-cta">
-          <span>Explore inventory</span>
+        <Link href={paths.signUp} className="intro-link glass-cta">
+          <span>Get Started</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M7 7h10v10" />
             <path d="M7 17 17 7" />

@@ -34,6 +34,24 @@ export type VisCandidate = {
   set: string | null;
 };
 
+export function galleryShots(
+  gallery?: Array<{ thumb?: string; large?: string; hd?: string } | string> | null,
+): VisCandidate[] {
+  if (!Array.isArray(gallery) || gallery.length === 0) {
+    return [];
+  }
+  return gallery.flatMap((shot, index) => {
+    if (typeof shot === "string") {
+      return shot ? [{ thumb: shot, large: shot, index, set: null }] : [];
+    }
+    const large = shot.large || shot.hd || shot.thumb || "";
+    if (!large) {
+      return [];
+    }
+    return [{ thumb: shot.thumb || large, large, index, set: null }];
+  });
+}
+
 export function expandVisImages(src: string): VisCandidate[] {
   let url: URL;
   try {

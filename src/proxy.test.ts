@@ -17,6 +17,7 @@ describe("security proxy middleware", () => {
     expect(csp).toContain("default-src 'self'");
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("vis.iaai.com");
+    expect(csp).toContain("https://cs.copart.com");
     expect(csp).toContain("https://*.googletagmanager.com");
     expect(csp).toContain("https://*.google-analytics.com");
     expect(csp).toContain("https://*.analytics.google.com");

@@ -9,8 +9,10 @@ import { FairOrb } from "../../components/orb/FairOrb";
 import { CopilotDrawer } from "../../components/copilot/CopilotDrawer";
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { InventoryThumb } from "../../features/inventory/InventoryThumb";
+import { galleryShots } from "../../features/inventory/visImages";
 import { CARD_GROUPS, formatCardValue } from "../../features/inventory/cardFields";
 import { SHOWCASE_INVENTORY } from "../../features/inventory/showcaseData";
+import { SourceCornerLabel, VehicleSourceTitle, listingUrl } from "../../features/inventory/SourceGlassPill";
 import { paths } from "../../routes/paths";
 
 export function PublicInventoryDetailPage() {
@@ -60,17 +62,19 @@ export function PublicInventoryDetailPage() {
           Inventory
         </Link>
 
-        <h1 className="text-balance font-serif text-[28px] leading-9 tracking-[-0.03em] lg:text-[40px] lg:leading-[1.15] text-ink">
-          {heading}
-        </h1>
+        <VehicleSourceTitle title={heading} href={listingUrl(row)} />
 
         <div className="grid min-h-0 gap-5 lg:grid-cols-[minmax(24rem,0.95fr)_minmax(0,1.05fr)] lg:items-start">
           <div className="relative overflow-hidden rounded-[8px]">
             <InventoryThumb
               src={row.imageUrl}
               title={row.title}
+              shots={galleryShots(row.gallery)}
               className="aspect-[16/10] w-full rounded-[8px] border border-hairline lg:aspect-auto lg:h-[min(420px,48vh)] lg:max-h-[min(420px,48vh)]"
             />
+            <div className="pointer-events-none absolute top-2 left-2 z-10">
+              <SourceCornerLabel source={row.source} />
+            </div>
           </div>
 
           {/* Facts Specifications Grid */}

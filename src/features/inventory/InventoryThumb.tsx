@@ -2,22 +2,25 @@
 
 import { useMemo, useState } from "react";
 import { ImageGallery } from "./ImageGallery";
-import { expandVisImages } from "./visImages";
+import { expandVisImages, type VisCandidate } from "./visImages";
 
 export function InventoryThumb({
   src,
   title,
   className = "",
   compact = false,
+  shots,
 }: {
   src?: string;
   title?: string;
   className?: string;
   compact?: boolean;
+  shots?: VisCandidate[];
 }) {
   const [failed, setFailed] = useState(false);
   const [open, setOpen] = useState(false);
-  const shots = useMemo(() => (src ? expandVisImages(src) : []), [src]);
+  const generated = useMemo(() => (src ? expandVisImages(src) : []), [src]);
+  const photos = shots && shots.length > 0 ? shots : generated;
   const initial = (title || "?").slice(0, 1).toUpperCase();
   if (!src || failed) {
     return (
@@ -29,7 +32,7 @@ export function InventoryThumb({
   return (
     <span className={`group/thumb relative block overflow-hidden ${className}`}>
       <img src={src} alt="" className="h-full w-full object-cover" onError={() => setFailed(true)} />
-      {shots.length > 0 ? (
+      {photos.length > 0 ? (
         <button
           type="button"
           aria-label="All images"
@@ -54,7 +57,7 @@ export function InventoryThumb({
           </span>
         </button>
       ) : null}
-      {open ? <ImageGallery title={title} candidates={shots} onClose={() => setOpen(false)} /> : null}
+      {open ? <ImageGallery title={title} candidates={photos} onClose={() => setOpen(false)} /> : null}
     </span>
   );
 }

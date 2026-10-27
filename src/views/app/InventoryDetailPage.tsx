@@ -9,7 +9,7 @@ import { FairOrb } from "../../components/orb/FairOrb";
 import { ImageGallery } from "../../components/ImageGallery";
 import { CARD_GROUPS, formatCardValue } from "../../features/inventory/cardFields";
 import { InventoryThumb } from "../../features/inventory/InventoryThumb";
-import { SourceCornerLabel } from "../../features/inventory/SourceGlassPill";
+import { SourceCornerLabel, VehicleSourceTitle, listingUrl } from "../../features/inventory/SourceGlassPill";
 import { PhonePromptModal } from "../../features/inventory/PhonePromptModal";
 import { useFavorites } from "../../features/inventory/useFavorites";
 import { paths } from "../../routes/paths";
@@ -55,22 +55,7 @@ export function InventoryDetailPage() {
         </svg>
         Inventory
       </Link>
-      <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-balance font-serif text-[28px] leading-9 tracking-[-0.03em] lg:text-[40px] lg:leading-[1.15]">
-          {row.outboundAuctionUrl || row.detailLink ? (
-            <a
-              href={row.outboundAuctionUrl || row.detailLink}
-              target="_blank"
-              rel="noreferrer"
-              className="text-ink hover:text-accent"
-            >
-              {heading}
-            </a>
-          ) : (
-            heading
-          )}
-        </h1>
-      </div>
+      <VehicleSourceTitle title={heading} href={listingUrl(row)} />
       <div className="grid min-h-0 gap-5 lg:grid-cols-[minmax(24rem,0.95fr)_minmax(0,1.05fr)] lg:items-start">
         <div className="relative group/thumb overflow-hidden rounded-[8px]">
           {row.gallery && row.gallery.length > 0 ? (

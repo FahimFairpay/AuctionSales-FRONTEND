@@ -5,6 +5,7 @@ import type { InventoryItem } from "../../types/api";
 import { paths } from "../../routes/paths";
 import { toInventorySearch, type InventoryQuery } from "./query";
 import { InventoryThumb } from "./InventoryThumb";
+import { galleryShots } from "./visImages";
 import { formatFactLine, visibleTopics, type DisplayTopic } from "./displayTopics";
 import { fieldLabel, type CardFieldId } from "./cardFields";
 import { HeartFavoriteButton } from "./HeartFavoriteButton";
@@ -55,22 +56,18 @@ export function InventoryLotList({
                   <InventoryThumb
                     src={item.imageUrl}
                     title={item.title}
+                    shots={galleryShots(item.gallery)}
                     compact
                     className="aspect-[16/9] w-full"
                   />
                   {/* Title overlaid at bottom of image */}
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-3 pb-2.5 pt-6">
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] bg-gradient-to-t from-black/70 to-transparent px-3 pb-2.5 pt-6">
                     <p className="line-clamp-2 font-serif text-[15px] leading-5 tracking-[-0.02em] text-white">
                       {heading}
                     </p>
                   </div>
-                  <div className="absolute top-2 left-2 z-10 flex items-center gap-1">
+                  <div className="pointer-events-none absolute top-2 left-2 z-10">
                     <SourceCornerLabel source={item.source} />
-                    {item.gallery && item.gallery.length > 0 ? (
-                      <span className="rounded-full px-1.5 py-0.5 text-[9px] font-semibold text-white" style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)" }}>
-                        {item.gallery.length}
-                      </span>
-                    ) : null}
                   </div>
                 </div>
                 {/* Facts below image in 2-col grid */}
@@ -179,17 +176,13 @@ export function InventoryLotRow({
           <InventoryThumb
             src={item.imageUrl}
             title={item.title}
+            shots={galleryShots(item.gallery)}
             compact
             className="h-[100px] w-[160px] rounded-[6px]"
           />
         </Link>
-        <div className="pointer-events-none absolute top-1.5 left-1.5 z-10 flex items-center gap-1">
+        <div className="pointer-events-none absolute top-1.5 left-1.5 z-10">
           <SourceCornerLabel source={item.source} />
-          {item.gallery && item.gallery.length > 0 ? (
-            <span className="rounded-full px-1 py-0.5 text-[8px] font-semibold text-white" style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)" }}>
-              {item.gallery.length}
-            </span>
-          ) : null}
         </div>
         {isFavorite && onToggleFavorite ? (
           <div className="absolute top-1.5 right-1.5 z-10">
