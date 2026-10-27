@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { inventoryFacetCount, inventoryHasFilters, inventoryLoadedCount, inventoryReachedCount, PAGE_SIZES, parseInventorySearch, toInventorySearch } from "./query";
+import { inventoryFacetCount, inventoryHasFilters, inventoryLoadedCount, PAGE_SIZES, parseInventorySearch, toInventorySearch } from "./query";
 
 describe("inventory query", () => {
   it("round-trips list filters and page size", () => {
@@ -38,15 +38,12 @@ describe("inventory query", () => {
     expect(inventoryFacetCount({ limit: 25, source: "ALL" })).toBe(0);
   });
 
-  it("keeps the highest loaded count when paging backward", () => {
-    let loaded = inventoryLoadedCount(0, 1, 25, 25);
-    loaded = inventoryLoadedCount(loaded, 2, 25, 25);
-    loaded = inventoryLoadedCount(loaded, 3, 25, 25);
-    expect(loaded).toBe(75);
-    expect(inventoryLoadedCount(loaded, 2, 25, 25)).toBe(75);
-    expect(inventoryLoadedCount(loaded, 1, 25, 25)).toBe(75);
-    expect(inventoryReachedCount(3, 50, 17)).toBe(117);
-    expect(inventoryLoadedCount(0, 1, 50, 0)).toBe(0);
+  it("counts the rows each page actually returned", () => {
+    expect(inventoryLoadedCount([61])).toBe(61);
+    expect(inventoryLoadedCount([61, 100])).toBe(161);
+    expect(inventoryLoadedCount([100, 100, 100])).toBe(300);
+    expect(inventoryLoadedCount([100, 100, 40])).toBe(240);
+    expect(inventoryLoadedCount([])).toBe(0);
   });
 
   it("exposes 25 50 100 and drops the cursor when page size changes", () => {

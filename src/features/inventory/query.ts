@@ -139,13 +139,8 @@ export function listFiltersFromRecipe(recipe: RecipeFilters): RecipeListKey[] {
   return RECIPE_LIST_KEYS.filter((key) => Array.isArray(recipe[key]) && (recipe[key] || []).length > 0);
 }
 
-export function inventoryReachedCount(pageIndex: number, pageSize: number, pageLength: number): number {
-  if (pageLength <= 0 || pageSize <= 0) return 0;
-  return Math.max(0, pageIndex - 1) * pageSize + pageLength;
-}
-
-export function inventoryLoadedCount(loaded: number, pageIndex: number, pageSize: number, pageLength: number): number {
-  return Math.max(0, loaded, inventoryReachedCount(pageIndex, pageSize, pageLength));
+export function inventoryLoadedCount(pageLengths: readonly number[]): number {
+  return pageLengths.reduce((sum, count) => sum + (count > 0 ? count : 0), 0);
 }
 
 export function inventoryHasFilters(query: InventoryQuery): boolean {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "@/compat/router";
 import { listInventory } from "../../api/inventory";
@@ -53,6 +53,7 @@ export function InventoryListPage() {
   const [onlyInterested, setOnlyInterested] = useState(false);
   const [fields, setFields] = useState<CardFieldId[]>([...DEFAULT_CARD_FIELDS]);
   const [loaded, setLoaded] = useState(0);
+  const loadedPages = useRef<{ key: string; counts: Map<string, number> }>({ key: "", counts: new Map() });
 
   const favorites = useFavorites({
     onPhoneRequired: () => setPhonePromptOpen(true),
@@ -78,7 +79,6 @@ export function InventoryListPage() {
   useEffect(() => {
     setDraft(query.modelContains || "");
     setCursors([]);
-    setLoaded(0);
   }, [params, query.modelContains]);
 
   useEffect(() => {
@@ -117,11 +117,18 @@ export function InventoryListPage() {
 
   const rawItems: InventoryItem[] = page.data?.items ?? [];
   const pageLength = rawItems.length;
+  const listKey = `${query.limit}:${params.toString()}`;
+  const pageKey = cursor || "first";
 
   useEffect(() => {
+    if (loadedPages.current.key !== listKey) {
+      loadedPages.current = { key: listKey, counts: new Map() };
+      setLoaded(0);
+    }
     if (pageLength === 0) return;
-    setLoaded((current) => inventoryLoadedCount(current, pageIndex, query.limit, pageLength));
-  }, [pageIndex, pageLength, query.limit]);
+    loadedPages.current.counts.set(pageKey, pageLength);
+    setLoaded(inventoryLoadedCount([...loadedPages.current.counts.values()]));
+  }, [listKey, pageKey, pageLength]);
 
   const filtered = inventoryHasFilters(query);
 
