@@ -70,14 +70,18 @@ export function PublicInventoryPage() {
     queryKey: ["public-inventory", listQuery],
     queryFn: async () => {
       try {
+        const source = query.source === "IAAI" || query.source === "COPART" ? query.source : undefined;
         const res = await listPublicInventory({
           types: query.vehicleTypes,
           damage: query.primaryDamages,
           search: query.modelContains,
+          yearMin: query.yearMin ? Number(query.yearMin) : undefined,
+          yearMax: query.yearMax ? Number(query.yearMax) : undefined,
+          source,
           limit: query.limit || 25,
           cursor: listQuery.cursor,
         });
-        if (res && res.items && res.items.length > 0) {
+        if (res) {
           return res;
         }
       } catch {

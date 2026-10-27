@@ -1,4 +1,4 @@
-import type { FailurePage, PublicRecipe, RecipeWriteResult, ScrapeRun, ScrapeRunList } from "../types/api";
+import type { CopartRecipeRules, FailurePage, PublicRecipe, RecipeWriteResult, ScrapeRun, ScrapeRunList } from "../types/api";
 import type { RecipeFilters } from "../types/filters";
 import { ApiError } from "./errors";
 import { apiGet, apiSend } from "./client";
@@ -16,12 +16,16 @@ export function getScrapeRun(scrapeRunId: string): Promise<ScrapeRun> {
   return apiGet<ScrapeRun>(`/admin/scrape-runs/${encodeURIComponent(scrapeRunId)}`);
 }
 
-export async function unlockAdminRecipe(pin: string): Promise<PublicRecipe> {
+export async function unlockAdminRecipe(
+  pin: string,
+  source: "IAAI" | "COPART" = "IAAI",
+): Promise<PublicRecipe> {
+  const body = { pin, source };
   try {
-    return await apiSend<PublicRecipe>("/admin/scrape-recipe", "POST", { pin });
+    return await apiSend<PublicRecipe>("/admin/scrape-recipe", "POST", body);
   } catch (err) {
     if (err instanceof ApiError && (err.status === 403 || err.status === 404)) {
-      return apiSend<PublicRecipe>("/admin/scrape-recipe", "PUT", { pin, preview: true });
+      return apiSend<PublicRecipe>("/admin/scrape-recipe", "PUT", { ...body, preview: true });
     }
     throw err;
   }
@@ -29,7 +33,9 @@ export async function unlockAdminRecipe(pin: string): Promise<PublicRecipe> {
 
 export function putAdminRecipe(body: {
   pin: string;
+  source?: "IAAI" | "COPART";
   filters?: RecipeFilters;
+  rules?: CopartRecipeRules;
   newPin?: string;
 }): Promise<RecipeWriteResult> {
   return apiSend<RecipeWriteResult>("/admin/scrape-recipe", "PUT", body);

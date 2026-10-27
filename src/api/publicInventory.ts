@@ -11,6 +11,7 @@ export interface PublicInventoryQuery {
   priceMin?: number;
   priceMax?: number;
   search?: string;
+  source?: "IAAI" | "COPART";
   sort?: "score" | "bid_asc" | "bid_desc" | "year_desc" | "spread_desc";
   page?: number;
   limit?: number;
@@ -28,6 +29,7 @@ export function toPublicInventorySearch(query: PublicInventoryQuery): string {
   if (query.priceMin !== undefined) params.set("priceMin", String(query.priceMin));
   if (query.priceMax !== undefined) params.set("priceMax", String(query.priceMax));
   if (query.search?.trim()) params.set("search", query.search.trim());
+  if (query.source) params.set("source", query.source);
   if (query.sort) params.set("sort", query.sort);
   if (query.page) params.set("page", String(query.page));
   if (query.limit) params.set("limit", String(query.limit));

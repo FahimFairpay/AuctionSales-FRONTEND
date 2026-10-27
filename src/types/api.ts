@@ -153,7 +153,9 @@ export type ActivityLogDetail = ActivityLog & {
 export type PublicRecipe = {
   recipeVersion?: string;
   itemsPerPage?: number;
-  filters: RecipeFilters;
+  filters?: RecipeFilters;
+  rules?: CopartRecipeRules;
+  source?: AuctionSource;
   updatedAt?: string;
   updatedBy?: string;
 };
@@ -282,17 +284,18 @@ export type CrawlSchedule = {
 export type AdminSchedule = CrawlSchedule;
 
 export interface CopartRecipeRules {
-  source: "COPART";
-  yearMin: number;
-  maxOdometer: number;
-  allowedDocTypes: string[];
-  prohibitedDamageTypes: string[];
-  cleanTitleOnly: boolean;
-  requiresRunsDrives: boolean;
-  requiresKeys: boolean;
-  prohibitedFuelTypes: string[];
-  prohibitedBodyStyles: string[];
-  maxRetailTier?: number;
+  source?: "COPART";
+  min_year: number;
+  max_odometer: number;
+  sale_title_type: string;
+  allowed_doc_types: string[];
+  makes: string[];
+  primary_damages: string[];
+  fuel_types: string[];
+  has_keys?: string;
+  transmission?: string;
+  runs_drives?: string;
+  secondary_damages_allowed?: string[];
 }
 
 export interface IaaiRecipeRules {
