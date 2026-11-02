@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 import { ImageGallery } from "./ImageGallery";
 import { expandVisImages, type VisCandidate } from "./visImages";
 
@@ -26,6 +26,31 @@ export function InventoryThumb({
   const generated = useMemo(() => (src ? expandVisImages(src) : []), [src]);
   const photos = fetched && fetched.length > 0 ? fetched : shots && shots.length > 0 ? shots : generated;
   const initial = (title || "?").slice(0, 1).toUpperCase();
+
+  function openPhotos(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (photos.length > 0) {
+      setOpen(true);
+      return;
+    }
+    if (!loadShots || loading) {
+      if (src) {
+        setFetched([{ thumb: src, large: src, index: 1, set: null }]);
+        setOpen(true);
+      }
+      return;
+    }
+    setLoading(true);
+    void loadShots()
+      .then((next) => {
+        const ready = next.length > 0 ? next : src ? [{ thumb: src, large: src, index: 1, set: null }] : [];
+        setFetched(ready);
+        setOpen(true);
+      })
+      .finally(() => setLoading(false));
+  }
+
   if (!src || failed) {
     return (
       <span className={`flex items-center justify-center bg-surface-muted font-serif text-lg text-muted ${className}`} aria-hidden>
@@ -35,31 +60,15 @@ export function InventoryThumb({
   }
   return (
     <span className={`group/thumb relative block overflow-hidden ${className}`}>
-      <img src={src} alt="" className="h-full w-full object-cover" onError={() => setFailed(true)} />
-      {photos.length > 0 || loadShots ? (
+      <img src={src} alt="" className="h-full w-full cursor-pointer object-cover" onClick={openPhotos} onError={() => setFailed(true)} />
+      {photos.length > 0 || loadShots || src ? (
         <button
           type="button"
           aria-label="All images"
           className={`absolute z-10 inline-flex max-w-[calc(100%-0.5rem)] items-center justify-center rounded-full border border-white/20 bg-[#141413] text-white shadow-[0_4px_12px_rgba(0,0,0,0.55)] transition-all duration-200 ease-out group-hover/thumb:w-auto group-hover/thumb:bg-accent ${
             compact ? "bottom-1 right-1 h-6 w-6 group-hover/thumb:px-1" : "bottom-2 right-2 h-8 w-8 group-hover/thumb:px-1.5"
           }`}
-          onClick={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            if (photos.length > 0) {
-              setOpen(true);
-              return;
-            }
-            if (!loadShots || loading) return;
-            setLoading(true);
-            void loadShots()
-              .then((next) => {
-                const ready = next.length > 0 ? next : src ? [{ thumb: src, large: src, index: 1, set: null }] : [];
-                setFetched(ready);
-                setOpen(true);
-              })
-              .finally(() => setLoading(false));
-          }}
+          onClick={openPhotos}
         >
           <span className={`inline-flex shrink-0 items-center justify-center ${compact ? "h-6 w-6" : "h-8 w-8"}`}>
             <svg viewBox="0 0 24 24" className={compact ? "h-3 w-3" : "h-3.5 w-3.5"} fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">

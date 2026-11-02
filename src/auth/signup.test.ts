@@ -11,7 +11,7 @@ describe("Sign Up Password Policy", () => {
   });
 
   it("accepts valid passwords with 10+ characters, uppercase, lowercase, number, symbol", () => {
-    const valid = "FairSales2026!";
+    const valid = "FairAutos2026!";
     const check = checkPassword(valid);
     expect(check.minLength).toBe(true);
     expect(check.upper).toBe(true);
@@ -23,16 +23,16 @@ describe("Sign Up Password Policy", () => {
 
   it("identifies specific missing requirements", () => {
     // Missing symbol
-    const noSymbol = checkPassword("FairSales2026");
+    const noSymbol = checkPassword("FairAutos2026");
     expect(noSymbol.symbol).toBe(false);
     expect(noSymbol.upper).toBe(true);
 
     // Missing uppercase
-    const noUpper = checkPassword("fairsales2026!");
+    const noUpper = checkPassword("fairautos2026!");
     expect(noUpper.upper).toBe(false);
 
     // Missing number
-    const noNumber = checkPassword("FairSalesPass!");
+    const noNumber = checkPassword("FairAutosPass!");
     expect(noNumber.number).toBe(false);
   });
 });

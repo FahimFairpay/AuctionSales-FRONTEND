@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "@/compat/router";
 import { listInventory } from "../../api/inventory";
@@ -27,7 +27,6 @@ import {
 } from "../../features/inventory/cardFields";
 import {
   inventoryHasFilters,
-  inventoryLoadedCount,
   PAGE_SIZES,
   parseInventorySearch,
   toInventorySearch,
@@ -52,8 +51,6 @@ export function InventoryListPage() {
   } | null>(null);
   const [onlyInterested, setOnlyInterested] = useState(false);
   const [fields, setFields] = useState<CardFieldId[]>([...DEFAULT_CARD_FIELDS]);
-  const [loaded, setLoaded] = useState(0);
-  const loadedPages = useRef<{ key: string; counts: Map<string, number> }>({ key: "", counts: new Map() });
 
   const favorites = useFavorites({
     onPhoneRequired: () => setPhonePromptOpen(true),
@@ -116,20 +113,7 @@ export function InventoryListPage() {
   );
 
   const rawItems: InventoryItem[] = page.data?.items ?? [];
-  const pageLength = rawItems.length;
-  const listKey = `${query.limit}:${params.toString()}`;
-  const pageKey = cursor || "first";
-
-  useEffect(() => {
-    if (loadedPages.current.key !== listKey) {
-      loadedPages.current = { key: listKey, counts: new Map() };
-      setLoaded(0);
-    }
-    if (pageLength === 0) return;
-    loadedPages.current.counts.set(pageKey, pageLength);
-    setLoaded(inventoryLoadedCount([...loadedPages.current.counts.values()]));
-  }, [listKey, pageKey, pageLength]);
-
+  const total = page.data?.total;
   const filtered = inventoryHasFilters(query);
 
   const items = useMemo(() => {
@@ -161,8 +145,8 @@ export function InventoryListPage() {
         <div className="min-w-0">
           <h1 className="font-serif text-[28px] leading-9 tracking-[-0.03em] break-words lg:text-[34px] lg:leading-10">
             Inventory
-            {loaded > 0 ? (
-              <span className="ml-2 text-muted tabular">({loaded})</span>
+            {typeof total === "number" ? (
+              <span className="ml-2 text-muted tabular">({total.toLocaleString("en-US")})</span>
             ) : null}
           </h1>
           <p className="mt-1 text-sm text-muted">Live auction lots.</p>
@@ -228,9 +212,8 @@ export function InventoryListPage() {
           loadGallery={(stockNumber) => loadLotShots(stockNumber, "app")}
         />
       ) : null}
-      {loaded > 0 ? (
+      {rawItems.length > 0 || cursors.length > 0 ? (
         <div className="flex items-center justify-end gap-3">
-          <span className="text-sm text-muted tabular">{loaded}</span>
           <PageStepper
             page={pageIndex}
             hasPrev={cursors.length > 0}

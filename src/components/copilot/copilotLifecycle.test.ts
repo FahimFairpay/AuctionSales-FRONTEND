@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach, vi } from "vitest";
 
 describe("Copilot Storage & Inactivity Lifecycles", () => {
-  const GUEST_STORAGE_KEY = "fairsales_ai_guest_thread_v1";
+  const GUEST_STORAGE_KEY = "fairautos_ai_guest_thread_v1";
   const GUEST_INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
   const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 

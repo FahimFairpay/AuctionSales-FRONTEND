@@ -10,7 +10,7 @@ export function TermsOfServiceContent() {
           1. Wholesale Brokerage & Bidding Representation
         </h4>
         <p>
-          FairSales operates as a wholesale vehicle brokerage providing qualified commercial buyers with access to live salvage, insurance, and pre-auction inventory from major auction houses (including IAAI and Copart). All vehicle listings and inventory representations are subject to live auction availability.
+          FairAutos operates as a wholesale vehicle brokerage providing qualified commercial buyers with access to live salvage, insurance, and pre-auction inventory from major auction houses (including IAAI and Copart). All vehicle listings and inventory representations are subject to live auction availability.
         </p>
       </section>
 
@@ -28,7 +28,7 @@ export function TermsOfServiceContent() {
           3. Binding Bidding Commitments & Hammer Price
         </h4>
         <p>
-          When you submit a bid authorization or request proxy representation through the FairSales platform, your submission represents a binding, irrevocable commitment to purchase the subject vehicle at or below your designated maximum hammer price, plus applicable auction transaction fees, gate fees, platform brokerage fees, and freight charges.
+          When you submit a bid authorization or request proxy representation through the FairAutos platform, your submission represents a binding, irrevocable commitment to purchase the subject vehicle at or below your designated maximum hammer price, plus applicable auction transaction fees, gate fees, platform brokerage fees, and freight charges.
         </p>
       </section>
 
@@ -46,7 +46,7 @@ export function TermsOfServiceContent() {
           5. Mandatory Phone Contact Authorization
         </h4>
         <p>
-          Because auction lane execution occurs in real time, you explicitly authorize FairSales sales desks and licensed bidding agents to contact your registered US telephone number via direct voice call and SMS regarding lot status, hammer limits, and pre-auction lane instructions.
+          Because auction lane execution occurs in real time, you explicitly authorize FairAutos sales desks and licensed bidding agents to contact your registered US telephone number via direct voice call and SMS regarding lot status, hammer limits, and pre-auction lane instructions.
         </p>
       </section>
     </div>

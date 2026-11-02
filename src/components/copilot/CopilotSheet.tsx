@@ -118,7 +118,7 @@ export function CopilotSheet({
     >
       <div
         role="region"
-        aria-label="FairSales Messenger"
+        aria-label="FairAutos Messenger"
         className={`copilot-public-sheet relative flex ${currentWidthClass} h-[520px] max-h-[calc(100vh-120px)] flex-col overflow-hidden rounded-[26px] border animate-in fade-in slide-in-from-bottom-5 duration-300 transition-all ease-out select-text text-[#141413] dark:text-[#f7f6f2] max-sm:mb-0 max-sm:flex-1 max-sm:h-full max-sm:w-full max-sm:max-h-none max-sm:rounded-none max-sm:border-0`}
       >
       {/* Optical Glare & Specular Refraction Overlay */}
@@ -154,13 +154,13 @@ export function CopilotSheet({
               }}
               className="flex items-center gap-2 rounded-xl px-2 py-1 -ml-1 hover:bg-white/15 dark:hover:bg-white/10 transition cursor-pointer"
               style={{ color: "var(--ink)" }}
-              title="FairSales options"
+              title="FairAutos options"
             >
               {/* FS Avatar Badge */}
               <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-gradient-to-tr from-accent via-[#ce6e42] to-[#e88a59] text-white font-bold text-[11px] shadow-sm border border-white/20">
                 FS
               </span>
-              <span className="text-xs font-semibold tracking-tight">FairSales</span>
+              <span className="text-xs font-semibold tracking-tight">FairAutos</span>
               {/* Downward Chevron */}
               <svg
                 width="13"
@@ -276,7 +276,7 @@ export function CopilotSheet({
               FS
             </span>
             <span className="text-xs font-semibold tracking-tight" style={{ color: "var(--ink)" }}>
-              FairSales
+              FairAutos
             </span>
           </div>
         )}
@@ -329,7 +329,7 @@ export function CopilotSheet({
               FS
             </span>
             <p className="text-xs font-semibold" style={{ color: "var(--ink)" }}>
-              New FairSales Session
+              New FairAutos Session
             </p>
             <p
               className="mt-1 text-[11px] max-w-[260px] leading-relaxed"
@@ -380,7 +380,7 @@ export function CopilotSheet({
                     className="flex items-center gap-1.5 px-0.5 text-[11px] font-semibold text-[#475569] dark:text-[#94a3b8] select-none"
                   >
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] shrink-0" />
-                    <span>FairSales • {formatRelativeTime(msg.timestamp)}</span>
+                    <span>FairAutos • {formatRelativeTime(msg.timestamp)}</span>
                   </div>
 
                   {/* Agent Message Prose Bubble */}

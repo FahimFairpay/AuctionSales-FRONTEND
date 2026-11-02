@@ -9,7 +9,7 @@ export default function TermsPage() {
   return (
     <AuthCard
       title="Terms of Service"
-      subtitle="FairSales Wholesale Salvage Marketplace Buyer Terms & Conditions."
+      subtitle="FairAutos Wholesale Salvage Marketplace Buyer Terms & Conditions."
       maxWidth="680px"
     >
       <div className="auth-terms-inset-box !max-h-[calc(100dvh-220px)] my-2">

@@ -2,7 +2,7 @@ import type { CardFieldId } from "./cardFields";
 import { fieldLabel, formatCardValue } from "./cardFields";
 import type { InventoryItem } from "../../types/api";
 
-export type DisplayTopicId = "vehicle" | "condition" | "build" | "sale" | "auction";
+export type DisplayTopicId = "vehicle" | "condition" | "build" | "sale";
 
 export type DisplayTopic = {
   id: DisplayTopicId;
@@ -14,45 +14,32 @@ export const DISPLAY_TOPICS: DisplayTopic[] = [
   {
     id: "vehicle",
     label: "Vehicle",
-    fields: [
-      "stockNumber",
-      "year",
-      "titleDoc",
-      "primaryDamage",
-      "secondaryDamage",
-      "lossType",
-      "newInvTime",
-      "vehicleType",
-      "vehicleSubtype",
-    ],
+    fields: ["primaryDamage", "secondaryDamage", "lossType", "vehicleType"],
   },
   {
     id: "condition",
     label: "Condition",
-    fields: ["odometer", "vehicleScore", "startCode", "airbags", "keyStatus", "extColor", "intColor"],
+    fields: ["odometer", "airbags", "keyStatus", "extColor", "intColor"],
   },
   {
     id: "build",
     label: "Build data",
-    fields: ["engine", "fuelType", "cylinders", "vin", "transmission", "drivelineType", "bodyStyle", "countryOfOrigin"],
+    fields: ["engine", "fuelType", "cylinders", "transmission", "drivelineType", "bodyStyle", "countryOfOrigin"],
   },
   {
     id: "sale",
     label: "Sale info",
-    fields: ["branch", "laneRun", "market", "seller", "sellerType", "acv", "region"],
-  },
-  {
-    id: "auction",
-    label: "Auction",
-    fields: ["auctionDate", "buyNowPrice"],
+    fields: [],
   },
 ];
 
-const LABELED = new Set<CardFieldId>(["stockNumber", "vehicleScore", "acv"]);
+const LABELED = new Set<CardFieldId>(["acv"]);
 
 export function visibleTopics(selected: CardFieldId[]): DisplayTopic[] {
   const on = new Set(selected);
-  return DISPLAY_TOPICS.filter((topic) => topic.id === "vehicle" || topic.fields.some((id) => on.has(id))).map(
+  return DISPLAY_TOPICS.filter(
+    (topic) => topic.id === "vehicle" || topic.id === "sale" || topic.fields.some((id) => on.has(id)),
+  ).map(
     (topic) => ({
       ...topic,
       fields: topic.fields.filter((id) => on.has(id)),

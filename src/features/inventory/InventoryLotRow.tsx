@@ -10,6 +10,7 @@ import { formatFactLine, visibleTopics, type DisplayTopic } from "./displayTopic
 import { fieldLabel, type CardFieldId } from "./cardFields";
 import { HeartFavoriteButton } from "./HeartFavoriteButton";
 import { SourceCornerLabel } from "./SourceGlassPill";
+import { PriceLines } from "./PriceLines";
 
 export function InventoryLotList({
   items,
@@ -29,8 +30,10 @@ export function InventoryLotList({
   loadGallery?: (stockNumber: string) => Promise<VisCandidate[]>;
 }) {
   const topics = visibleTopics(fields);
-  const rest = topics.filter((topic) => topic.id !== "vehicle").length;
-  const columns = `10rem minmax(14rem, 1.4fr) repeat(${rest}, minmax(10rem, 1fr))`;
+  const columns = `10rem minmax(14rem, 1.4fr) ${topics
+    .filter((topic) => topic.id !== "vehicle")
+    .map((topic) => (topic.id === "sale" ? "minmax(13rem, 1.2fr)" : "minmax(10rem, 1fr)"))
+    .join(" ")}`;
   const suffix = toInventorySearch(query, false).toString();
   const stockHref = (stockNumber: string) => {
     const base = hrefFor(stockNumber);
@@ -49,12 +52,8 @@ export function InventoryLotList({
             .map((id) => ({ line: formatFactLine(item, id), id }))
             .filter((f): f is { line: string; id: CardFieldId } => Boolean(f.line));
           return (
-            <li key={item.stockNumber} className="relative">
-              <Link
-                to={stockTo}
-                className="block overflow-hidden rounded-[8px] border border-hairline bg-surface hover:bg-surface-muted"
-              >
-                {/* Full-width image with title overlay */}
+            <li key={item.stockNumber} className="relative overflow-hidden rounded-[8px] border border-hairline bg-surface">
+              <div>
                 <div className="relative">
                   <InventoryThumb
                     src={item.imageUrl}
@@ -74,17 +73,27 @@ export function InventoryLotList({
                     <SourceCornerLabel source={item.source} />
                   </div>
                 </div>
-                {/* Facts below image in 2-col grid */}
-                {facets.length > 0 ? (
-                  <div className="grid grid-cols-2 gap-x-3 gap-y-1 px-3 py-2.5">
-                    {facets.map(({ line, id: fid }) => (
-                      <p key={fid} className="truncate text-[12px] leading-4 text-muted" title={fieldLabel(fid)}>
-                        {line}
-                      </p>
-                    ))}
-                  </div>
+                {facets.length > 0 || item.estimateStatus ? (
+                  <Link to={stockTo} className="block hover:bg-surface-muted">
+                    {item.estimateStatus ? (
+                      <div className="px-3 py-3">
+                        <PriceLines item={item} tone="panel" />
+                      </div>
+                    ) : null}
+                    {facets.length > 0 ? (
+                      <div
+                        className={`grid grid-cols-2 gap-x-3 gap-y-1 px-3 py-2.5 ${item.estimateStatus ? "border-t border-hairline" : ""}`}
+                      >
+                        {facets.map(({ line, id: fid }) => (
+                          <p key={fid} className="truncate text-[12px] leading-4 text-muted" title={fieldLabel(fid)}>
+                            {line}
+                          </p>
+                        ))}
+                      </div>
+                    ) : null}
+                  </Link>
                 ) : null}
-              </Link>
+              </div>
               {isFavorite && onToggleFavorite ? (
                 <div className="absolute top-2 right-2 z-10">
                   <HeartFavoriteButton
@@ -180,16 +189,14 @@ export function InventoryLotRow({
       style={{ gridTemplateColumns: columns }}
     >
       <div className="relative h-[100px] w-[160px] shrink-0">
-        <Link to={stockTo} className="block">
-          <InventoryThumb
-            src={item.imageUrl}
-            title={item.title}
-            shots={galleryShots(item.gallery)}
-            loadShots={loadShots}
-            compact
-            className="h-[100px] w-[160px] rounded-[6px]"
-          />
-        </Link>
+        <InventoryThumb
+          src={item.imageUrl}
+          title={item.title}
+          shots={galleryShots(item.gallery)}
+          loadShots={loadShots}
+          compact
+          className="h-[100px] w-[160px] rounded-[6px]"
+        />
         <div className="pointer-events-none absolute top-1.5 left-1.5 z-10">
           <SourceCornerLabel source={item.source} />
         </div>
@@ -237,6 +244,7 @@ export function InventoryLotRow({
               );
             })}
           </Link>
+          {topic.id === "sale" ? <PriceLines item={item} /> : null}
         </div>
       ))}
     </div>

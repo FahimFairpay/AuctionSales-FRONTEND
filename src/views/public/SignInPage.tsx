@@ -43,7 +43,7 @@ export function SignInPage() {
       <div className="auth-signin-hero-statement">
         <Link
           to="/"
-          aria-label="FairSales Home"
+          aria-label="FairAutos Home"
           className="auth-signin-brand-badge mb-2 inline-flex items-center"
         >
           <BrandWordmark size="display" />

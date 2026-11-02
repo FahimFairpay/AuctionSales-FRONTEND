@@ -5,28 +5,31 @@ import { DEFAULT_CARD_FIELDS } from "./cardFields";
 describe("display topics", () => {
   it("keeps Vehicle even when no vehicle fields are selected", () => {
     const topics = visibleTopics(["odometer"]);
-    expect(topics.map((topic) => topic.id)).toEqual(["vehicle", "condition"]);
+    expect(topics.map((topic) => topic.id)).toEqual(["vehicle", "condition", "sale"]);
     expect(topics[0].fields).toEqual([]);
   });
 
   it("shows Build when a build field is on", () => {
     const topics = visibleTopics([...DEFAULT_CARD_FIELDS]);
-    expect(topics.map((topic) => topic.id)).toEqual(["vehicle", "condition", "build", "sale", "auction"]);
-    expect(topics.find((topic) => topic.id === "build")?.fields).toEqual(["engine", "fuelType", "vin"]);
+    expect(topics.map((topic) => topic.id)).toEqual(["vehicle", "condition", "build", "sale"]);
+    expect(topics.find((topic) => topic.id === "build")?.fields).toEqual([
+      "engine",
+      "fuelType",
+      "cylinders",
+      "transmission",
+    ]);
   });
 
-  it("labels Stock # and Buy now", () => {
-    expect(formatFactLine({ stockNumber: "46130172" }, "stockNumber")).toBe("Stock #: 46130172");
+  it("labels Buy now", () => {
     expect(formatFactLine({ stockNumber: "1", buyNowPrice: 1200 }, "buyNowPrice")).toBe("Buy now $1,200");
   });
 
-  it("covers five IAAI topic groups", () => {
+  it("covers the four inventory topic groups", () => {
     expect(DISPLAY_TOPICS.map((topic) => topic.label)).toEqual([
       "Vehicle",
       "Condition",
       "Build data",
       "Sale info",
-      "Auction",
     ]);
   });
 });

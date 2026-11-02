@@ -6,9 +6,9 @@ import { Link, useLocation, useParams } from "@/compat/router";
 import { getInventoryItem } from "../../api/inventory";
 import { Card } from "../../components/Card";
 import { FairOrb } from "../../components/orb/FairOrb";
-import { ImageGallery } from "../../components/ImageGallery";
-import { CARD_GROUPS, formatCardValue } from "../../features/inventory/cardFields";
+import { LotFactGrid } from "../../features/inventory/LotFactGrid";
 import { InventoryThumb } from "../../features/inventory/InventoryThumb";
+import { galleryShots } from "../../features/inventory/visImages";
 import { SourceCornerLabel, VehicleSourceTitle, listingUrl } from "../../features/inventory/SourceGlassPill";
 import { PhonePromptModal } from "../../features/inventory/PhonePromptModal";
 import { useFavorites } from "../../features/inventory/useFavorites";
@@ -57,16 +57,13 @@ export function InventoryDetailPage() {
       </Link>
       <VehicleSourceTitle title={heading} href={listingUrl(row)} />
       <div className="grid min-h-0 gap-5 lg:grid-cols-[minmax(24rem,0.95fr)_minmax(0,1.05fr)] lg:items-start">
-        <div className="relative group/thumb overflow-hidden rounded-[8px]">
-          {row.gallery && row.gallery.length > 0 ? (
-            <ImageGallery gallery={row.gallery} vehicleTitle={heading} primaryFallbackUrl={row.imageUrl} />
-          ) : (
-            <InventoryThumb
-              src={row.imageUrl}
-              title={row.title}
-              className="aspect-[16/10] w-full rounded-[8px] border border-hairline lg:aspect-auto lg:h-[min(420px,48vh)] lg:max-h-[min(420px,48vh)]"
-            />
-          )}
+        <div className="relative">
+          <InventoryThumb
+            src={row.imageUrl}
+            title={row.title}
+            shots={galleryShots(row.gallery)}
+            className="aspect-[16/10] w-full rounded-[8px] border border-hairline lg:aspect-auto lg:h-[min(420px,48vh)] lg:max-h-[min(420px,48vh)]"
+          />
           <div className="absolute top-2 left-2 z-10">
             <SourceCornerLabel source={row.source} />
           </div>
@@ -110,31 +107,7 @@ export function InventoryDetailPage() {
             </svg>
           </button>
         </div>
-        <div className="grid min-h-0 grid-cols-2 gap-x-5 gap-y-4 xl:grid-cols-4">
-          {CARD_GROUPS.map((group) => {
-            const facts = group.fields
-              .map((field) => ({ field, value: formatCardValue(row, field.id) }))
-              .filter((fact) => fact.value !== "—");
-            if (facts.length === 0) {
-              return null;
-            }
-            return (
-              <section key={group.id} className="min-w-0 space-y-2">
-                <h2 className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">{group.label}</h2>
-                <dl className="space-y-2">
-                  {facts.map(({ field, value }) => (
-                    <div key={field.id} className="min-w-0">
-                      <dt className="text-xs text-muted">{field.label}</dt>
-                      <dd className="break-words text-[15px] leading-5 text-ink" title={value}>
-                        {value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
-            );
-          })}
-        </div>
+        <LotFactGrid item={row} />
       </div>
       <PhonePromptModal
         open={phonePromptOpen}

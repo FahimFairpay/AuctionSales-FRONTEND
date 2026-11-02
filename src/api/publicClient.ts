@@ -1,4 +1,4 @@
-import { apiBaseUrl } from "../config";
+import { resolveApiBase } from "../config";
 import { ApiError } from "./errors";
 
 type Envelope<T> = {
@@ -29,7 +29,7 @@ export async function publicApiRequest<T>(path: string, init: RequestInit = {}):
     headers.set("Content-Type", "application/json");
   }
 
-  const response = await fetch(`${apiBaseUrl}${path}`, { ...init, headers });
+  const response = await fetch(`${resolveApiBase(path)}${path}`, { ...init, headers });
   const envelope = await parseBody(response);
 
   if (!response.ok || envelope.success === false) {

@@ -40,7 +40,7 @@ export function AuthShell({ children }: AuthShellProps) {
       <header className="auth-shell-header">
         <Link
           href="/"
-          aria-label="FairSales Home"
+          aria-label="FairAutos Home"
           className={`auth-shell-brand-link ${isSignInPage ? "signin-header-brand" : ""}`}
         >
           <BrandWordmark size="header" />
@@ -57,7 +57,7 @@ export function AuthShell({ children }: AuthShellProps) {
 
       {/* Layer 4: Compact Glass Footer (32px) */}
       <footer className="auth-shell-footer">
-        <span>© 2026 FairSales Inc. All rights reserved.</span>
+        <span>© 2026 FairAutos Inc. All rights reserved.</span>
         <span>·</span>
         <Link href="/terms">Terms</Link>
         <span>·</span>

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { MatchedVehicle } from "../../api/copilot";
-import { Link, useNavigate } from "@/compat/router";
+import { Link } from "@/compat/router";
 import { paths } from "../../routes/paths";
 import { getCurrentUser } from "../../auth/session";
 import { useFavorites } from "../../features/inventory/useFavorites";
@@ -145,7 +145,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     }
   };
 
-  const navigate = useNavigate();
   const inventoryHref = (getCurrentUser() ? paths.inventoryItem : paths.publicInventoryItem)(
     vehicle.stockNumber,
   );
@@ -155,11 +154,10 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
     e.stopPropagation();
     if (onViewGallery) {
       onViewGallery(vehicle);
-    } else if (shots.length > 0) {
+      return;
+    }
+    if (shots.length > 0 || heroImage) {
       setGalleryOpen(true);
-    } else {
-      markChatNavigating();
-      navigate(inventoryHref);
     }
   };
 
@@ -424,10 +422,14 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
       </article>
 
       {/* Lightbox Image Gallery Modal for vehicle photos */}
-      {galleryOpen && shots.length > 0 && (
+      {galleryOpen && (shots.length > 0 || heroImage) && (
         <ImageGallery
           title={makeModel}
-          candidates={shots}
+          candidates={
+            shots.length > 0
+              ? shots
+              : [{ thumb: heroImage, large: heroImage, index: 1, set: null }]
+          }
           onClose={() => setGalleryOpen(false)}
         />
       )}

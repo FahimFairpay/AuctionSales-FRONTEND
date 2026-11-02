@@ -1,4 +1,4 @@
-import { apiBaseUrl } from "../config";
+import { resolveApiBase } from "../config";
 import { publicApiPost } from "./publicClient";
 import type { CopilotMessage, CopilotChatResponse } from "./copilot";
 
@@ -15,10 +15,10 @@ export async function sendPublicCopilotChat(
 
 export function getOrCreateGuestSessionId(): string {
   if (typeof window === "undefined") return "guest_ssr";
-  let id = sessionStorage.getItem("fairsales_guest_session");
+  let id = sessionStorage.getItem("fairautos_guest_session");
   if (!id) {
     id = "guest_" + Math.random().toString(36).substring(2, 11);
-    sessionStorage.setItem("fairsales_guest_session", id);
+    sessionStorage.setItem("fairautos_guest_session", id);
   }
   return id;
 }
@@ -32,7 +32,7 @@ export async function streamPublicCopilotChat(
 ): Promise<void> {
   try {
     const sessionId = guestSessionId || getOrCreateGuestSessionId();
-    const response = await fetch(`${apiBaseUrl}/public/copilot/chat`, {
+    const response = await fetch(`${resolveApiBase("/public/copilot/chat")}/public/copilot/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

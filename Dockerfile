@@ -1,4 +1,4 @@
-# Multi-stage production container for FairPy Sales Next.js 16 standalone
+# Multi-stage production container for FairAutos Next.js 16 standalone
 FROM node:20-alpine AS runner
 
 WORKDIR /app

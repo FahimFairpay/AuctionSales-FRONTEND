@@ -7,6 +7,8 @@ import type { AuctionSource } from "../../types/api";
 
 export const PAGE_SIZES = [10, 25, 50, 100] as const;
 export type PageSize = (typeof PAGE_SIZES)[number];
+export const INVENTORY_SORTS = ["score", "bid_asc", "bid_desc", "year_desc", "spread_desc"] as const;
+export type InventorySort = (typeof INVENTORY_SORTS)[number];
 
 export type InventoryQuery = {
   limit: PageSize;
@@ -39,6 +41,7 @@ export type InventoryQuery = {
   buyNowMin?: string;
   buyNowMax?: string;
   source?: AuctionSource | "ALL";
+  sort?: InventorySort;
 };
 
 type RangeQueryKey = "yearMin" | "yearMax" | "odoMin" | "odoMax" | "scoreMin" | "scoreMax";
@@ -70,6 +73,10 @@ export function parseInventorySearch(search: string): InventoryQuery {
   if (src === "IAAI" || src === "COPART" || src === "ALL") {
     query.source = src as AuctionSource | "ALL";
   }
+  const sort = params.get("sort")?.trim();
+  if (sort && sort !== "score" && (INVENTORY_SORTS as readonly string[]).includes(sort)) {
+    query.sort = sort as InventorySort;
+  }
   for (const key of RECIPE_LIST_KEYS) {
     const raw = params.get(key);
     if (raw) {
@@ -100,6 +107,9 @@ export function toInventorySearch(query: InventoryQuery, includeCursor = true): 
   }
   if (query.source && query.source !== "ALL") {
     params.set("source", query.source);
+  }
+  if (query.sort && query.sort !== "score") {
+    params.set("sort", query.sort);
   }
   for (const key of RECIPE_LIST_KEYS) {
     const values = query[key];

@@ -43,15 +43,10 @@ export const CARD_GROUPS: CardGroup[] = [
     id: "vehicle",
     label: "Vehicle",
     fields: [
-      { id: "stockNumber", label: "Stock #" },
-      { id: "year", label: "Year" },
-      { id: "titleDoc", label: "Title/Sale Document" },
       { id: "primaryDamage", label: "Primary Damage" },
       { id: "secondaryDamage", label: "Secondary Damage" },
       { id: "lossType", label: "Loss Type" },
-      { id: "newInvTime", label: "New Inventory Time" },
       { id: "vehicleType", label: "Vehicle Type" },
-      { id: "vehicleSubtype", label: "Vehicle SubType" },
     ],
   },
   {
@@ -59,8 +54,6 @@ export const CARD_GROUPS: CardGroup[] = [
     label: "Condition",
     fields: [
       { id: "odometer", label: "Odometer" },
-      { id: "startCode", label: "Start Code" },
-      { id: "vehicleScore", label: "Vehicle Score" },
       { id: "airbags", label: "Airbags" },
       { id: "keyStatus", label: "Key" },
       { id: "extColor", label: "Exterior Color" },
@@ -74,7 +67,6 @@ export const CARD_GROUPS: CardGroup[] = [
       { id: "engine", label: "Engine" },
       { id: "fuelType", label: "Fuel Type" },
       { id: "cylinders", label: "Cylinders" },
-      { id: "vin", label: "VIN" },
       { id: "transmission", label: "Transmission" },
       { id: "drivelineType", label: "Drive Line Type" },
       { id: "bodyStyle", label: "Body Style" },
@@ -84,38 +76,21 @@ export const CARD_GROUPS: CardGroup[] = [
   {
     id: "sale",
     label: "Sale info",
-    fields: [
-      { id: "auctionDate", label: "Auction Date" },
-      { id: "branch", label: "Branch" },
-      { id: "laneRun", label: "Lane/Run" },
-      { id: "market", label: "Market" },
-      { id: "seller", label: "Seller" },
-      { id: "sellerType", label: "Seller Type" },
-      { id: "acv", label: "ACV" },
-      { id: "buyNowPrice", label: "Buy Now" },
-      { id: "region", label: "Region" },
-    ],
+    fields: [],
   },
 ];
 
 export const DEFAULT_CARD_FIELDS: CardFieldId[] = [
-  "stockNumber",
-  "year",
-  "titleDoc",
   "primaryDamage",
+  "secondaryDamage",
   "odometer",
-  "vehicleScore",
-  "startCode",
+  "airbags",
   "extColor",
   "intColor",
   "engine",
+  "cylinders",
+  "transmission",
   "fuelType",
-  "vin",
-  "branch",
-  "seller",
-  "acv",
-  "auctionDate",
-  "buyNowPrice",
 ];
 
 const STORAGE_KEY = "fps-card-fields-v2";

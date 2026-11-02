@@ -23,7 +23,7 @@ interface CopilotDrawerProps {
 export type { CopilotDrawerHandle };
 
 const TYPEWRITER_PHRASES = [
-  "Ask FairSales anything...",
+  "Ask FairAutos anything...",
   "Search auction inventory...",
   "What car are you seeking?",
   "Ask about repairs & savings...",
@@ -228,7 +228,7 @@ export const CopilotDrawer = forwardRef<CopilotDrawerHandle, CopilotDrawerProps>
 
   return (
     <aside
-      aria-label="FairSales"
+      aria-label="FairAutos"
       className={`select-none font-sans ${
         isExpanded
           ? "max-sm:fixed max-sm:inset-0 max-sm:z-[400] max-sm:flex max-sm:h-auto max-sm:w-full max-sm:flex-col max-sm:overflow-hidden max-sm:bg-white dark:max-sm:bg-[#0d0e15] max-sm:overscroll-contain sm:fixed sm:bottom-6 sm:right-6 sm:z-50 sm:flex sm:flex-col sm:items-end"

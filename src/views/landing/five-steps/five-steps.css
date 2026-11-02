@@ -1,4 +1,4 @@
-.fairsales-landing .five-steps-split {
+.fairautos-landing .five-steps-split {
   --step-glass: rgba(255, 255, 255, 0.68);
   --step-glass-hover: rgba(255, 255, 255, 0.82);
   --step-glass-active: rgba(255, 255, 255, 0.94);
@@ -20,8 +20,8 @@
   scroll-margin-top: 96px;
 }
 
-[data-theme="dark"] .fairsales-landing .five-steps-split,
-.dark .fairsales-landing .five-steps-split {
+[data-theme="dark"] .fairautos-landing .five-steps-split,
+.dark .fairautos-landing .five-steps-split {
   --step-glass: rgba(24, 24, 23, 0.65);
   --step-glass-hover: rgba(32, 32, 30, 0.78);
   --step-glass-active: rgba(38, 37, 34, 0.88);
@@ -36,7 +36,7 @@
     0 0 32px -6px var(--fs-claude-orange-glow);
 }
 
-.fairsales-landing .five-steps-grid {
+.fairautos-landing .five-steps-grid {
   display: grid;
   grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.15fr);
   gap: 72px;
@@ -45,13 +45,13 @@
   margin: 0 auto;
 }
 
-.fairsales-landing .five-steps-sticky {
+.fairautos-landing .five-steps-sticky {
   position: sticky;
   top: max(108px, calc(50vh - 270px));
   padding-bottom: 48px;
 }
 
-.fairsales-landing .five-steps-eyebrow {
+.fairautos-landing .five-steps-eyebrow {
   display: block;
   margin-bottom: 16px;
   color: var(--fs-claude-orange);
@@ -60,7 +60,7 @@
   letter-spacing: 2.5px;
 }
 
-.fairsales-landing .five-steps-sticky h2 {
+.fairautos-landing .five-steps-sticky h2 {
   margin: 0 0 16px;
   font-size: 44px;
   font-weight: 600;
@@ -69,7 +69,7 @@
   color: var(--fs-ink);
 }
 
-.fairsales-landing .five-steps-sticky > p {
+.fairautos-landing .five-steps-sticky > p {
   max-width: 360px;
   margin: 0 0 32px;
   color: var(--fs-text-sub);
@@ -77,12 +77,12 @@
   line-height: 1.55;
 }
 
-.fairsales-landing .five-steps-pills {
+.fairautos-landing .five-steps-pills {
   display: flex;
   flex-direction: column;
 }
 
-.fairsales-landing .five-steps-pill {
+.fairautos-landing .five-steps-pill {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -106,19 +106,19 @@
     color 0.3s ease;
 }
 
-.fairsales-landing .five-steps-pill span {
+.fairautos-landing .five-steps-pill span {
   min-width: 24px;
   color: var(--fs-muted);
   font-size: 13px;
   font-weight: 800;
 }
 
-.fairsales-landing .five-steps-pill:hover {
+.fairautos-landing .five-steps-pill:hover {
   background: var(--step-glass-hover);
   transform: translateX(4px);
 }
 
-.fairsales-landing .five-steps-pill.is-active {
+.fairautos-landing .five-steps-pill.is-active {
   background: var(--step-glass-active);
   border-color: var(--step-line-active);
   box-shadow: var(--step-shadow-active);
@@ -126,11 +126,11 @@
   transform: translateX(10px);
 }
 
-.fairsales-landing .five-steps-pill.is-active span {
+.fairautos-landing .five-steps-pill.is-active span {
   color: var(--fs-claude-orange);
 }
 
-.fairsales-landing .five-steps-connector {
+.fairautos-landing .five-steps-connector {
   display: block;
   width: 2px;
   height: 14px;
@@ -140,12 +140,12 @@
   transition: background 0.4s ease, box-shadow 0.4s ease;
 }
 
-.fairsales-landing .five-steps-connector.is-lit {
+.fairautos-landing .five-steps-connector.is-lit {
   background: var(--fs-claude-orange);
   box-shadow: 0 0 8px var(--fs-claude-orange-glow);
 }
 
-.fairsales-landing .five-steps-flow {
+.fairautos-landing .five-steps-flow {
   display: flex;
   flex-direction: column;
   gap: 52px;
@@ -153,7 +153,7 @@
   padding-bottom: calc(50vh - 40px);
 }
 
-.fairsales-landing .five-steps-card {
+.fairautos-landing .five-steps-card {
   position: relative;
   min-height: 220px;
   padding: 44px 48px;
@@ -173,7 +173,7 @@
     box-shadow 0.5s ease;
 }
 
-.fairsales-landing .five-steps-card::after {
+.fairautos-landing .five-steps-card::after {
   content: "";
   position: absolute;
   top: 0;
@@ -184,13 +184,13 @@
   pointer-events: none;
 }
 
-.fairsales-landing .five-steps-card.is-active {
+.fairautos-landing .five-steps-card.is-active {
   background: var(--step-glass-active);
   border-color: var(--step-line-active);
   box-shadow: var(--step-shadow-active);
 }
 
-.fairsales-landing .five-steps-card > span {
+.fairautos-landing .five-steps-card > span {
   display: inline-block;
   margin-bottom: 20px;
   padding: 4px 14px;
@@ -202,7 +202,7 @@
   font-weight: 800;
 }
 
-.fairsales-landing .five-steps-card h3 {
+.fairautos-landing .five-steps-card h3 {
   margin: 0 0 12px;
   color: var(--fs-ink);
   font-size: 28px;
@@ -210,37 +210,37 @@
   letter-spacing: -0.8px;
 }
 
-.fairsales-landing .five-steps-card p {
+.fairautos-landing .five-steps-card p {
   margin: 0;
   color: var(--fs-text-sub);
   font-size: 16px;
   line-height: 1.6;
 }
 
-.fairsales-landing .five-steps-card.is-active p {
+.fairautos-landing .five-steps-card.is-active p {
   color: var(--fs-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fairsales-landing .five-steps-card,
-  .fairsales-landing .five-steps-pill {
+  .fairautos-landing .five-steps-card,
+  .fairautos-landing .five-steps-pill {
     transition: none;
   }
 
-  .fairsales-landing .five-steps-card {
+  .fairautos-landing .five-steps-card {
     filter: none;
   }
 }
 
 @media (max-width: 900px) {
-  .fairsales-landing .five-steps-split {
+  .fairautos-landing .five-steps-split {
     padding: 56px 14px 24px;
     overflow: hidden;
     max-width: 100vw;
     box-sizing: border-box;
   }
 
-  .fairsales-landing .five-steps-grid {
+  .fairautos-landing .five-steps-grid {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -251,7 +251,7 @@
     box-sizing: border-box;
   }
 
-  .fairsales-landing .five-steps-sticky {
+  .fairautos-landing .five-steps-sticky {
     position: static;
     top: auto;
     width: 100%;
@@ -261,12 +261,12 @@
     padding-bottom: 0;
   }
 
-  .fairsales-landing .five-steps-sticky h2 {
+  .fairautos-landing .five-steps-sticky h2 {
     font-size: 30px;
     letter-spacing: -1.2px;
   }
 
-  .fairsales-landing .five-steps-pills {
+  .fairautos-landing .five-steps-pills {
     display: flex;
     flex-direction: row;
     position: relative;
@@ -284,19 +284,19 @@
     box-sizing: border-box;
   }
 
-  .fairsales-landing .five-steps-pills::-webkit-scrollbar {
+  .fairautos-landing .five-steps-pills::-webkit-scrollbar {
     display: none;
   }
 
-  .fairsales-landing .five-steps-pill-wrap {
+  .fairautos-landing .five-steps-pill-wrap {
     flex-shrink: 0;
   }
 
-  .fairsales-landing .five-steps-connector {
+  .fairautos-landing .five-steps-connector {
     display: none;
   }
 
-  .fairsales-landing .five-steps-pill {
+  .fairautos-landing .five-steps-pill {
     padding: 8px 14px;
     border-radius: 999px;
     font-size: 13px;
@@ -305,7 +305,7 @@
     transform: none !important;
   }
 
-  .fairsales-landing .five-steps-flow {
+  .fairautos-landing .five-steps-flow {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -318,7 +318,7 @@
     box-sizing: border-box;
   }
 
-  .fairsales-landing .five-steps-card {
+  .fairautos-landing .five-steps-card {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
@@ -336,19 +336,19 @@
                 background 0.3s ease;
   }
 
-  .fairsales-landing .five-steps-card h3 {
+  .fairautos-landing .five-steps-card h3 {
     font-size: 24px;
     letter-spacing: -0.5px;
     word-break: break-word;
   }
 
-  .fairsales-landing .five-steps-card p {
+  .fairautos-landing .five-steps-card p {
     font-size: 15px;
     line-height: 1.5;
     word-break: break-word;
   }
 
-  .fairsales-landing .five-steps-card.is-active {
+  .fairautos-landing .five-steps-card.is-active {
     border-color: var(--step-line-active);
     box-shadow: var(--step-shadow-active);
     background: var(--step-glass-active);

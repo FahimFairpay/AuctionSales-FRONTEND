@@ -93,7 +93,7 @@ export function CustomizeListModal({
           </PresetButton>
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {CARD_GROUPS.map((group) => (
+          {CARD_GROUPS.filter((group) => group.fields.length > 0).map((group) => (
             <section key={group.id}>
               <h3 className="mb-2 text-[10px] font-medium uppercase tracking-[0.16em] text-muted">{group.label}</h3>
               <div className="flex flex-wrap gap-1.5">

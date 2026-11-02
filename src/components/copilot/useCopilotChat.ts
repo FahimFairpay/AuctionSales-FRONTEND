@@ -40,11 +40,11 @@ let inMemoryActiveThreadId: string | null = null;
 export function markChatNavigating(threadId?: string | null) {
   if (typeof window === "undefined") return;
   try {
-    sessionStorage.setItem("fairsales_ai_navigating_from_chat", "true");
+    sessionStorage.setItem("fairautos_ai_navigating_from_chat", "true");
     sessionStorage.setItem("copilot_prevent_collapse", "true");
     const tid = threadId || inMemoryActiveThreadId;
     if (tid) {
-      sessionStorage.setItem("fairsales_ai_active_redirect_thread", tid);
+      sessionStorage.setItem("fairautos_ai_active_redirect_thread", tid);
     }
   } catch {}
 }
@@ -55,8 +55,8 @@ function getInitialActiveThreadId(): string | null {
   // Rule: On browser refresh (F5 / reload), discard the active chat session
   if (isBrowserReload()) {
     try {
-      sessionStorage.removeItem("fairsales_ai_navigating_from_chat");
-      sessionStorage.removeItem("fairsales_ai_active_redirect_thread");
+      sessionStorage.removeItem("fairautos_ai_navigating_from_chat");
+      sessionStorage.removeItem("fairautos_ai_active_redirect_thread");
       sessionStorage.removeItem("fairscout_ai_navigating_from_chat");
       sessionStorage.removeItem("fairscout_ai_active_redirect_thread");
       sessionStorage.removeItem("copilot_prevent_collapse");
@@ -68,11 +68,11 @@ function getInitialActiveThreadId(): string | null {
   // If navigating via chat redirect, recover the active thread ID
   try {
     const redirectThreadId =
-      sessionStorage.getItem("fairsales_ai_active_redirect_thread") ||
+      sessionStorage.getItem("fairautos_ai_active_redirect_thread") ||
       sessionStorage.getItem("fairscout_ai_active_redirect_thread");
     if (redirectThreadId) {
       inMemoryActiveThreadId = redirectThreadId;
-      sessionStorage.removeItem("fairsales_ai_active_redirect_thread");
+      sessionStorage.removeItem("fairautos_ai_active_redirect_thread");
       sessionStorage.removeItem("fairscout_ai_active_redirect_thread");
       return redirectThreadId;
     }
@@ -276,7 +276,7 @@ export function useCopilotChat() {
           setMessages(finalMessages);
           persistGuestSession(finalMessages);
         } catch (err: any) {
-          console.error("FairSales guest request error:", err);
+          console.error("FairAutos guest request error:", err);
           setError(err.message || "Failed to scout inventory.");
           const errMsg: ChatMessage = {
             id: `err-${Date.now()}`,
@@ -354,7 +354,7 @@ export function useCopilotChat() {
           return nextThreads;
         });
       } catch (err: any) {
-        console.error("FairSales request error:", err);
+        console.error("FairAutos request error:", err);
         setError(err.message || "Failed to scout inventory.");
         const errMsg: ChatMessage = {
           id: `err-${Date.now()}`,

@@ -1,4 +1,4 @@
-import { apiBaseUrl } from "../config";
+import { resolveApiBase } from "../config";
 import { getIdToken, signOut } from "../auth/session";
 import { ApiError } from "./errors";
 
@@ -11,10 +11,12 @@ type Envelope<T> = {
 /** Sent beside Authorization so the proxy can restore the Cognito token. */
 export const FAIR_TOKEN_HEADER = "X-Fair-Token";
 
-export function withAuthHeaders(token: string, extra?: HeadersInit): Headers {
+export function withAuthHeaders(token: string, extra?: HeadersInit, direct = false): Headers {
   const headers = new Headers(extra);
   headers.set("Authorization", token);
-  headers.set(FAIR_TOKEN_HEADER, token);
+  if (!direct) {
+    headers.set(FAIR_TOKEN_HEADER, token);
+  }
   return headers;
 }
 
@@ -32,11 +34,12 @@ async function parseBody(response: Response): Promise<Envelope<unknown>> {
 
 export async function apiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
   const token = await getIdToken();
-  const headers = withAuthHeaders(token, init.headers);
+  const base = resolveApiBase(path);
+  const headers = withAuthHeaders(token, init.headers, base !== "/api");
   if (init.body !== undefined && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
-  const response = await fetch(`${apiBaseUrl}${path}`, { ...init, headers });
+  const response = await fetch(`${base}${path}`, { ...init, headers });
   if (response.status === 401) {
     await signOut();
     const next = encodeURIComponent(`${window.location.pathname}${window.location.search}`);

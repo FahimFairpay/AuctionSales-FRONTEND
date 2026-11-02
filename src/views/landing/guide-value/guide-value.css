@@ -1,4 +1,4 @@
-.fairsales-landing .guide-value {
+.fairautos-landing .guide-value {
   --gv-fill: rgba(255, 255, 255, 0.78);
   --gv-fill-active: #fffcf8;
   --gv-line: rgba(230, 223, 216, 0.9);
@@ -21,8 +21,8 @@
   background: var(--fs-paper);
 }
 
-[data-theme="dark"] .fairsales-landing .guide-value,
-.dark .fairsales-landing .guide-value {
+[data-theme="dark"] .fairautos-landing .guide-value,
+.dark .fairautos-landing .guide-value {
   --gv-fill: rgba(24, 24, 23, 0.78);
   --gv-fill-active: #201f1d;
   --gv-line: rgba(255, 255, 255, 0.1);
@@ -42,22 +42,22 @@
   background: #171513;
 }
 
-[data-theme="dark"] .fairsales-landing .guide-value .section-heading h2,
-.dark .fairsales-landing .guide-value .section-heading h2 {
+[data-theme="dark"] .fairautos-landing .guide-value .section-heading h2,
+.dark .fairautos-landing .guide-value .section-heading h2 {
   color: #ffffff;
 }
 
-[data-theme="dark"] .fairsales-landing .guide-value .section-heading > p,
-.dark .fairsales-landing .guide-value .section-heading > p {
+[data-theme="dark"] .fairautos-landing .guide-value .section-heading > p,
+.dark .fairautos-landing .guide-value .section-heading > p {
   color: #b5b0a8;
 }
 
-[data-theme="dark"] .fairsales-landing .guide-value .eyebrow.dark,
-.dark .fairsales-landing .guide-value .eyebrow.dark {
+[data-theme="dark"] .fairautos-landing .guide-value .eyebrow.dark,
+.dark .fairautos-landing .guide-value .eyebrow.dark {
   color: var(--fs-claude-orange);
 }
 
-.fairsales-landing .guide-value-pin {
+.fairautos-landing .guide-value-pin {
   position: sticky;
   top: 0;
   display: flex;
@@ -70,18 +70,18 @@
   overflow: hidden;
 }
 
-.fairsales-landing .guide-value-copy {
+.fairautos-landing .guide-value-copy {
   z-index: 5;
   width: min(1180px, 88%);
   margin: 0;
   margin-bottom: 0;
 }
 
-.fairsales-landing .guide-value-copy.section-heading {
+.fairautos-landing .guide-value-copy.section-heading {
   margin-bottom: 0;
 }
 
-.fairsales-landing .guide-value-copy h2 {
+.fairautos-landing .guide-value-copy h2 {
   margin-top: 18px;
   font-size: 50px;
   font-weight: 500;
@@ -89,7 +89,7 @@
   line-height: 1.08;
 }
 
-.fairsales-landing .guide-value-viewport {
+.fairautos-landing .guide-value-viewport {
   position: relative;
   z-index: 1;
   width: 100%;
@@ -97,7 +97,7 @@
   overflow: hidden;
 }
 
-.fairsales-landing .guide-value-track {
+.fairautos-landing .guide-value-track {
   position: absolute;
   top: 0;
   left: 50%;
@@ -108,7 +108,7 @@
   will-change: transform;
 }
 
-.fairsales-landing .guide-value-card {
+.fairautos-landing .guide-value-card {
   position: relative;
   display: flex;
   flex-shrink: 0;
@@ -130,7 +130,7 @@
   -webkit-backdrop-filter: blur(28px) saturate(180%);
 }
 
-.fairsales-landing .guide-value-card::after {
+.fairautos-landing .guide-value-card::after {
   content: "";
   position: absolute;
   top: 0;
@@ -141,13 +141,13 @@
   pointer-events: none;
 }
 
-.fairsales-landing .guide-value-card.is-focal {
+.fairautos-landing .guide-value-card.is-focal {
   border-color: var(--gv-line-active);
   background: var(--gv-fill-active);
   box-shadow: var(--gv-shadow-active);
 }
 
-.fairsales-landing .guide-value-card > div:first-child > span {
+.fairautos-landing .guide-value-card > div:first-child > span {
   display: inline-block;
   margin-bottom: 16px;
   padding: 4px 12px;
@@ -161,7 +161,7 @@
   text-transform: uppercase;
 }
 
-.fairsales-landing .guide-value-card h3 {
+.fairautos-landing .guide-value-card h3 {
   margin: 0 0 12px;
   color: var(--fs-ink);
   font-size: 30px;
@@ -170,24 +170,24 @@
   line-height: 1.2;
 }
 
-[data-theme="dark"] .fairsales-landing .guide-value-card h3,
-.dark .fairsales-landing .guide-value-card h3 {
+[data-theme="dark"] .fairautos-landing .guide-value-card h3,
+.dark .fairautos-landing .guide-value-card h3 {
   color: #ffffff;
 }
 
-.fairsales-landing .guide-value-card p {
+.fairautos-landing .guide-value-card p {
   margin: 0;
   color: var(--fs-text-sub);
   font-size: 16.5px;
   line-height: 1.6;
 }
 
-[data-theme="dark"] .fairsales-landing .guide-value-card p,
-.dark .fairsales-landing .guide-value-card p {
+[data-theme="dark"] .fairautos-landing .guide-value-card p,
+.dark .fairautos-landing .guide-value-card p {
   color: #ded9d0;
 }
 
-.fairsales-landing .guide-value-foot {
+.fairautos-landing .guide-value-foot {
   display: flex;
   flex-shrink: 0;
   align-items: center;
@@ -202,17 +202,17 @@
   letter-spacing: 0.8px;
 }
 
-.fairsales-landing .guide-value-foot span:first-child {
+.fairautos-landing .guide-value-foot span:first-child {
   color: var(--fs-claude-orange);
 }
 
-.fairsales-landing .guide-value-foot span:last-child {
+.fairautos-landing .guide-value-foot span:last-child {
   color: var(--fs-muted);
   font-weight: 600;
   text-align: right;
 }
 
-.fairsales-landing .guide-value-hud {
+.fairautos-landing .guide-value-hud {
   z-index: 5;
   display: flex;
   gap: 16px;
@@ -227,8 +227,8 @@
   white-space: nowrap !important;
 }
 
-.fairsales-landing .guide-value-hud > span:first-child,
-.fairsales-landing .guide-value-hud-num {
+.fairautos-landing .guide-value-hud > span:first-child,
+.fairautos-landing .guide-value-hud-num {
   color: var(--fs-claude-orange);
   font-size: 12px;
   font-weight: 700;
@@ -239,13 +239,13 @@
   min-width: 48px;
 }
 
-.fairsales-landing .guide-value-hud > span:last-child {
+.fairautos-landing .guide-value-hud > span:last-child {
   color: var(--fs-muted);
   font-size: 12px;
   font-weight: 600;
 }
 
-.fairsales-landing .guide-value-meter {
+.fairautos-landing .guide-value-meter {
   position: relative;
   width: 140px;
   height: 3px;
@@ -254,7 +254,7 @@
   background: var(--gv-track);
 }
 
-.fairsales-landing .guide-value-meter span {
+.fairautos-landing .guide-value-meter span {
   position: absolute;
   top: 0;
   left: 0;
@@ -265,7 +265,7 @@
 }
 
 @media (max-width: 900px) {
-  .fairsales-landing .guide-value {
+  .fairautos-landing .guide-value {
     position: relative;
     z-index: 2;
     height: 320vh;
@@ -274,7 +274,7 @@
     margin-bottom: 0;
   }
 
-  .fairsales-landing .guide-value-pin {
+  .fairautos-landing .guide-value-pin {
     position: sticky;
     top: 0;
     z-index: 5;
@@ -291,7 +291,7 @@
     background: inherit;
   }
 
-  .fairsales-landing .guide-value-copy {
+  .fairautos-landing .guide-value-copy {
     width: 100%;
     max-width: 680px;
     margin-top: 0;
@@ -299,20 +299,20 @@
     flex-shrink: 0;
   }
 
-  .fairsales-landing .guide-value-copy h2 {
+  .fairautos-landing .guide-value-copy h2 {
     font-size: 26px;
     letter-spacing: -1px;
     margin: 4px 0 2px;
     line-height: 1.15;
   }
 
-  .fairsales-landing .guide-value-copy > p {
+  .fairautos-landing .guide-value-copy > p {
     font-size: 13px;
     line-height: 1.45;
     margin-top: 2px;
   }
 
-  .fairsales-landing .guide-value-viewport {
+  .fairautos-landing .guide-value-viewport {
     flex: 0 1 auto;
     height: min(250px, 34dvh);
     min-height: 180px;
@@ -322,12 +322,12 @@
     overflow: hidden;
   }
 
-  .fairsales-landing .guide-value-track {
+  .fairautos-landing .guide-value-track {
     gap: 16px;
     height: 100%;
   }
 
-  .fairsales-landing .guide-value-card {
+  .fairautos-landing .guide-value-card {
     width: min(320px, calc(100vw - 36px));
     height: 100%;
     min-height: 0;
@@ -340,17 +340,17 @@
     box-sizing: border-box;
   }
 
-  .fairsales-landing .guide-value-card h3 {
+  .fairautos-landing .guide-value-card h3 {
     font-size: 20px;
     margin-bottom: 4px;
   }
 
-  .fairsales-landing .guide-value-card p {
+  .fairautos-landing .guide-value-card p {
     font-size: 13px;
     line-height: 1.4;
   }
 
-  .fairsales-landing .guide-value-hud {
+  .fairautos-landing .guide-value-hud {
     margin-top: 4px;
     width: min(320px, calc(100vw - 36px));
     display: flex;
@@ -362,8 +362,8 @@
     padding: 7px 16px;
   }
 
-  .fairsales-landing .guide-value-hud > span:first-child,
-  .fairsales-landing .guide-value-hud-num {
+  .fairautos-landing .guide-value-hud > span:first-child,
+  .fairautos-landing .guide-value-hud-num {
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     display: inline-block !important;
@@ -374,13 +374,13 @@
     min-width: 48px;
   }
 
-  .fairsales-landing .guide-value-meter {
+  .fairautos-landing .guide-value-meter {
     width: 90px;
     flex-shrink: 0;
   }
 
-  .fairsales-landing .guide-value-hud > span:last-child,
-  .fairsales-landing .guide-value-hud-title {
+  .fairautos-landing .guide-value-hud > span:last-child,
+  .fairautos-landing .guide-value-hud-title {
     display: block !important;
     font-size: 11px;
     font-weight: 600;
@@ -396,30 +396,30 @@
 }
 
 @media (max-width: 480px) {
-  .fairsales-landing .guide-value {
+  .fairautos-landing .guide-value {
     height: 300vh;
     min-height: 0;
   }
 
-  .fairsales-landing .guide-value-pin {
+  .fairautos-landing .guide-value-pin {
     top: 0;
     gap: 6px;
     padding: 64px 14px 12px;
     box-sizing: border-box;
   }
 
-  .fairsales-landing .guide-value-copy h2 {
+  .fairautos-landing .guide-value-copy h2 {
     font-size: 24px;
     letter-spacing: -0.8px;
   }
 
-  .fairsales-landing .guide-value-viewport {
+  .fairautos-landing .guide-value-viewport {
     min-height: 168px;
     max-height: 220px;
     margin: 6px 0;
   }
 
-  .fairsales-landing .guide-value-card {
+  .fairautos-landing .guide-value-card {
     width: min(310px, calc(100vw - 28px));
     padding: 16px 16px 12px;
     height: 100%;
@@ -428,47 +428,47 @@
     box-sizing: border-box;
   }
 
-  .fairsales-landing .guide-value-card h3 {
+  .fairautos-landing .guide-value-card h3 {
     font-size: 18px;
   }
 
-  .fairsales-landing .guide-value-hud {
+  .fairautos-landing .guide-value-hud {
     width: min(310px, calc(100vw - 28px));
     padding: 7px 12px;
     gap: 6px;
     box-sizing: border-box;
   }
 
-  .fairsales-landing .guide-value-hud-num {
+  .fairautos-landing .guide-value-hud-num {
     font-size: 11px;
     min-width: 44px;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
   }
 
-  .fairsales-landing .guide-value-meter {
+  .fairautos-landing .guide-value-meter {
     width: 70px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fairsales-landing .guide-value {
+  .fairautos-landing .guide-value {
     height: auto;
   }
 
-  .fairsales-landing .guide-value-pin {
+  .fairautos-landing .guide-value-pin {
     position: static;
     height: auto;
     overflow: visible;
     padding: 96px 6% 72px;
   }
 
-  .fairsales-landing .guide-value-viewport {
+  .fairautos-landing .guide-value-viewport {
     height: auto;
     overflow: visible;
   }
 
-  .fairsales-landing .guide-value-track {
+  .fairautos-landing .guide-value-track {
     position: static;
     left: auto;
     flex-direction: column;
@@ -477,7 +477,7 @@
     transform: none !important;
   }
 
-  .fairsales-landing .guide-value-card {
+  .fairautos-landing .guide-value-card {
     width: min(560px, 100%);
     height: auto;
     min-height: 280px;

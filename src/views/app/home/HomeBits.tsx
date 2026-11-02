@@ -32,27 +32,20 @@ export function LiveLotsStrip({ items }: { items: InventoryItem[] }) {
   return (
     <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
       {items.slice(0, 6).map((item) => {
-        const meta = [item.primaryDamage, item.vehicleScore != null ? `Score ${item.vehicleScore}` : null]
-          .filter(Boolean)
-          .join(" · ");
+        const meta = item.primaryDamage || "";
         return (
-          <li key={item.stockNumber}>
-            <Link
-              to={paths.inventoryItem(item.stockNumber)}
-              className="group block overflow-hidden rounded-[8px] border border-hairline bg-surface hover:border-accent/40"
-            >
-              <InventoryThumb
-                src={item.imageUrl}
-                title={item.title}
-                className="aspect-[16/10] w-full"
-                loadShots={() => loadLotShots(item.stockNumber, "app")}
-              />
-              <div className="space-y-0.5 px-2.5 py-2">
-                <p className="line-clamp-2 font-serif text-[14px] leading-5 tracking-[-0.02em] text-ink group-hover:text-accent">
-                  {item.title || item.stockNumber}
-                </p>
-                {meta ? <p className="truncate text-[11px] text-muted">{meta}</p> : null}
-              </div>
+          <li key={item.stockNumber} className="overflow-hidden rounded-[8px] border border-hairline bg-surface">
+            <InventoryThumb
+              src={item.imageUrl}
+              title={item.title}
+              className="aspect-[16/10] w-full"
+              loadShots={() => loadLotShots(item.stockNumber, "app")}
+            />
+            <Link to={paths.inventoryItem(item.stockNumber)} className="group block space-y-0.5 px-2.5 py-2 hover:bg-surface-muted">
+              <p className="line-clamp-2 font-serif text-[14px] leading-5 tracking-[-0.02em] text-ink group-hover:text-accent">
+                {item.title || item.stockNumber}
+              </p>
+              {meta ? <p className="truncate text-[11px] text-muted">{meta}</p> : null}
             </Link>
           </li>
         );

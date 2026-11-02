@@ -1,38 +1,38 @@
 /* ==========================================================================
    SECTION 9: FINAL CTA
    ========================================================================== */
-.fairsales-landing .final-cta {
+.fairautos-landing .final-cta {
   text-align: center;
   color: #ffffff;
   background: #171513;
   padding: 85px 20px 90px;
 }
 
-.fairsales-landing .final-cta>span {
+.fairautos-landing .final-cta>span {
   letter-spacing: 2px;
   color: var(--fs-claude-orange);
   font-size: 10px;
   font-weight: 700;
 }
 
-.fairsales-landing .final-cta h2 {
+.fairautos-landing .final-cta h2 {
   margin: 25px 0 32px;
   font-size: 60px;
   color: #ffffff !important;
 }
 
-.fairsales-landing .final-cta em {
+.fairautos-landing .final-cta em {
   color: var(--fs-claude-orange);
 }
 
-.fairsales-landing .btn-final-cta {
+.fairautos-landing .btn-final-cta {
   gap: 14px;
   padding: 16px 28px;
   font-size: 14px;
   font-weight: 700;
 }
 
-.fairsales-landing .btn-final-cta svg {
+.fairautos-landing .btn-final-cta svg {
   width: 19px;
   height: 19px;
 }
@@ -40,7 +40,7 @@
 /* ==========================================================================
    SECTION 10: MINIMALIST FOOTER
    ========================================================================== */
-.fairsales-landing .site-footer {
+.fairautos-landing .site-footer {
   justify-content: space-between;
   align-items: center;
   gap: 25px;
@@ -50,16 +50,16 @@
   border-top: 1px solid var(--fs-line);
 }
 
-.fairsales-landing .footer-logo {
+.fairautos-landing .footer-logo {
   text-decoration: none;
 }
 
-.fairsales-landing .site-footer p {
+.fairautos-landing .site-footer p {
   color: var(--fs-muted);
   font-size: 11px;
 }
 
-.fairsales-landing .footer-links {
+.fairautos-landing .footer-links {
   color: var(--fs-muted);
   align-items: center;
   gap: 20px;
@@ -67,7 +67,7 @@
   display: flex;
 }
 
-.fairsales-landing .footer-links button {
+.fairautos-landing .footer-links button {
   color: inherit;
   background: transparent;
   border: none;
@@ -75,7 +75,7 @@
   cursor: pointer;
 }
 
-.fairsales-landing .footer-links button:hover {
+.fairautos-landing .footer-links button:hover {
   color: var(--fs-claude-orange);
 }
 

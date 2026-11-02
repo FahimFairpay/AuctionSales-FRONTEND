@@ -84,8 +84,8 @@ export function CopilotComposer({
               onBlur={onBlur}
               onKeyDown={onKeyDown}
               rows={1}
-              placeholder={input ? "" : isFocused ? "Ask FairSales" : animatedPlaceholder}
-              aria-label="Ask FairSales"
+              placeholder={input ? "" : isFocused ? "Ask FairAutos" : animatedPlaceholder}
+              aria-label="Ask FairAutos"
               className="copilot-blended-input"
             />
           </div>
@@ -130,8 +130,8 @@ export function CopilotComposer({
               onBlur={onBlur}
               onKeyDown={onKeyDown}
               rows={1}
-              placeholder={input ? "" : isFocused ? "Ask FairSales" : animatedPlaceholder}
-              aria-label="Ask FairSales"
+              placeholder={input ? "" : isFocused ? "Ask FairAutos" : animatedPlaceholder}
+              aria-label="Ask FairAutos"
               className="copilot-public-input"
             />
           </div>

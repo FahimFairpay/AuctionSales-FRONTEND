@@ -94,7 +94,7 @@ export function AppShell({ children }: { children?: ReactNode } = {}) {
         } ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
         <div className={`flex shrink-0 items-center ${collapsed ? "justify-center px-0" : "px-2"}`}>
-          <Link href="/" aria-label="FairSales home" className="text-inherit no-underline">
+          <Link href="/" aria-label="FairAutos home" className="text-inherit no-underline">
             {collapsed ? (
               <span className="brand-wordmark brand-wordmark-header">
                 <span className="brand-arrow" aria-hidden="true">↗︎</span>
@@ -208,7 +208,7 @@ export function AppShell({ children }: { children?: ReactNode } = {}) {
                 <path d="M5 7h14M5 12h14M5 17h14" strokeLinecap="round" />
               </svg>
             </button>
-            <Link href="/" aria-label="FairSales home" className="text-inherit no-underline">
+            <Link href="/" aria-label="FairAutos home" className="text-inherit no-underline">
               <BrandWordmark />
             </Link>
           </div>

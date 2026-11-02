@@ -10,7 +10,7 @@ export function PrivacyPolicyContent() {
           1. Information We Collect
         </h4>
         <p>
-          FairSales collects commercial identity and contact information including your full legal name, business email address, verified United States mobile telephone number, company dealership affiliation, vehicle search queries, favorited lots, and bidding request records.
+          FairAutos collects commercial identity and contact information including your full legal name, business email address, verified United States mobile telephone number, company dealership affiliation, vehicle search queries, favorited lots, and bidding request records.
         </p>
       </section>
 
@@ -37,7 +37,7 @@ export function PrivacyPolicyContent() {
           4. Website Measurement
         </h4>
         <p>
-          FairSales uses Google Analytics to measure visits, pages, and how visitors move through the public pages. Google may set cookies named _ga and _ga_X1PJW54Z33 for that measurement. FairSales also uses Microsoft Clarity to understand how visitors use the public pages, including session replay and heatmaps. Clarity may set its own cookies or storage keys for that measurement. Neither tag receives your name, email address, or phone number from the app. Buyer contact records are not sold to third-party advertisers.
+          FairAutos uses Google Analytics to measure visits, pages, and how visitors move through the public pages. Google may set cookies named _ga and _ga_X1PJW54Z33 for that measurement. FairAutos also uses Microsoft Clarity to understand how visitors use the public pages, including session replay and heatmaps. Clarity may set its own cookies or storage keys for that measurement. Neither tag receives your name, email address, or phone number from the app. Buyer contact records are not sold to third-party advertisers.
         </p>
       </section>
 

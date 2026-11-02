@@ -37,7 +37,39 @@ if (typeof window !== "undefined") {
   requireConfig();
 }
 
-// In the browser, always route through the Next.js /api proxy to prevent direct AWS API Gateway exposure
+const DIRECT_API_PREFIXES = ["/users", "/inventory", "/presets", "/public"];
+
+/** Turn on with NEXT_PUBLIC_DIRECT_API=true. Off restores the /api proxy. */
+export function directApiEnabled(): boolean {
+  return (process.env.NEXT_PUBLIC_DIRECT_API || "").trim() === "true";
+}
+
+function matchesDirectPrefix(path: string): boolean {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  return DIRECT_API_PREFIXES.some(
+    (prefix) =>
+      normalized === prefix ||
+      normalized.startsWith(`${prefix}/`) ||
+      normalized.startsWith(`${prefix}?`),
+  );
+}
+
+/**
+ * Browser calls stay on the Next.js proxy unless the direct-call flag is on
+ * and the path is one of the allow-listed API groups.
+ */
+export function resolveApiBase(path: string): string {
+  const proxy = "/api";
+  const direct = readEnv("API_BASE").replace(/\/+$/, "");
+  if (typeof window === "undefined") {
+    return direct || proxy;
+  }
+  if (directApiEnabled() && direct && matchesDirectPrefix(path)) {
+    return direct;
+  }
+  return proxy;
+}
+
 export const apiBaseUrl =
   typeof window !== "undefined"
     ? "/api"

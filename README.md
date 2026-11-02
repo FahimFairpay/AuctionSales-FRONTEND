@@ -1,6 +1,6 @@
-# FairPy Sales — nextjs-web
+# FairAutos — nextjs-web
 
-High-performance Next.js 16 (App Router + Turbopack) frontend for **FairPy Sales** automotive auction discovery and wholesale lead intelligence.
+High-performance Next.js 16 (App Router + Turbopack) frontend for **FairAutos** automotive auction discovery and wholesale lead intelligence.
 
 ## Features
 

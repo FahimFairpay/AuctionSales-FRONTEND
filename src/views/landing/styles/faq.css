@@ -1,14 +1,14 @@
 /* ==========================================================================
    SECTION 8: FAQ ACCORDION (CLEAR ANSWERS)
    ========================================================================== */
-.fairsales-landing .faq-section {
+.fairautos-landing .faq-section {
   grid-template-columns: 1fr 1.2fr;
   gap: 85px;
   align-items: start;
   display: grid;
 }
 
-.fairsales-landing .faq-section h2 {
+.fairautos-landing .faq-section h2 {
   margin-top: 18px;
   font-size: 48px;
   line-height: 1.12;
@@ -16,22 +16,22 @@
   color: var(--fs-ink);
 }
 
-.fairsales-landing .faq-section h2 em {
+.fairautos-landing .faq-section h2 em {
   display: block;
   line-height: 1.15;
 }
 
-.fairsales-landing .faq-accordion-list {
+.fairautos-landing .faq-accordion-list {
   display: flex;
   flex-direction: column;
 }
 
-.fairsales-landing .faq-row {
+.fairautos-landing .faq-row {
   border-bottom: 1px solid var(--fs-line);
   padding: 22px 0;
 }
 
-.fairsales-landing .faq-question-btn {
+.fairautos-landing .faq-question-btn {
   width: 100%;
   background: transparent;
   border: none;
@@ -47,11 +47,11 @@
   padding: 0;
 }
 
-.fairsales-landing .faq-question-btn:hover {
+.fairautos-landing .faq-question-btn:hover {
   color: var(--fs-claude-orange);
 }
 
-.fairsales-landing .faq-chevron {
+.fairautos-landing .faq-chevron {
   width: 19px;
   height: 19px;
   flex-shrink: 0;
@@ -60,12 +60,12 @@
   transition: transform 0.25s ease;
 }
 
-.fairsales-landing .faq-chevron.rotated {
+.fairautos-landing .faq-chevron.rotated {
   transform: rotate(180deg);
   stroke: var(--fs-claude-orange);
 }
 
-.fairsales-landing .faq-answer-text {
+.fairautos-landing .faq-answer-text {
   color: var(--fs-muted);
   margin-top: 15px;
   font-size: 13px;

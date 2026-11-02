@@ -21,7 +21,7 @@ export function LandingPage() {
   };
 
   return (
-    <div className="fairsales-landing">
+    <div className="fairautos-landing">
       {/* Morphing Adaptive Header: Zero size shift, early scroll trigger */}
       <PublicHeader mode="landing" />
 
@@ -73,7 +73,7 @@ export function LandingPage() {
                 type="button"
                 className="btn-hero-ai"
                 onClick={handleHeroAskAiClick}
-                aria-label="Ask FairSales AI Copilot"
+                aria-label="Ask FairAutos AI Copilot"
               >
                 <span className="btn-ai-sparkle-wrap">
                   <svg
@@ -305,7 +305,7 @@ export function LandingPage() {
             type="button"
             className="btn-guide-ask"
             onClick={handleHeroAskAiClick}
-            aria-label="Ask FairSales"
+            aria-label="Ask FairAutos"
           >
             <span>Ask us</span>
             <svg viewBox="0 0 24 24" fill="currentColor">
@@ -382,14 +382,14 @@ export function LandingPage() {
            SECTION 10: MINIMALIST FOOTER
            ==================================================================== */}
       <footer className="site-footer">
-        <Link href="/" className="footer-logo" aria-label="FairSales Home">
+        <Link href="/" className="footer-logo" aria-label="FairAutos Home">
           <BrandWordmark size="display" />
         </Link>
         <p>A smarter way from potential to pavement.</p>
         <div className="footer-links">
           <button type="button">Privacy</button>
           <button type="button">Terms</button>
-          <span>© 2026 FairSales</span>
+          <span>© 2026 FairAutos</span>
         </div>
       </footer>
 

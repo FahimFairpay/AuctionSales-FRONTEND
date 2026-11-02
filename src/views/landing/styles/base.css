@@ -1,5 +1,5 @@
 /* ==========================================================================
-   FAIRSALES STOREFRONT LANDING PAGE STYLES
+   FAIRAUTOS STOREFRONT LANDING PAGE STYLES
    - Claude Terracotta Orange Design System
    - Full 100vh Viewport Hero Section
    - Apple Liquid Glassmorphism (Light & Dark)
@@ -9,7 +9,7 @@
 
 @import "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap";
 
-.fairsales-landing {
+.fairautos-landing {
   /* Core Palette Tokens - Light Mode */
   --fs-ink: #20241f;
   --fs-paper: #faf9f5;
@@ -49,8 +49,8 @@
 /* ==========================================================================
    DARK THEME TOKENS
    ========================================================================== */
-[data-theme="dark"] .fairsales-landing,
-.dark .fairsales-landing {
+[data-theme="dark"] .fairautos-landing,
+.dark .fairautos-landing {
   --fs-ink: #f5f0e8;
   --fs-paper: #0b0b0a;
   --fs-paper-elevated: #151514;
@@ -71,27 +71,27 @@
   --fs-glass-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.7);
 }
 
-.fairsales-landing * {
+.fairautos-landing * {
   box-sizing: border-box;
 }
 
-.fairsales-landing h1,
-.fairsales-landing h2,
-.fairsales-landing h3,
-.fairsales-landing p {
+.fairautos-landing h1,
+.fairautos-landing h2,
+.fairautos-landing h3,
+.fairautos-landing p {
   margin: 0;
   font-family: inherit;
 }
 
-.fairsales-landing h1,
-.fairsales-landing h2 {
+.fairautos-landing h1,
+.fairautos-landing h2 {
   font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
   letter-spacing: -2px;
   font-weight: 500;
   line-height: 1.08;
 }
 
-.fairsales-landing em {
+.fairautos-landing em {
   font-family: "Georgia", serif !important;
   font-style: italic;
   font-weight: 400;

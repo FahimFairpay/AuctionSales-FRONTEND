@@ -62,7 +62,7 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
         <Link
           href="/"
           className="brand-container"
-          aria-label="FairSales Home"
+          aria-label="FairAutos Home"
         >
           <BrandWordmark />
         </Link>

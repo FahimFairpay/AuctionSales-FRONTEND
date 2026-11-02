@@ -19,7 +19,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "FairPy Sales",
+  title: "FairAutos",
   icons: {
     icon: [
       {

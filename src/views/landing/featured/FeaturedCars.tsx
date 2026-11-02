@@ -69,6 +69,11 @@ const FEATURED_CARS: CarCardItem[] = [
   },
 ];
 
+function photoCandidates(image: string): VisCandidate[] {
+  const vis = expandVisImages(image);
+  return vis.length > 0 ? vis : [{ thumb: image, large: image, index: 1, set: null }];
+}
+
 export function FeaturedCars() {
   const [liveCars, setLiveCars] = useState<CarCardItem[]>(FEATURED_CARS);
   const [galleryCar, setGalleryCar] = useState<{ title: string; candidates: VisCandidate[] } | null>(null);
@@ -147,6 +152,12 @@ export function FeaturedCars() {
                       src={car.image}
                       alt={`${car.name} photo`}
                       loading="lazy"
+                      className="cursor-pointer"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        setGalleryCar({ title: car.name, candidates: photoCandidates(car.image) });
+                      }}
                     />
                     <span className="title-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -162,15 +173,10 @@ export function FeaturedCars() {
                       type="button"
                       aria-label="All images"
                       className="car-image-stack-btn"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const vis = expandVisImages(car.image);
-                        const candidates: VisCandidate[] =
-                          vis.length > 0
-                            ? vis
-                            : [{ thumb: car.image, large: car.image, index: 1, set: null }];
-                        setGalleryCar({ title: car.name, candidates });
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        setGalleryCar({ title: car.name, candidates: photoCandidates(car.image) });
                       }}
                     >
                       <span className="stack-icon-wrap">

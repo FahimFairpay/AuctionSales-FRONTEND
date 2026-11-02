@@ -200,6 +200,14 @@ export type InventoryItem = {
   laneRun?: string;
   sellerType?: string;
   acv?: number;
+  onRoadLow?: number;
+  onRoadHigh?: number;
+  marketLow?: number;
+  marketHigh?: number;
+  savingsLow?: number;
+  savingsHigh?: number;
+  estimateStatus?: "ready" | "unavailable" | "failed";
+  estimateAsOf?: string;
   region?: string;
   state?: string;
   source?: AuctionSource;

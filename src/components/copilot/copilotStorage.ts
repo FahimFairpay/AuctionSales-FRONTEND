@@ -2,8 +2,8 @@
 
 import type { ChatMessage, ConversationThread } from "./copilotTypes";
 
-const STORAGE_KEY = "fairsales_ai_threads_v1";
-const GUEST_STORAGE_KEY = "fairsales_ai_guest_thread_v1";
+const STORAGE_KEY = "fairautos_ai_threads_v1";
+const GUEST_STORAGE_KEY = "fairautos_ai_guest_thread_v1";
 const GUEST_INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
 export const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
@@ -55,7 +55,7 @@ export function isBrowserReload(): boolean {
   if (typeof window === "undefined" || typeof performance === "undefined") return false;
   // If navigating via chat redirect, this is explicitly a route navigation, NOT a reload
   try {
-    if (sessionStorage.getItem("fairsales_ai_navigating_from_chat") === "true") {
+    if (sessionStorage.getItem("fairautos_ai_navigating_from_chat") === "true") {
       return false;
     }
   } catch {}

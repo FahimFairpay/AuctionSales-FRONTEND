@@ -10,7 +10,7 @@ import { CopilotDrawer } from "../../components/copilot/CopilotDrawer";
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { InventoryThumb } from "../../features/inventory/InventoryThumb";
 import { galleryShots } from "../../features/inventory/visImages";
-import { CARD_GROUPS, formatCardValue } from "../../features/inventory/cardFields";
+import { LotFactGrid } from "../../features/inventory/LotFactGrid";
 import { SHOWCASE_INVENTORY } from "../../features/inventory/showcaseData";
 import { SourceCornerLabel, VehicleSourceTitle, listingUrl } from "../../features/inventory/SourceGlassPill";
 import { paths } from "../../routes/paths";
@@ -77,32 +77,7 @@ export function PublicInventoryDetailPage() {
             </div>
           </div>
 
-          {/* Facts Specifications Grid */}
-          <div className="grid min-h-0 grid-cols-2 gap-x-5 gap-y-4 xl:grid-cols-4">
-            {CARD_GROUPS.map((group) => {
-              const facts = group.fields
-                .map((field) => ({ field, value: formatCardValue(row, field.id) }))
-                .filter((fact) => fact.value !== "—");
-              if (facts.length === 0) return null;
-              return (
-                <section key={group.id} className="min-w-0 space-y-2">
-                  <h2 className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted">
-                    {group.label}
-                  </h2>
-                  <dl className="space-y-2">
-                    {facts.map(({ field, value }) => (
-                      <div key={field.id} className="min-w-0">
-                        <dt className="text-xs text-muted">{field.label}</dt>
-                        <dd className="break-words text-[15px] leading-5 text-ink" title={value}>
-                          {value}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                </section>
-              );
-            })}
-          </div>
+          <LotFactGrid item={row} />
         </div>
 
       </main>

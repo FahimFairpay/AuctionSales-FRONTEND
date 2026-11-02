@@ -9,7 +9,7 @@ export default function PrivacyPage() {
   return (
     <AuthCard
       title="Privacy Policy"
-      subtitle="How FairSales collects, protects, and handles commercial account data."
+      subtitle="How FairAutos collects, protects, and handles commercial account data."
       maxWidth="680px"
     >
       <div className="auth-terms-inset-box !max-h-[calc(100dvh-220px)] my-2">
