@@ -120,22 +120,19 @@ export function InventoryToolbar({
   return (
     <div className="flex flex-col gap-2 w-full">
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full">
-        {/* 1. SMART SEARCH INPUT */}
         <label className="relative flex-1 min-w-[200px] w-full sm:w-auto">
-          {/* AI Search icon */}
-          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted" title="Smart Search (Supports questions & typos)">
+          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted">
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M12 3v3m0 12v3m9-9h-3M6 12H3" strokeLinecap="round" />
-              <circle cx="12" cy="12" r="5" />
-              <path d="m19 5-2 2M7 17l-2 2m14 0-2-2M7 7 5 5" strokeLinecap="round" opacity="0.6" />
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="M16 16l4 4" strokeLinecap="round" />
             </svg>
           </span>
           <Input
             className="h-9 w-full pl-9 pr-8 text-sm"
             value={search}
             onChange={(event) => onSearch(event.target.value)}
-            placeholder="Smart search: 'Hybird', 'Honda hybrid', '2023 rav4'..."
-            aria-label="Smart search"
+            placeholder="Search make, model, year, or fuel"
+            aria-label="Search inventory"
           />
           {search ? (
             <button
@@ -189,15 +186,9 @@ export function InventoryToolbar({
         </div>
       </div>
 
-      {/* 2. SMART SEARCH INTENT FEEDBACK CHIPS */}
       {hasIntentChips ? (
         <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted pt-0.5">
-          <span className="flex items-center gap-1 font-medium text-ink">
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-ink" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" strokeLinecap="round" />
-            </svg>
-            Smart filter:
-          </span>
+          <span className="font-medium text-ink">Filters:</span>
 
           {applied?.makes?.map((make) => (
             <span
@@ -324,7 +315,7 @@ export function InventoryToolbar({
               onClick={onClearIntent}
               className="ml-1 text-xs text-muted hover:text-ink underline cursor-pointer"
             >
-              Clear smart filters
+              Clear filters
             </button>
           ) : null}
         </div>
