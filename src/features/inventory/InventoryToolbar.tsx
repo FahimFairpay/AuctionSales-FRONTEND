@@ -4,8 +4,6 @@ import { IconTool } from "../../components/IconTool";
 import { Input } from "../../components/Input";
 import { useToast } from "../../components/Toast";
 import type { RecipeFilters } from "../../types/filters";
-import type { SmartIntentApplied } from "../../types/api";
-import { AppliedSearchChips } from "./AppliedSearchChips";
 import { InventoryFilterPill } from "./InventoryFilters";
 import { inventoryFacetCount, type InventoryQuery } from "./query";
 
@@ -73,8 +71,6 @@ export function InventoryToolbar({
   onlyInterested,
   onToggleInterested,
   interestedCount,
-  activeIntent,
-  onRemoveFacet,
 }: {
   search: string;
   onSearch: (value: string) => void;
@@ -87,12 +83,6 @@ export function InventoryToolbar({
   onlyInterested?: boolean;
   onToggleInterested?: () => void;
   interestedCount?: number;
-  activeIntent?: {
-    summary?: string;
-    applied?: SmartIntentApplied;
-  } | null;
-  onClearIntent?: () => void;
-  onRemoveFacet?: (key: keyof SmartIntentApplied, val?: string | number) => void;
 }) {
   const { pushToast } = useToast();
   const hasFilters = inventoryFacetCount(query) > 0;
@@ -104,8 +94,6 @@ export function InventoryToolbar({
     }
     onSave();
   }
-
-  const applied = activeIntent?.applied;
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -175,8 +163,6 @@ export function InventoryToolbar({
           </div>
         </div>
       </div>
-
-      {applied ? <AppliedSearchChips applied={applied} onRemove={onRemoveFacet} /> : null}
     </div>
   );
 }

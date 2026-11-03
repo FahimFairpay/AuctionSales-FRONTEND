@@ -152,8 +152,6 @@ export function PublicInventoryPage() {
   const smartSearch = useSmartSearch({
     query,
     onChange: replaceQuery,
-    serverApplied: page.data?.appliedFilters,
-    serverSummary: page.data?.summary,
   });
 
   useEffect(() => {
@@ -238,9 +236,6 @@ export function PublicInventoryPage() {
           onlyInterested={onlyInterested}
           onToggleInterested={() => setOnlyInterested((prev) => !prev)}
           interestedCount={guestFavorites.length}
-          activeIntent={smartSearch.activeIntent}
-          onClearIntent={smartSearch.clearIntent}
-          onRemoveFacet={smartSearch.removeFacet}
         />
 
         {page.isLoading && !onlyInterested ? <FairOrb state="working" /> : null}

@@ -76,8 +76,6 @@ export function InventoryListPage() {
   const smartSearch = useSmartSearch({
     query,
     onChange: replaceQuery,
-    serverApplied: page.data?.appliedFilters,
-    serverSummary: page.data?.summary,
   });
 
   useEffect(() => {
@@ -181,9 +179,6 @@ export function InventoryListPage() {
         onlyInterested={onlyInterested}
         onToggleInterested={() => setOnlyInterested((prev) => !prev)}
         interestedCount={favorites.favorites.length}
-        activeIntent={smartSearch.activeIntent}
-        onClearIntent={smartSearch.clearIntent}
-        onRemoveFacet={smartSearch.removeFacet}
       />
       {page.isLoading && !onlyInterested ? <FairOrb state="working" /> : null}
       {page.error && !onlyInterested ? (
