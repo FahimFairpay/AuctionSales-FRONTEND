@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { InventoryQuery } from "./query";
 
 export function useSmartSearch({
@@ -10,19 +10,21 @@ export function useSmartSearch({
   query: InventoryQuery;
   onChange: (next: InventoryQuery) => void;
 }) {
-  const [draft, setDraft] = useState(query.modelContains || "");
+  const committed = query.modelContains || "";
+  const [draft, setDraft] = useState(committed);
 
   useEffect(() => {
-    setDraft(query.modelContains || "");
-  }, [query.modelContains]);
+    setDraft((current) => (current.trim() === committed ? current : committed));
+  }, [committed]);
 
   useEffect(() => {
+    const trimmed = draft.trim();
+    if (trimmed === committed) return;
     const handle = window.setTimeout(() => {
-      if (draft === (query.modelContains || "")) return;
-      onChange({ ...query, modelContains: draft || undefined });
+      onChange({ ...query, modelContains: trimmed || undefined });
     }, 300);
     return () => window.clearTimeout(handle);
-  }, [draft, query, onChange]);
+  }, [draft, committed, query, onChange]);
 
   return { draft, setDraft };
 }
