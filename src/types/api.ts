@@ -254,6 +254,8 @@ export type SmartIntentApplied = {
   odoMax?: number;
   cleanTitleOnly?: boolean;
   modelContains?: string;
+  source?: string;
+  branch?: string;
 };
 
 export type InventoryPage = {

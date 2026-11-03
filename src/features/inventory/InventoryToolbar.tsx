@@ -5,6 +5,7 @@ import { Input } from "../../components/Input";
 import { useToast } from "../../components/Toast";
 import type { RecipeFilters } from "../../types/filters";
 import type { SmartIntentApplied } from "../../types/api";
+import { AppliedSearchChips } from "./AppliedSearchChips";
 import { InventoryFilterPill } from "./InventoryFilters";
 import { inventoryFacetCount, type InventoryQuery } from "./query";
 
@@ -73,7 +74,6 @@ export function InventoryToolbar({
   onToggleInterested,
   interestedCount,
   activeIntent,
-  onClearIntent,
   onRemoveFacet,
 }: {
   search: string;
@@ -106,16 +106,6 @@ export function InventoryToolbar({
   }
 
   const applied = activeIntent?.applied;
-  const hasIntentChips = Boolean(
-    applied &&
-      (applied.makes?.length ||
-        applied.fuelTypes?.length ||
-        applied.vehicleTypes?.length ||
-        applied.startCodes?.length ||
-        applied.yearMin ||
-        applied.odoMax ||
-        applied.cleanTitleOnly)
-  );
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -186,140 +176,7 @@ export function InventoryToolbar({
         </div>
       </div>
 
-      {hasIntentChips ? (
-        <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted pt-0.5">
-          <span className="font-medium text-ink">Filters:</span>
-
-          {applied?.makes?.map((make) => (
-            <span
-              key={`make-${make}`}
-              className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink"
-            >
-              <span>Make: {make}</span>
-              {onRemoveFacet ? (
-                <button
-                  type="button"
-                  onClick={() => onRemoveFacet("makes", make)}
-                  className="hover:text-ink text-muted cursor-pointer"
-                  aria-label={`Remove make ${make}`}
-                >
-                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
-                  </svg>
-                </button>
-              ) : null}
-            </span>
-          ))}
-
-          {applied?.fuelTypes?.map((fuel) => (
-            <span
-              key={`fuel-${fuel}`}
-              className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink"
-            >
-              <span>Fuel: {fuel}</span>
-              {onRemoveFacet ? (
-                <button
-                  type="button"
-                  onClick={() => onRemoveFacet("fuelTypes", fuel)}
-                  className="hover:text-ink text-muted cursor-pointer"
-                  aria-label={`Remove fuel ${fuel}`}
-                >
-                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
-                  </svg>
-                </button>
-              ) : null}
-            </span>
-          ))}
-
-          {applied?.vehicleTypes?.map((type) => (
-            <span
-              key={`type-${type}`}
-              className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink"
-            >
-              <span>Type: {type}</span>
-              {onRemoveFacet ? (
-                <button
-                  type="button"
-                  onClick={() => onRemoveFacet("vehicleTypes", type)}
-                  className="hover:text-ink text-muted cursor-pointer"
-                  aria-label={`Remove type ${type}`}
-                >
-                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
-                  </svg>
-                </button>
-              ) : null}
-            </span>
-          ))}
-
-          {applied?.yearMin ? (
-            <span className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink">
-              <span>
-                Year: {applied.yearMin === applied.yearMax ? applied.yearMin : `${applied.yearMin}-${applied.yearMax || ""}`}
-              </span>
-              {onRemoveFacet ? (
-                <button
-                  type="button"
-                  onClick={() => onRemoveFacet("yearMin")}
-                  className="hover:text-ink text-muted cursor-pointer"
-                  aria-label="Remove year filter"
-                >
-                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
-                  </svg>
-                </button>
-              ) : null}
-            </span>
-          ) : null}
-
-          {applied?.odoMax ? (
-            <span className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink">
-              <span>Max {applied.odoMax.toLocaleString()} mi</span>
-              {onRemoveFacet ? (
-                <button
-                  type="button"
-                  onClick={() => onRemoveFacet("odoMax")}
-                  className="hover:text-ink text-muted cursor-pointer"
-                  aria-label="Remove odometer filter"
-                >
-                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
-                  </svg>
-                </button>
-              ) : null}
-            </span>
-          ) : null}
-
-          {applied?.cleanTitleOnly ? (
-            <span className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink">
-              <span>Clean Title</span>
-              {onRemoveFacet ? (
-                <button
-                  type="button"
-                  onClick={() => onRemoveFacet("cleanTitleOnly")}
-                  className="hover:text-ink text-muted cursor-pointer"
-                  aria-label="Remove clean title filter"
-                >
-                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
-                  </svg>
-                </button>
-              ) : null}
-            </span>
-          ) : null}
-
-          {onClearIntent ? (
-            <button
-              type="button"
-              onClick={onClearIntent}
-              className="ml-1 text-xs text-muted hover:text-ink underline cursor-pointer"
-            >
-              Clear filters
-            </button>
-          ) : null}
-        </div>
-      ) : null}
+      {applied ? <AppliedSearchChips applied={applied} onRemove={onRemoveFacet} /> : null}
     </div>
   );
 }

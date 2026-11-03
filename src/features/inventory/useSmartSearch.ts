@@ -68,43 +68,21 @@ export function useSmartSearch({
   }, [query, serverApplied, onChange]);
 
   const removeFacet = useCallback(
-    (key: keyof SmartIntentApplied, val?: string | number) => {
-      const next: InventoryQuery = { ...query };
-      if (key === "makes") {
-        if (val && next.makes) {
-          next.makes = next.makes.filter((m) => m !== val);
-          if (next.makes.length === 0) next.makes = undefined;
-        } else {
-          next.makes = undefined;
-        }
-      } else if (key === "fuelTypes") {
-        if (val && next.fuelTypes) {
-          next.fuelTypes = next.fuelTypes.filter((f) => f !== val);
-          if (next.fuelTypes.length === 0) next.fuelTypes = undefined;
-        } else {
-          next.fuelTypes = undefined;
-        }
-      } else if (key === "vehicleTypes") {
-        if (val && next.vehicleTypes) {
-          next.vehicleTypes = next.vehicleTypes.filter((t) => t !== val);
-          if (next.vehicleTypes.length === 0) next.vehicleTypes = undefined;
-        } else {
-          next.vehicleTypes = undefined;
-        }
-      } else if (key === "startCodes") {
-        next.startCodes = undefined;
-      } else if (key === "yearMin" || key === "yearMax") {
-        next.yearMin = undefined;
-        next.yearMax = undefined;
-      } else if (key === "odoMax") {
-        next.odoMax = undefined;
-      } else if (key === "modelContains") {
-        setDraft("");
-        next.modelContains = undefined;
+    (_key: keyof SmartIntentApplied, _value?: string | number) => {
+      setDraft("");
+      const next: InventoryQuery = { ...query, modelContains: undefined };
+      if (serverApplied) {
+        if (serverApplied.makes) next.makes = undefined;
+        if (serverApplied.fuelTypes) next.fuelTypes = undefined;
+        if (serverApplied.vehicleTypes) next.vehicleTypes = undefined;
+        if (serverApplied.startCodes) next.startCodes = undefined;
+        if (serverApplied.yearMin) next.yearMin = undefined;
+        if (serverApplied.yearMax) next.yearMax = undefined;
+        if (serverApplied.odoMax) next.odoMax = undefined;
       }
       onChange(next);
     },
-    [query, onChange]
+    [query, serverApplied, onChange]
   );
 
   return {
