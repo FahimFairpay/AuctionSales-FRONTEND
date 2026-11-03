@@ -16,6 +16,7 @@ import { CustomizeListModal } from "../../features/inventory/CustomizeListModal"
 import { InventoryLotList } from "../../features/inventory/InventoryLotRow";
 import { loadLotShots } from "../../features/inventory/loadLotShots";
 import { InventoryToolbar } from "../../features/inventory/InventoryToolbar";
+import { useSmartSearch } from "../../features/inventory/useSmartSearch";
 import { SHOWCASE_INVENTORY } from "../../features/inventory/showcaseData";
 import {
   DEFAULT_CARD_FIELDS,
@@ -48,7 +49,6 @@ const DEFAULT_PUBLIC_RECIPE: RecipeFilters = {
 export function PublicInventoryPage() {
   const [params, setParams] = useSearchParams();
   const query = useMemo(() => parseInventorySearch(params.toString()), [params]);
-  const [draft, setDraft] = useState(query.modelContains || "");
   const [cursors, setCursors] = useState<string[]>([]);
   const [customOpen, setCustomOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -69,6 +69,7 @@ export function PublicInventoryPage() {
       try {
         const source = query.source === "IAAI" || query.source === "COPART" ? query.source : undefined;
         const res = await listPublicInventory({
+          makes: query.makes,
           types: query.vehicleTypes,
           damage: query.primaryDamages,
           fuelTypes: query.fuelTypes,
@@ -97,6 +98,11 @@ export function PublicInventoryPage() {
 
       // Filter showcase inventory locally based on user filters
       let filtered = [...SHOWCASE_INVENTORY];
+      if (query.makes && query.makes.length > 0) {
+        filtered = filtered.filter((i) =>
+          query.makes!.some((m) => i.make?.toLowerCase() === m.toLowerCase())
+        );
+      }
       if (query.modelContains) {
         const mc = query.modelContains.toLowerCase();
         filtered = filtered.filter(
@@ -143,18 +149,16 @@ export function PublicInventoryPage() {
     } catch { }
   }, []);
 
-  useEffect(() => {
-    setDraft(query.modelContains || "");
-    setCursors([]);
-  }, [params, query.modelContains]);
+  const smartSearch = useSmartSearch({
+    query,
+    onChange: replaceQuery,
+    serverApplied: page.data?.appliedFilters,
+    serverSummary: page.data?.summary,
+  });
 
   useEffect(() => {
-    const handle = window.setTimeout(() => {
-      if (draft === (query.modelContains || "")) return;
-      replaceQuery({ ...query, modelContains: draft || undefined });
-    }, 300);
-    return () => window.clearTimeout(handle);
-  }, [draft, query, replaceQuery]);
+    setCursors([]);
+  }, [params]);
 
   function setCardFields(next: CardFieldId[]) {
     setFields(next);
@@ -217,8 +221,8 @@ export function PublicInventoryPage() {
 
         {/* EXACT INTERNAL INVENTORY TOOLBAR */}
         <InventoryToolbar
-          search={draft}
-          onSearch={setDraft}
+          search={smartSearch.draft}
+          onSearch={smartSearch.setDraft}
           recipe={DEFAULT_PUBLIC_RECIPE}
           query={query}
           onChange={replaceQuery}
@@ -234,6 +238,9 @@ export function PublicInventoryPage() {
           onlyInterested={onlyInterested}
           onToggleInterested={() => setOnlyInterested((prev) => !prev)}
           interestedCount={guestFavorites.length}
+          activeIntent={smartSearch.activeIntent}
+          onClearIntent={smartSearch.clearIntent}
+          onRemoveFacet={smartSearch.removeFacet}
         />
 
         {page.isLoading && !onlyInterested ? <FairOrb state="working" /> : null}

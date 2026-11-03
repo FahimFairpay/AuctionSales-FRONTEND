@@ -17,6 +17,7 @@ import { FilterSaveModal } from "../../features/inventory/FilterSaveModal";
 import { InventoryLotList } from "../../features/inventory/InventoryLotRow";
 import { loadLotShots } from "../../features/inventory/loadLotShots";
 import { InventoryToolbar } from "../../features/inventory/InventoryToolbar";
+import { useSmartSearch } from "../../features/inventory/useSmartSearch";
 import { PhonePromptModal } from "../../features/inventory/PhonePromptModal";
 import { favoriteKey, useFavorites } from "../../features/inventory/useFavorites";
 import {
@@ -39,7 +40,6 @@ export function InventoryListPage() {
   const [params, setParams] = useSearchParams();
   const query = useMemo(() => parseInventorySearch(params.toString()), [params]);
   const recipe = useQuery({ queryKey: ["recipe"], queryFn: getRecipe });
-  const [draft, setDraft] = useState(query.modelContains || "");
   const [cursors, setCursors] = useState<string[]>([]);
   const [customOpen, setCustomOpen] = useState(false);
   const [saveOpen, setSaveOpen] = useState(false);
@@ -73,18 +73,16 @@ export function InventoryListPage() {
 
   useEffect(() => { setFields(loadCardFields()); }, []);
 
-  useEffect(() => {
-    setDraft(query.modelContains || "");
-    setCursors([]);
-  }, [params, query.modelContains]);
+  const smartSearch = useSmartSearch({
+    query,
+    onChange: replaceQuery,
+    serverApplied: page.data?.appliedFilters,
+    serverSummary: page.data?.summary,
+  });
 
   useEffect(() => {
-    const handle = window.setTimeout(() => {
-      if (draft === (query.modelContains || "")) return;
-      replaceQuery({ ...query, modelContains: draft || undefined });
-    }, 300);
-    return () => window.clearTimeout(handle);
-  }, [draft, query, replaceQuery]);
+    setCursors([]);
+  }, [params]);
 
   function setCardFields(next: CardFieldId[]) {
     setFields(next);
@@ -172,8 +170,8 @@ export function InventoryListPage() {
         </div>
       </div>
       <InventoryToolbar
-        search={draft}
-        onSearch={setDraft}
+        search={smartSearch.draft}
+        onSearch={smartSearch.setDraft}
         recipe={recipe.data?.filters}
         query={query}
         onChange={replaceQuery}
@@ -183,6 +181,9 @@ export function InventoryListPage() {
         onlyInterested={onlyInterested}
         onToggleInterested={() => setOnlyInterested((prev) => !prev)}
         interestedCount={favorites.favorites.length}
+        activeIntent={smartSearch.activeIntent}
+        onClearIntent={smartSearch.clearIntent}
+        onRemoveFacet={smartSearch.removeFacet}
       />
       {page.isLoading && !onlyInterested ? <FairOrb state="working" /> : null}
       {page.error && !onlyInterested ? (

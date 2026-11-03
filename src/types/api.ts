@@ -243,6 +243,19 @@ export type FailurePage = {
   limit: number;
 };
 
+export type SmartIntentApplied = {
+  makes?: string[];
+  fuelTypes?: string[];
+  vehicleTypes?: string[];
+  startCodes?: string[];
+  primaryDamages?: string[];
+  yearMin?: number;
+  yearMax?: number;
+  odoMax?: number;
+  cleanTitleOnly?: boolean;
+  modelContains?: string;
+};
+
 export type InventoryPage = {
   items: InventoryItem[];
   nextCursor?: string | null;
@@ -251,6 +264,8 @@ export type InventoryPage = {
   totalPages?: number;
   page?: number;
   hasMore?: boolean;
+  appliedFilters?: SmartIntentApplied;
+  summary?: string;
 };
 
 export type ScrapeRun = {

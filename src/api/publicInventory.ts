@@ -60,6 +60,14 @@ export function listPublicInventory(query: PublicInventoryQuery = {}): Promise<I
   return publicApiGet<InventoryPage>(qs ? `/public/inventory?${qs}` : "/public/inventory");
 }
 
+export function smartSearchPublicInventory(query: PublicInventoryQuery & { q?: string }): Promise<InventoryPage> {
+  const qObj = { ...query };
+  if (qObj.q && !qObj.search) {
+    qObj.search = qObj.q;
+  }
+  return listPublicInventory(qObj);
+}
+
 export function getPublicInventoryItem(stockNumber: string): Promise<InventoryItem> {
   return publicApiGet<InventoryItem>(`/public/inventory/${encodeURIComponent(stockNumber)}`);
 }

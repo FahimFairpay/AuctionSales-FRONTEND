@@ -4,6 +4,7 @@ import { IconTool } from "../../components/IconTool";
 import { Input } from "../../components/Input";
 import { useToast } from "../../components/Toast";
 import type { RecipeFilters } from "../../types/filters";
+import type { SmartIntentApplied } from "../../types/api";
 import { InventoryFilterPill } from "./InventoryFilters";
 import { inventoryFacetCount, type InventoryQuery } from "./query";
 
@@ -71,6 +72,9 @@ export function InventoryToolbar({
   onlyInterested,
   onToggleInterested,
   interestedCount,
+  activeIntent,
+  onClearIntent,
+  onRemoveFacet,
 }: {
   search: string;
   onSearch: (value: string) => void;
@@ -83,6 +87,12 @@ export function InventoryToolbar({
   onlyInterested?: boolean;
   onToggleInterested?: () => void;
   interestedCount?: number;
+  activeIntent?: {
+    summary?: string;
+    applied?: SmartIntentApplied;
+  } | null;
+  onClearIntent?: () => void;
+  onRemoveFacet?: (key: keyof SmartIntentApplied, val?: string | number) => void;
 }) {
   const { pushToast } = useToast();
   const hasFilters = inventoryFacetCount(query) > 0;
@@ -95,62 +105,230 @@ export function InventoryToolbar({
     onSave();
   }
 
+  const applied = activeIntent?.applied;
+  const hasIntentChips = Boolean(
+    applied &&
+      (applied.makes?.length ||
+        applied.fuelTypes?.length ||
+        applied.vehicleTypes?.length ||
+        applied.startCodes?.length ||
+        applied.yearMin ||
+        applied.odoMax ||
+        applied.cleanTitleOnly)
+  );
+
   return (
-    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full">
-      {/* 1. DYNAMIC SEARCH BOX ON LEFT (stretches to fill remaining space) */}
-      <label className="relative flex-1 min-w-[200px] w-full sm:w-auto">
-        <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted">
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <circle cx="11" cy="11" r="6.5" />
-            <path d="M16.2 16.2 21 21" strokeLinecap="round" />
-          </svg>
-        </span>
-        <Input
-          className="h-9 w-full pl-9 text-sm"
-          value={search}
-          onChange={(event) => onSearch(event.target.value)}
-          placeholder="Search model or title"
-          aria-label="Search model or title"
-        />
-      </label>
-
-      {/* Filters, interested, and list tools. Auction house lives in the filter sheet. */}
-      <div className="flex items-center gap-2 shrink-0">
-
-        {/* FILTERS */}
-        {recipe ? <InventoryFilterPill recipe={recipe} query={query} onChange={onChange} /> : null}
-
-        {/* HEART SHAPED CHECK BOX */}
-        {onToggleInterested ? (
-          <HeartCheckbox
-            checked={Boolean(onlyInterested)}
-            count={interestedCount ?? 0}
-            onChange={onToggleInterested}
+    <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full">
+        {/* 1. SMART SEARCH INPUT */}
+        <label className="relative flex-1 min-w-[200px] w-full sm:w-auto">
+          {/* AI Search icon */}
+          <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted" title="Smart Search (Supports questions & typos)">
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M12 3v3m0 12v3m9-9h-3M6 12H3" strokeLinecap="round" />
+              <circle cx="12" cy="12" r="5" />
+              <path d="m19 5-2 2M7 17l-2 2m14 0-2-2M7 7 5 5" strokeLinecap="round" opacity="0.6" />
+            </svg>
+          </span>
+          <Input
+            className="h-9 w-full pl-9 pr-8 text-sm"
+            value={search}
+            onChange={(event) => onSearch(event.target.value)}
+            placeholder="Smart search: 'Hybird', 'Honda hybrid', '2023 rav4'..."
+            aria-label="Smart search"
           />
-        ) : null}
+          {search ? (
+            <button
+              type="button"
+              onClick={() => onSearch("")}
+              className="absolute inset-y-0 right-2.5 flex items-center text-muted hover:text-ink cursor-pointer"
+              aria-label="Clear search text"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+              </svg>
+            </button>
+          ) : null}
+        </label>
 
-        {/* CUSTOMIZE | SAVE | LOAD SVGs */}
-        <div className="flex items-center gap-1">
-          <IconTool label="Customize list" onClick={onCustomize}>
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M4 7h16M4 12h10M4 17h7" strokeLinecap="round" />
-              <rect x="16" y="10" width="4" height="4" rx="1" />
-              <rect x="13" y="15" width="4" height="4" rx="1" />
-            </svg>
-          </IconTool>
-          <IconTool label="Save as preset" onClick={handleSave}>
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M5 3h14v18l-7-4-7 4V3z" strokeLinejoin="round" />
-            </svg>
-          </IconTool>
-          <IconTool label="Apply preset" onClick={onLoad}>
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M12 16l-4-4h3V5h2v7h3l-4 4z" strokeLinejoin="round" />
-              <path d="M5 19h14" strokeLinecap="round" />
-            </svg>
-          </IconTool>
+        {/* Filters, interested, and list tools */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* FILTERS */}
+          {recipe ? <InventoryFilterPill recipe={recipe} query={query} onChange={onChange} /> : null}
+
+          {/* HEART SHAPED CHECK BOX */}
+          {onToggleInterested ? (
+            <HeartCheckbox
+              checked={Boolean(onlyInterested)}
+              count={interestedCount ?? 0}
+              onChange={onToggleInterested}
+            />
+          ) : null}
+
+          {/* CUSTOMIZE | SAVE | LOAD SVGs */}
+          <div className="flex items-center gap-1">
+            <IconTool label="Customize list" onClick={onCustomize}>
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M4 7h16M4 12h10M4 17h7" strokeLinecap="round" />
+                <rect x="16" y="10" width="4" height="4" rx="1" />
+                <rect x="13" y="15" width="4" height="4" rx="1" />
+              </svg>
+            </IconTool>
+            <IconTool label="Save as preset" onClick={handleSave}>
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M5 3h14v18l-7-4-7 4V3z" strokeLinejoin="round" />
+              </svg>
+            </IconTool>
+            <IconTool label="Apply preset" onClick={onLoad}>
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M12 16l-4-4h3V5h2v7h3l-4 4z" strokeLinejoin="round" />
+                <path d="M5 19h14" strokeLinecap="round" />
+              </svg>
+            </IconTool>
+          </div>
         </div>
       </div>
+
+      {/* 2. SMART SEARCH INTENT FEEDBACK CHIPS */}
+      {hasIntentChips ? (
+        <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted pt-0.5">
+          <span className="flex items-center gap-1 font-medium text-ink">
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-ink" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" strokeLinecap="round" />
+            </svg>
+            Smart filter:
+          </span>
+
+          {applied?.makes?.map((make) => (
+            <span
+              key={`make-${make}`}
+              className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink"
+            >
+              <span>Make: {make}</span>
+              {onRemoveFacet ? (
+                <button
+                  type="button"
+                  onClick={() => onRemoveFacet("makes", make)}
+                  className="hover:text-ink text-muted cursor-pointer"
+                  aria-label={`Remove make ${make}`}
+                >
+                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+                  </svg>
+                </button>
+              ) : null}
+            </span>
+          ))}
+
+          {applied?.fuelTypes?.map((fuel) => (
+            <span
+              key={`fuel-${fuel}`}
+              className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink"
+            >
+              <span>Fuel: {fuel}</span>
+              {onRemoveFacet ? (
+                <button
+                  type="button"
+                  onClick={() => onRemoveFacet("fuelTypes", fuel)}
+                  className="hover:text-ink text-muted cursor-pointer"
+                  aria-label={`Remove fuel ${fuel}`}
+                >
+                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+                  </svg>
+                </button>
+              ) : null}
+            </span>
+          ))}
+
+          {applied?.vehicleTypes?.map((type) => (
+            <span
+              key={`type-${type}`}
+              className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink"
+            >
+              <span>Type: {type}</span>
+              {onRemoveFacet ? (
+                <button
+                  type="button"
+                  onClick={() => onRemoveFacet("vehicleTypes", type)}
+                  className="hover:text-ink text-muted cursor-pointer"
+                  aria-label={`Remove type ${type}`}
+                >
+                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+                  </svg>
+                </button>
+              ) : null}
+            </span>
+          ))}
+
+          {applied?.yearMin ? (
+            <span className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink">
+              <span>
+                Year: {applied.yearMin === applied.yearMax ? applied.yearMin : `${applied.yearMin}-${applied.yearMax || ""}`}
+              </span>
+              {onRemoveFacet ? (
+                <button
+                  type="button"
+                  onClick={() => onRemoveFacet("yearMin")}
+                  className="hover:text-ink text-muted cursor-pointer"
+                  aria-label="Remove year filter"
+                >
+                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+                  </svg>
+                </button>
+              ) : null}
+            </span>
+          ) : null}
+
+          {applied?.odoMax ? (
+            <span className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink">
+              <span>Max {applied.odoMax.toLocaleString()} mi</span>
+              {onRemoveFacet ? (
+                <button
+                  type="button"
+                  onClick={() => onRemoveFacet("odoMax")}
+                  className="hover:text-ink text-muted cursor-pointer"
+                  aria-label="Remove odometer filter"
+                >
+                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+                  </svg>
+                </button>
+              ) : null}
+            </span>
+          ) : null}
+
+          {applied?.cleanTitleOnly ? (
+            <span className="inline-flex items-center gap-1 rounded-[6px] border border-hairline bg-surface-muted px-2 py-0.5 text-ink">
+              <span>Clean Title</span>
+              {onRemoveFacet ? (
+                <button
+                  type="button"
+                  onClick={() => onRemoveFacet("cleanTitleOnly")}
+                  className="hover:text-ink text-muted cursor-pointer"
+                  aria-label="Remove clean title filter"
+                >
+                  <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+                  </svg>
+                </button>
+              ) : null}
+            </span>
+          ) : null}
+
+          {onClearIntent ? (
+            <button
+              type="button"
+              onClick={onClearIntent}
+              className="ml-1 text-xs text-muted hover:text-ink underline cursor-pointer"
+            >
+              Clear smart filters
+            </button>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -14,6 +14,7 @@ export type InventoryQuery = {
   limit: PageSize;
   cursor?: string;
   modelContains?: string;
+  makes?: string[];
   vehicleTypes?: string[];
   fuelTypes?: string[];
   transmissions?: string[];
@@ -61,6 +62,10 @@ export function parseInventorySearch(search: string): InventoryQuery {
   const limitRaw = Number(params.get("limit") || 25);
   const limit: PageSize = PAGE_SIZES.includes(limitRaw as PageSize) ? (limitRaw as PageSize) : 25;
   const query: InventoryQuery = { limit };
+  const makes = params.get("makes")?.trim();
+  if (makes) {
+    query.makes = makes.split(",").map((p) => p.trim()).filter(Boolean);
+  }
   const model = params.get("q")?.trim();
   if (model) {
     query.modelContains = model;
@@ -101,6 +106,9 @@ export function toInventorySearch(query: InventoryQuery, includeCursor = true): 
   params.set("limit", String(query.limit));
   if (query.modelContains) {
     params.set("q", query.modelContains);
+  }
+  if (query.makes && query.makes.length > 0) {
+    params.set("makes", query.makes.join(","));
   }
   if (includeCursor && query.cursor) {
     params.set("cursor", query.cursor);
@@ -161,6 +169,9 @@ export function inventoryFacetCount(query: InventoryQuery): number {
   let count = 0;
   for (const key of RECIPE_LIST_KEYS) {
     count += (query[key] || []).length;
+  }
+  if (query.makes && query.makes.length > 0) {
+    count += query.makes.length;
   }
   for (const key of ["yearMin", "yearMax", "odoMin", "odoMax", "scoreMin", "scoreMax"] as const) {
     if (query[key]) {
