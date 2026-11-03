@@ -6,6 +6,8 @@ describe("card fields", () => {
     expect(DEFAULT_CARD_FIELDS).toEqual([
       "primaryDamage",
       "secondaryDamage",
+      "lossType",
+      "vehicleType",
       "odometer",
       "airbags",
       "extColor",
@@ -14,6 +16,7 @@ describe("card fields", () => {
       "cylinders",
       "transmission",
       "fuelType",
+      "bodyStyle",
     ]);
   });
 

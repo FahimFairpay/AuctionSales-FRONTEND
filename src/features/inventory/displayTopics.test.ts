@@ -12,11 +12,18 @@ describe("display topics", () => {
   it("shows Build when a build field is on", () => {
     const topics = visibleTopics([...DEFAULT_CARD_FIELDS]);
     expect(topics.map((topic) => topic.id)).toEqual(["vehicle", "condition", "build", "sale"]);
+    expect(topics.find((topic) => topic.id === "vehicle")?.fields).toEqual([
+      "primaryDamage",
+      "secondaryDamage",
+      "lossType",
+      "vehicleType",
+    ]);
     expect(topics.find((topic) => topic.id === "build")?.fields).toEqual([
       "engine",
       "fuelType",
       "cylinders",
       "transmission",
+      "bodyStyle",
     ]);
   });
 

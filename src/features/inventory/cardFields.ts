@@ -83,6 +83,8 @@ export const CARD_GROUPS: CardGroup[] = [
 export const DEFAULT_CARD_FIELDS: CardFieldId[] = [
   "primaryDamage",
   "secondaryDamage",
+  "lossType",
+  "vehicleType",
   "odometer",
   "airbags",
   "extColor",
@@ -91,6 +93,7 @@ export const DEFAULT_CARD_FIELDS: CardFieldId[] = [
   "cylinders",
   "transmission",
   "fuelType",
+  "bodyStyle",
 ];
 
 const STORAGE_KEY = "fps-card-fields-v2";

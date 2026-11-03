@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { InventoryQuery } from "./query";
 
-const SEARCH_PAUSE_MS = 600;
+const SEARCH_PAUSE_MS = 800;
 
 /** Keep the letters still being typed. Only an unrelated query replaces the box. */
 export function reconcileSearchDraft(current: string, committed: string): string {
