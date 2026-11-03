@@ -1,7 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { InventoryQuery } from "./query";
+
+const SEARCH_PAUSE_MS = 600;
+
+/** Keep the letters still being typed. Only an unrelated query replaces the box. */
+export function reconcileSearchDraft(current: string, committed: string): string {
+  const trimmed = current.trim();
+  if (trimmed === committed) return current;
+  if (trimmed.startsWith(committed) || committed.startsWith(trimmed)) return current;
+  return committed;
+}
 
 export function useSmartSearch({
   query,
@@ -12,19 +22,26 @@ export function useSmartSearch({
 }) {
   const committed = query.modelContains || "";
   const [draft, setDraft] = useState(committed);
+  const draftRef = useRef(draft);
+  const queryRef = useRef(query);
+  const onChangeRef = useRef(onChange);
+  draftRef.current = draft;
+  queryRef.current = query;
+  onChangeRef.current = onChange;
 
   useEffect(() => {
-    setDraft((current) => (current.trim() === committed ? current : committed));
+    setDraft((current) => reconcileSearchDraft(current, committed));
   }, [committed]);
 
   useEffect(() => {
-    const trimmed = draft.trim();
-    if (trimmed === committed) return;
     const handle = window.setTimeout(() => {
-      onChange({ ...query, modelContains: trimmed || undefined });
-    }, 300);
+      const trimmed = draftRef.current.trim();
+      const currentQuery = queryRef.current;
+      if (trimmed === (currentQuery.modelContains || "")) return;
+      onChangeRef.current({ ...currentQuery, modelContains: trimmed || undefined });
+    }, SEARCH_PAUSE_MS);
     return () => window.clearTimeout(handle);
-  }, [draft, committed, query, onChange]);
+  }, [draft]);
 
   return { draft, setDraft };
 }
