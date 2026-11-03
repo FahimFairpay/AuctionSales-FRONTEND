@@ -1,4 +1,5 @@
 import type { InventoryItem } from "../../types/api";
+import { EstimateNote } from "./EstimateNote";
 
 function dollars(value: number): string {
   return new Intl.NumberFormat("en-US", {
@@ -59,7 +60,10 @@ function PriceColumn({ onRoad, market, savings }: { onRoad: string; market: stri
       </div>
       <div className="flex flex-col gap-px pt-px">
         <div className="flex items-baseline justify-between gap-1.5 text-[12px] leading-[17px]">
-          <span className="text-[13px] leading-[19px] text-muted">On road:</span>
+          <span className="inline-flex items-center gap-1 text-[13px] leading-[19px] text-muted">
+            On road:
+            <EstimateNote />
+          </span>
           <span className="shrink-0 font-semibold whitespace-nowrap tabular-nums text-ink" title={onRoad}>
             {onRoad}
           </span>
@@ -86,7 +90,10 @@ function PricePanel({ onRoad, market, savings }: { onRoad: string; market: strin
       </div>
       <div className="grid grid-cols-2 gap-x-4">
         <div className="min-w-0">
-          <p className="text-[12px] leading-4 text-muted">On road</p>
+          <p className="inline-flex items-center gap-1 text-[12px] leading-4 text-muted">
+            On road
+            <EstimateNote />
+          </p>
           <p className="mt-0.5 text-[13px] font-semibold leading-5 whitespace-nowrap tabular-nums text-ink" title={onRoad}>
             {onRoad}
           </p>

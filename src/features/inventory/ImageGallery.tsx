@@ -9,28 +9,31 @@ const MIN_EDGE = 48;
 export function ImageGallery({
   title,
   candidates,
+  start = 0,
   onClose,
 }: {
   title?: string;
   candidates: VisCandidate[];
+  start?: number;
   onClose: () => void;
 }) {
   const [ready, setReady] = useState<VisCandidate[] | null>(null);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(start);
 
   useEffect(() => {
     let cancel = false;
     setReady(null);
-    setIndex(0);
+    setIndex(start);
     void keepLoaded(candidates).then((kept) => {
       if (!cancel) {
         setReady(kept);
+        setIndex((current) => (kept.length === 0 ? 0 : Math.min(current, kept.length - 1)));
       }
     });
     return () => {
       cancel = true;
     };
-  }, [candidates]);
+  }, [candidates, start]);
 
   useEffect(() => {
     const previous = document.body.style.overflow;

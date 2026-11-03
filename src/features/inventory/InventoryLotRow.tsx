@@ -64,7 +64,7 @@ export function InventoryLotList({
                     className="aspect-[16/9] w-full"
                   />
                   {/* Title overlaid at bottom of image */}
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] bg-gradient-to-t from-black/70 to-transparent px-3 pb-2.5 pt-6">
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] bg-gradient-to-t from-black/70 to-transparent px-12 pb-3 pt-8">
                     <p className="line-clamp-2 font-serif text-[15px] leading-5 tracking-[-0.02em] text-white">
                       {heading}
                     </p>
