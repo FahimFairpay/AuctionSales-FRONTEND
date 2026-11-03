@@ -213,21 +213,6 @@ export function InventoryListPage() {
           loadGallery={(stockNumber) => loadLotShots(stockNumber, "app")}
         />
       ) : null}
-      {rawItems.length > 0 || cursors.length > 0 ? (
-        <div className="flex items-center justify-end gap-3">
-          <PageStepper
-            page={pageIndex}
-            hasPrev={cursors.length > 0}
-            hasNext={Boolean(page.data?.nextCursor)}
-            pending={page.isFetching}
-            onPrev={() => setCursors((s) => s.slice(0, -1))}
-            onNext={() => {
-              const next = page.data?.nextCursor;
-              if (next) setCursors((s) => [...s, next]);
-            }}
-          />
-        </div>
-      ) : null}
       <CustomizeListModal
         open={customOpen}
         selected={fields}
