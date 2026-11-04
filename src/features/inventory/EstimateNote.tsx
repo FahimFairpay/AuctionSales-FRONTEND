@@ -63,9 +63,7 @@ export function EstimateNote() {
         type="button"
         aria-label="About these estimates"
         aria-expanded={open}
-        className={`inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-white shadow-[0_1px_2px_rgba(20,20,19,0.18)] transition-colors ${
-          open ? "bg-accent" : "bg-ink hover:bg-accent"
-        }`}
+        className="inline-flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-full border border-current text-[9px] font-medium leading-none text-muted"
         onPointerDown={(event) => {
           event.stopPropagation();
         }}
@@ -75,7 +73,7 @@ export function EstimateNote() {
           setOpen((current) => !current);
         }}
       >
-        <InfoMark className="h-3.5 w-3.5" />
+        i
       </button>
       {open
         ? createPortal(
@@ -94,11 +92,3 @@ export function EstimateNote() {
   );
 }
 
-function InfoMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 16 16" className={className} fill="none" aria-hidden="true">
-      <circle cx="8" cy="4.35" r="1.15" fill="currentColor" />
-      <path d="M8 7.05v5.15" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-    </svg>
-  );
-}
