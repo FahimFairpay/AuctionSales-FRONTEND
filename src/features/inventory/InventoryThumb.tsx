@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { ImageGallery } from "./ImageGallery";
 import { expandVisImages, type VisCandidate } from "./visImages";
 
@@ -31,10 +31,20 @@ export function InventoryThumb({
   const image = shown?.large || src;
   const canStep = photos.length > 1 || Boolean(loadShots && !fetched);
   const initial = (title || "?").slice(0, 1).toUpperCase();
+  const desktop = useDesktop();
+
+  useEffect(() => {
+    if (!desktop) {
+      setOpen(false);
+    }
+  }, [desktop]);
 
   function openPhotos(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
+    if (!desktop) {
+      return;
+    }
     if (photos.length > 0) {
       setOpen(true);
       return;
@@ -96,7 +106,7 @@ export function InventoryThumb({
       <img
         src={image}
         alt=""
-        className="h-full w-full cursor-pointer object-cover"
+        className={`h-full w-full object-cover ${desktop ? "cursor-pointer" : ""}`}
         onClick={openPhotos}
         onError={() => {
           if (photos.length > 1 && misses < photos.length) {
@@ -118,6 +128,18 @@ export function InventoryThumb({
       ) : null}
     </span>
   );
+}
+
+function useDesktop() {
+  const [desktop, setDesktop] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setDesktop(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+  return desktop;
 }
 
 function PhotoStep({

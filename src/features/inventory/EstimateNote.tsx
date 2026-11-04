@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+const PANEL_WIDTH = 208;
 const NOTE =
   "These are estimates based on repair and potential winning price and other expenses. These estimates may differ than actual. To get a full breakdown contact us and we will walk you through it.";
 
@@ -22,9 +23,8 @@ export function EstimateNote() {
         return;
       }
       const rect = button.getBoundingClientRect();
-      const width = 268;
-      const height = panelRef.current?.offsetHeight ?? 132;
-      const left = Math.min(Math.max(12, rect.left - 8), window.innerWidth - width - 12);
+      const height = panelRef.current?.offsetHeight ?? 112;
+      const left = Math.min(Math.max(12, rect.left - 8), window.innerWidth - PANEL_WIDTH - 12);
       const below = rect.bottom + 8;
       const top = below + height > window.innerHeight - 12 ? Math.max(12, rect.top - height - 8) : below;
       setBox({ top, left });
@@ -63,7 +63,9 @@ export function EstimateNote() {
         type="button"
         aria-label="About these estimates"
         aria-expanded={open}
-        className="inline-flex h-[15px] w-[15px] shrink-0 translate-y-px items-center justify-center rounded-full border border-current/40 text-[10px] font-semibold leading-none text-muted hover:border-ink hover:text-ink"
+        className={`inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-white shadow-[0_1px_2px_rgba(20,20,19,0.18)] transition-colors ${
+          open ? "bg-accent" : "bg-ink hover:bg-accent"
+        }`}
         onPointerDown={(event) => {
           event.stopPropagation();
         }}
@@ -73,21 +75,30 @@ export function EstimateNote() {
           setOpen((current) => !current);
         }}
       >
-        i
+        <InfoMark className="h-3.5 w-3.5" />
       </button>
       {open
         ? createPortal(
             <div
               ref={panelRef}
               role="note"
-              style={{ top: box?.top ?? -9999, left: box?.left ?? 12 }}
-              className="fixed z-[80] w-[268px] rounded-[12px] border border-hairline bg-surface px-3.5 py-3 text-left text-[13px] leading-5 text-ink shadow-[0_16px_40px_rgba(20,20,19,0.16)]"
+              style={{ top: box?.top ?? -9999, left: box?.left ?? 12, width: PANEL_WIDTH }}
+              className="fixed z-[80] rounded-[6px] border border-hairline bg-surface px-2.5 py-2 text-left shadow-[0_8px_20px_rgba(20,20,19,0.10)]"
             >
-              {NOTE}
+              <p className="font-sans text-[11px] leading-[15px] font-medium tracking-[0.01em] text-muted">{NOTE}</p>
             </div>,
             document.body,
           )
         : null}
     </>
+  );
+}
+
+function InfoMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} fill="none" aria-hidden="true">
+      <circle cx="8" cy="4.35" r="1.15" fill="currentColor" />
+      <path d="M8 7.05v5.15" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
   );
 }

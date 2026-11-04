@@ -59,8 +59,8 @@ function PriceColumn({ onRoad, market, savings }: { onRoad: string; market: stri
         </span>
       </div>
       <div className="flex flex-col gap-px pt-px">
-        <div className="flex items-baseline justify-between gap-1.5 text-[12px] leading-[17px]">
-          <span className="inline-flex items-center gap-1 text-[13px] leading-[19px] text-muted">
+        <div className="flex items-center justify-between gap-1.5 text-[12px] leading-[17px]">
+          <span className="inline-flex items-center gap-1.5 text-[13px] leading-[19px] text-muted">
             On road:
             <EstimateNote />
           </span>
@@ -90,7 +90,7 @@ function PricePanel({ onRoad, market, savings }: { onRoad: string; market: strin
       </div>
       <div className="grid grid-cols-2 gap-x-4">
         <div className="min-w-0">
-          <p className="inline-flex items-center gap-1 text-[12px] leading-4 text-muted">
+          <p className="inline-flex items-center gap-1.5 text-[12px] leading-4 text-muted">
             On road
             <EstimateNote />
           </p>
