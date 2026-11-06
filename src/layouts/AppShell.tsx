@@ -23,16 +23,16 @@ const appNav = [
 ];
 
 const adminNav = [
+  { to: paths.adminFairental, label: "Fairental", icon: "fairental" },
   { to: paths.adminUsers, label: "Users", icon: "users" },
   { to: paths.adminPresets, label: "Presets", icon: "all" },
   { to: paths.adminFailures, label: "Failures", icon: "fail" },
   { to: paths.adminCrawler, label: "Schedules", icon: "scrape" },
-  { to: paths.adminFairental, label: "Fairental", icon: "fairental" },
 ];
 
 function navClass(active: boolean, collapsed: boolean): string {
-  return `flex items-center gap-3 rounded-[10px] text-[13px] ${
-    collapsed ? "justify-center px-0 py-2.5" : "px-3 py-2.5"
+  return `flex items-center gap-2.5 rounded-[10px] text-[13px] ${
+    collapsed ? "justify-center px-0 py-1.5" : "px-3 py-1.5"
   } ${active ? "bg-surface-muted text-ink" : "text-muted hover:bg-surface-muted hover:text-ink"}`;
 }
 
@@ -105,7 +105,7 @@ export function AppShell({ children }: { children?: ReactNode } = {}) {
             )}
           </Link>
         </div>
-        <nav className="mt-7 min-h-0 flex-1 space-y-0.5 overflow-y-auto overscroll-contain" aria-label="Primary">
+        <nav className="mt-3 min-h-0 flex-1 space-y-0" aria-label="Primary">
           {appNav.map((item) => (
             <NavLink
               key={item.to}
@@ -123,11 +123,11 @@ export function AppShell({ children }: { children?: ReactNode } = {}) {
             <>
               {collapsed ? (
                 <>
-                  <div className="mx-auto my-3 h-px w-6 bg-hairline" />
+                  <div className="mx-auto my-2 h-px w-6 bg-hairline" />
                   <p className="sr-only">Admin</p>
                 </>
               ) : (
-                <p className="px-3 pb-1 pt-5 text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
+                <p className="px-3 pb-0.5 pt-3 text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
                   Admin
                 </p>
               )}

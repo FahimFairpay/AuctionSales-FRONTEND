@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PublicHeader } from "@/components/layout/PublicHeader";
+import { Button } from "@/components/Button";
 import { ApiError } from "@/api/errors";
-import { AppliedChips } from "./AppliedChips";
 import { fairentalFacets, listFairental, type FairentalCard, type FairentalFacets } from "./fairentalApi";
-import { FilterPanel } from "./FilterPanel";
-import { FilterSheet } from "./FilterSheet";
-import { EMPTY_FILTERS, readFilters, toSearchParams, type FairentalFilters } from "./filters";
+import { FairentalToolbar } from "./FairentalToolbar";
+import { readFilters, toSearchParams, type FairentalFilters } from "./filters";
 import { VehicleGrid } from "./VehicleGrid";
 
 export function FairentalBrowse({
@@ -30,7 +29,6 @@ export function FairentalBrowse({
   const [facets, setFacets] = useState<FairentalFacets | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [sheet, setSheet] = useState(false);
   const filterKey = toSearchParams(filters, !!admin).toString();
 
   useEffect(() => {
@@ -81,53 +79,49 @@ export function FairentalBrowse({
     setCursor(page.nextCursor);
   }
 
-  const panel = (
-    <FilterPanel
-      filters={filters}
-      facets={facets}
-      query={query}
-      onQuery={setQuery}
-      onChange={replace}
-      onClear={() => replace(EMPTY_FILTERS)}
-      admin={admin}
-    />
+  const count = facets?.total;
+  const heading = (
+    <div className="min-w-0">
+      <h1 className="font-serif text-[28px] leading-9 tracking-[-0.03em] text-ink lg:text-[34px] lg:leading-10">
+        Fairental
+        {typeof count === "number" ? (
+          <span className="ml-2 text-muted tabular">({count.toLocaleString("en-US")})</span>
+        ) : null}
+      </h1>
+      <p className="mt-1 text-sm text-muted">Cars listed by FairPy.</p>
+    </div>
   );
 
+  const body = (
+    <div className="space-y-4">
+      {heading}
+      <FairentalToolbar
+        filters={filters}
+        facets={facets}
+        search={query}
+        onSearch={setQuery}
+        onChange={replace}
+        admin={admin}
+        onCreate={onCreate}
+      />
+      {error ? <p className="text-sm text-danger">{error}</p> : null}
+      {loading && cars.length === 0 ? (
+        <p className="text-sm text-muted">Loading cars</p>
+      ) : (
+        <VehicleGrid cars={cars} admin={admin} onEdit={onEdit} loading={loading} />
+      )}
+      {cursor ? (
+        <Button variant="secondary" onClick={() => void loadMore()}>Load more</Button>
+      ) : null}
+    </div>
+  );
+
+  if (admin) return body;
+
   return (
-    <div className={admin ? "fairautos-landing" : "fairautos-landing min-h-screen"}>
-      {admin ? null : <PublicHeader mode="inventory" />}
-      <main className={admin ? "" : "mx-auto max-w-6xl px-4 pb-16 pt-28 lg:px-8"}>
-        <div className="mb-5 flex items-end justify-between gap-4">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--fs-muted)]">Fairental Sales</p>
-            <h1 className="text-[40px] leading-none text-[var(--fs-ink)]">The cars we keep</h1>
-          </div>
-          <div className="flex gap-2">
-            <button type="button" className="rounded-full border border-[var(--fs-line)] px-4 py-2 text-[13px] lg:hidden" onClick={() => setSheet(true)}>
-              Filters
-            </button>
-            {admin ? (
-              <button type="button" onClick={onCreate} className="rounded-full bg-[var(--fs-claude-orange)] px-4 py-2 text-[13px] text-white">
-                Add car
-              </button>
-            ) : null}
-          </div>
-        </div>
-        {error ? <p className="mb-4 text-[14px] text-[var(--fs-claude-orange)]">{error}</p> : null}
-        <div className="flex items-start gap-5">
-          <div className="sticky top-24 hidden lg:block">{panel}</div>
-          <div className="min-w-0 flex-1 space-y-4">
-            <AppliedChips filters={filters} onChange={replace} />
-            <VehicleGrid cars={cars} admin={admin} onEdit={onEdit} loading={loading} />
-            {cursor ? (
-              <button type="button" onClick={() => void loadMore()} className="rounded-full border border-[var(--fs-line)] px-4 py-2 text-[13px]">
-                Load more
-              </button>
-            ) : null}
-          </div>
-        </div>
-      </main>
-      <FilterSheet open={sheet} onClose={() => setSheet(false)}>{panel}</FilterSheet>
+    <div className="flex min-h-dvh flex-col bg-canvas text-ink">
+      <PublicHeader mode="inventory" />
+      <main className="public-page-frame min-w-0 flex-1">{body}</main>
     </div>
   );
 }

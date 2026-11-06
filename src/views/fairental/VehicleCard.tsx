@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { paths } from "@/routes/paths";
 import type { FairentalCard } from "./fairentalApi";
-import { dollars, glass, swatchHex } from "./swatches";
+import { dollars } from "./filters";
 
 export function VehicleCard({
   car,
@@ -14,53 +14,51 @@ export function VehicleCard({
   admin?: boolean;
   onEdit?: (vin: string) => void;
 }) {
-  const href = paths.fairentalItem(car.vin);
-  return (
-    <article className={`${glass} overflow-hidden rounded-[28px]`}>
-      <div className="relative aspect-[16/10] bg-[var(--fs-paper)]">
+  const heading = [car.year, car.make, car.model].filter(Boolean).join(" ");
+  const showTitle = car.title && car.title.trim().toLowerCase() !== heading.toLowerCase();
+  const spec = [car.bodyStyle, car.exteriorColor, car.interiorColor].filter(Boolean).join(" · ");
+  const status = car.isSold ? "Sold" : car.isListed ? "Listed" : "Unlisted";
+  const card = (
+    <article className="relative h-full overflow-hidden rounded-md border border-hairline bg-surface shadow-sm">
+      <div className="relative h-[184px] bg-surface-muted">
         {car.coverUrl ? (
           // Signed photo URLs expire, so the optimizer would cache a dead link.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={car.coverUrl} alt="" className="h-full w-full object-cover" />
+          <img src={car.coverUrl} alt="" className="h-full w-full rounded-t-md object-cover" />
         ) : (
-          <div className="flex h-full items-center justify-center text-[12px] uppercase tracking-[0.16em] text-[var(--fs-muted)]">
-            Photo coming
-          </div>
+          <div className="flex h-full items-center justify-center text-xs text-muted">No photo yet</div>
         )}
         {admin ? (
           <button
             type="button"
             onClick={() => onEdit?.(car.vin)}
-            className="absolute right-3 top-3 rounded-full bg-[var(--fs-paper-elevated)] px-3 py-1 text-[12px] text-[var(--fs-ink)]"
-            aria-label={`Edit ${car.title}`}
+            className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-sm hover:bg-surface-muted"
+            aria-label={`Edit ${heading}`}
           >
-            Edit
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M4 20h4l10-10-4-4L4 16v4z" strokeLinejoin="round" />
+              <path d="M13 7l4 4" strokeLinecap="round" />
+            </svg>
           </button>
         ) : null}
       </div>
-      <div className="space-y-2 p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            {admin ? (
-              <h3 className="text-[18px] text-[var(--fs-ink)]">{car.title}</h3>
-            ) : (
-              <Link href={href} className="text-[18px] text-[var(--fs-ink)] no-underline">
-                {car.title}
-              </Link>
-            )}
-            <p className="text-[13px] text-[var(--fs-muted)]">
-              {car.year} {car.make} {car.model}
-            </p>
-          </div>
-          <p className="text-[18px] text-[var(--fs-claude-orange)]">{dollars(car.price)}</p>
+      <div className="flex flex-col gap-3 p-4">
+        <div className="min-w-0">
+          <h3 className="truncate text-base font-medium text-ink">{heading}</h3>
+          {showTitle ? <p className="truncate text-sm text-muted">{car.title}</p> : null}
+          {spec ? <p className="mt-1 truncate text-sm text-ink">{spec}</p> : null}
         </div>
-        <div className="flex items-center gap-2 text-[12px] text-[var(--fs-text-sub)]">
-          <span className="h-3 w-3 rounded-full border border-[var(--fs-line)]" style={{ background: swatchHex(car.exteriorColor) }} />
-          {car.bodyStyle}
-          {admin && car.isSold ? <span>Sold</span> : null}
-          {admin && !car.isListed && !car.isSold ? <span>Unlisted</span> : null}
-        </div>
+        <p className="text-2xl font-medium text-ink">{dollars(car.price)}</p>
+        <div className="min-h-6" />
+        {admin ? <p className="text-sm text-muted">{status}</p> : null}
       </div>
     </article>
+  );
+
+  if (admin) return card;
+  return (
+    <Link href={paths.fairentalItem(car.vin)} className="block h-full text-inherit no-underline">
+      {card}
+    </Link>
   );
 }

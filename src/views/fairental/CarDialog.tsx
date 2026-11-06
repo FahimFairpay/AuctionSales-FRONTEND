@@ -11,8 +11,11 @@ import {
   type FairentalDraft,
   type FairentalImage,
 } from "./fairentalApi";
+import { Button } from "@/components/Button";
+import { Field } from "@/components/Field";
+import { IconTool } from "@/components/IconTool";
+import { Input } from "@/components/Input";
 import { PhotoPicker } from "./PhotoPicker";
-import { glass } from "./swatches";
 
 type Kind = "create" | "edit" | "again";
 
@@ -150,26 +153,44 @@ export function CarDialog({
   }
 
   const field = (key: keyof typeof form, label: string) => (
-    <label className="block text-[12px] text-[var(--fs-muted)]">
-      {label}
-      <input
+    <Field label={label} htmlFor={`car-${key}`}>
+      <Input
+        id={`car-${key}`}
         value={String(form[key])}
         disabled={locked || (key === "vin" && kind === "edit")}
         onChange={(event) => setForm({ ...form, [key]: event.target.value })}
-        className="mt-1 w-full rounded-2xl border border-[var(--fs-line)] bg-[var(--fs-paper)] px-3 py-2 text-[14px] text-[var(--fs-ink)] disabled:opacity-60"
       />
-    </label>
+    </Field>
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-3 sm:items-center">
-      <div className={`${glass} max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[28px] p-5`}>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-[24px] text-[var(--fs-ink)]">{kind === "create" ? "New car" : form.title || "Fairental car"}</h2>
-          <button type="button" onClick={onClose} className="text-[13px] text-[var(--fs-muted)]">Close</button>
+    <>
+      <div className="fixed inset-0 z-40 bg-scrim backdrop-blur-[8px]" aria-hidden="true" onClick={onClose} />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="fairental-car-title"
+        className="fixed bottom-0 left-0 right-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-[16px] bg-surface p-5 shadow-2xl lg:bottom-auto lg:left-1/2 lg:right-auto lg:top-1/2 lg:max-h-[calc(100dvh-4rem)] lg:w-full lg:max-w-3xl lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-[12px] lg:border lg:border-hairline lg:p-6"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-hairline lg:hidden" aria-hidden="true" />
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 id="fairental-car-title" className="font-serif text-xl text-ink">
+              {kind === "create" ? "New car" : form.title || "Fairental car"}
+            </h2>
+            <p className="mt-0.5 text-sm text-muted">
+              {locked ? "This version is sold and cannot be changed." : "Customers see a listed car after the first photo is ready."}
+            </p>
+          </div>
+          <IconTool label="Close" onClick={onClose}>
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+            </svg>
+          </IconTool>
         </div>
-        {error ? <p className="mb-3 text-[13px] text-[var(--fs-claude-orange)]">{error}</p> : null}
-        <div className="grid gap-3 sm:grid-cols-2">
+        {error ? <p className="mt-4 text-sm text-danger">{error}</p> : null}
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {field("vin", "VIN")}
           {field("title", "Title")}
           {field("make", "Make")}
@@ -180,17 +201,18 @@ export function CarDialog({
           {field("interiorColor", "Interior")}
           {field("price", "Price")}
         </div>
-        <label className="mt-3 block text-[12px] text-[var(--fs-muted)]">
-          Description
-          <textarea
-            value={form.description}
-            disabled={locked}
-            onChange={(event) => setForm({ ...form, description: event.target.value })}
-            className="mt-1 min-h-24 w-full rounded-2xl border border-[var(--fs-line)] bg-[var(--fs-paper)] px-3 py-2 text-[14px]"
-          />
-        </label>
-        <p className="mt-3 text-[12px] text-[var(--fs-muted)]">Customers will see this after the first photo.</p>
-        <div className="mt-3">
+        <div className="mt-4">
+          <Field label="Description" htmlFor="car-description">
+            <textarea
+              id="car-description"
+              value={form.description}
+              disabled={locked}
+              onChange={(event) => setForm({ ...form, description: event.target.value })}
+              className="min-h-24 w-full rounded-[8px] border border-hairline bg-surface px-3 py-2 text-sm text-ink disabled:opacity-60"
+            />
+          </Field>
+        </div>
+        <div className="mt-4">
           <PhotoPicker
             images={images.filter((image) => !removed.includes(image.imageId))}
             files={files}
@@ -200,7 +222,7 @@ export function CarDialog({
             onRemoveStored={(imageId) => setRemoved((current) => [...current, imageId])}
           />
         </div>
-        <div className="mt-4 flex flex-wrap gap-4 text-[13px]">
+        <div className="mt-4 flex flex-wrap gap-4 text-sm text-ink">
           <label className="flex items-center gap-2">
             <input type="checkbox" checked={form.isListed} disabled={locked || form.isSold} onChange={(event) => setForm({ ...form, isListed: event.target.checked })} />
             Listed
@@ -211,10 +233,10 @@ export function CarDialog({
           </label>
         </div>
         {versions && versions.length ? (
-          <ul className="mt-4 space-y-1 text-[12px] text-[var(--fs-text-sub)]">
+          <ul className="mt-4 space-y-1 text-sm text-muted">
             {versions.map((row) => (
               <li key={row.version}>
-                <button type="button" className="underline" onClick={() => void openVersion(row.version)}>
+                <button type="button" className="text-ink underline" onClick={() => void openVersion(row.version)}>
                   {row.version}
                 </button>
                 {" "}{row.isSold ? "Sold" : row.isListed ? "Listed" : "Unlisted"} · {row.updatedByName || "Fairental"}
@@ -222,20 +244,20 @@ export function CarDialog({
             ))}
           </ul>
         ) : null}
-        <div className="mt-5 flex justify-between gap-3">
+        <div className="mt-5 flex items-center justify-between gap-3">
           {kind === "edit" && vin && !locked ? (
-            <button type="button" className="text-[13px] text-[var(--fs-claude-orange)]" onClick={() => applyRow({ ...formToDetail(), images }, true)}>
+            <Button variant="ghost" onClick={() => applyRow({ ...formToDetail(), images }, true)}>
               Add this car again
-            </button>
+            </Button>
           ) : <span />}
           {locked ? null : (
-            <button type="button" disabled={saving} onClick={() => void save()} className="rounded-full bg-[var(--fs-claude-orange)] px-4 py-2 text-[13px] text-white disabled:opacity-60">
+            <Button disabled={saving} onClick={() => void save()}>
               {saving ? "Saving" : "Save"}
-            </button>
+            </Button>
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 
   function formToDetail(): FairentalDetail {

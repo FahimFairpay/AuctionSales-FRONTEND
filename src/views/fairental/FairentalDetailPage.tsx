@@ -26,16 +26,17 @@ export function FairentalDetailPage({ vin }: { vin: string }) {
 
   if (error) {
     return (
-      <div className="fairautos-landing min-h-screen">
+      <div className="flex min-h-dvh flex-col bg-canvas text-ink">
         <PublicHeader mode="inventory" />
-        <p className="px-6 pt-32 text-[var(--fs-muted)]">{error}</p>
+        <p className="public-page-frame text-sm text-muted">{error}</p>
       </div>
     );
   }
   if (!car) {
     return (
-      <div className="fairautos-landing min-h-screen">
+      <div className="flex min-h-dvh flex-col bg-canvas text-ink">
         <PublicHeader mode="inventory" />
+        <p className="public-page-frame text-sm text-muted">Loading this car</p>
       </div>
     );
   }
