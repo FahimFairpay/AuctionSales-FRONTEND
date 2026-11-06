@@ -93,7 +93,7 @@ export function FairentalToolbar({
           type="button"
           onClick={onCreate}
           aria-label="Add car"
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-white hover:bg-accent-hover"
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface text-ink hover:bg-surface-muted"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -336,25 +336,28 @@ function SortMenu({ value, onChange }: { value: string; onChange: (sort: string)
         <span className="truncate">{active.label}</span>
         <DirectionGlyph down={descending} />
       </button>
-      {open ? (
-        <div className="absolute right-0 z-20 mt-2 w-44 max-w-[calc(100vw-1.5rem)] rounded-[12px] border border-hairline bg-surface p-1 shadow-lg">
-          {SORT_FIELDS.map((field) => {
-            const selected = field.id === active.id;
-            const down = !selected || value === field.desc;
-            return (
-              <button
-                key={field.id}
-                type="button"
-                className={`flex w-full items-center justify-between rounded-[8px] px-3 py-2 text-left text-sm ${selected ? "bg-surface-muted text-ink" : "text-ink hover:bg-surface-muted"}`}
-                onClick={() => onChange(nextSort(value, field.id))}
-              >
-                {field.label}
-                {selected ? <DirectionGlyph down={down} /> : null}
-              </button>
-            );
-          })}
-        </div>
-      ) : null}
+      <div
+        className={`absolute right-0 z-20 mt-2 w-44 max-w-[calc(100vw-1.5rem)] origin-top-right rounded-[12px] border border-hairline bg-surface p-1 shadow-lg transition duration-150 ease-out ${open ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-1 opacity-0"}`}
+      >
+        {SORT_FIELDS.map((field) => {
+          const selected = field.id === active.id;
+          const down = !selected || value === field.desc;
+          return (
+            <button
+              key={field.id}
+              type="button"
+              className={`flex w-full items-center justify-between rounded-[8px] px-3 py-2 text-left text-sm ${selected ? "bg-surface-muted text-ink" : "text-ink hover:bg-surface-muted"}`}
+              onClick={() => {
+                onChange(nextSort(value, field.id));
+                setOpen(false);
+              }}
+            >
+              {field.label}
+              {selected ? <DirectionGlyph down={down} /> : null}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

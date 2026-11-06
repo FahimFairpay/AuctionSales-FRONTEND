@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { paths } from "@/routes/paths";
 import type { FairentalCard } from "./fairentalApi";
+import { VersionMark } from "./car-dialog/VersionMark";
 import { dollars } from "./filters";
 
 export function VehicleCard({
@@ -44,7 +45,10 @@ export function VehicleCard({
       </div>
       <div className="flex flex-col gap-3 p-4">
         <div className="min-w-0">
-          <h3 className="truncate text-base font-medium text-ink">{heading}</h3>
+          <h3 className="flex min-w-0 items-baseline text-base font-medium text-ink">
+            <span className="truncate">{heading}</span>
+            {admin ? <VersionMark version={car.version} /> : null}
+          </h3>
           {showTitle ? <p className="truncate text-sm text-muted">{car.title}</p> : null}
           {spec ? <p className="mt-1 truncate text-sm text-ink">{spec}</p> : null}
         </div>
