@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CarDialog } from "./CarDialog";
 import { FairentalBrowse } from "./FairentalBrowse";
 
-type Open = { kind: "create" } | { kind: "edit"; vin: string } | { kind: "again"; vin: string } | null;
+type Open = { kind: "create" } | { kind: "edit"; vin: string } | null;
 
 export function AdminFairentalPage() {
   const [open, setOpen] = useState<Open>(null);

@@ -26,5 +26,7 @@ describe("security proxy middleware", () => {
     expect(csp).toContain("frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net");
     expect(csp).toContain("https://*.clarity.ms");
     expect(csp).toContain("https://c.bing.com");
+    const connect = csp?.split(";").find((part) => part.trim().startsWith("connect-src"));
+    expect(connect).toContain("https://*.s3.amazonaws.com");
   });
 });

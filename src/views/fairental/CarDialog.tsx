@@ -21,7 +21,7 @@ import { Stepper } from "./car-dialog/Stepper";
 import { VersionMark } from "./car-dialog/VersionMark";
 import { statusOf, type CarForm, type CarStatus } from "./car-dialog/form";
 
-type Kind = "create" | "edit" | "again";
+type Kind = "create" | "edit";
 
 const BLANK: CarForm = {
   vin: "", title: "", make: "", model: "", year: "", bodyStyle: "",
@@ -60,7 +60,7 @@ export function CarDialog({
     let gone = false;
     adminFairental(vin).then((row) => {
       if (gone) return;
-      applyRow(row, kind === "again");
+      applyRow(row);
     }).catch((err: unknown) => {
       if (!gone) setError(err instanceof ApiError ? err.message : "This car could not be opened");
     });
@@ -69,14 +69,13 @@ export function CarDialog({
     };
   }, [vin, kind]);
 
-  function applyRow(row: FairentalDetail, again: boolean) {
-    setVersion(again ? "" : row.version || "");
-    setLocked(!again && !!row.isSold);
-    setImages(again ? [] : row.images || []);
+  function applyRow(row: FairentalDetail) {
+    setVersion(row.version || "");
+    setLocked(!!row.isSold);
+    setImages(row.images || []);
     setRemoved([]);
     setFiles([]);
     setConfirmSold(false);
-    setStep(again ? 1 : step);
     setForm({
       vin: row.vin,
       title: row.title || "",
@@ -86,10 +85,10 @@ export function CarDialog({
       bodyStyle: row.bodyStyle || "",
       exteriorColor: row.exteriorColor || "",
       interiorColor: row.interiorColor || "",
-      price: again ? "" : row.price ? String(row.price) : "",
-      description: again ? "" : row.description || "",
-      isListed: again ? true : !!row.isListed,
-      isSold: again ? false : !!row.isSold,
+      price: row.price ? String(row.price) : "",
+      description: row.description || "",
+      isListed: !!row.isListed,
+      isSold: !!row.isSold,
     });
   }
 
@@ -119,6 +118,10 @@ export function CarDialog({
   }
 
   async function save() {
+    if (creating && files.length === 0) {
+      setError("Add at least one photo.");
+      return;
+    }
     setSaving(true);
     setError("");
     try {
@@ -185,12 +188,14 @@ export function CarDialog({
         {error ? <p className="mb-2 text-sm text-danger">{error}</p> : null}
         {locked ? <p className="mb-2 text-sm text-muted">This version is sold and cannot be changed.</p> : null}
         {step === 1 ? (
-          <DetailsStep form={form} locked={frozen} vinLocked={kind === "edit"} onChange={setForm} />
-        ) : (
           <div className="space-y-3">
             {creating ? null : (
               <StatusMenu value={statusOf(form)} disabled={frozen} onChange={chooseStatus} />
             )}
+            <DetailsStep form={form} locked={frozen} vinLocked={kind === "edit"} onChange={setForm} />
+          </div>
+        ) : (
+          <div className="space-y-3">
             <PhotoPicker
               images={images.filter((image) => !removed.includes(image.imageId))}
               files={files}
@@ -202,10 +207,7 @@ export function CarDialog({
             />
           </div>
         )}
-        <div className="mt-3 flex items-center justify-between gap-3">
-          {step === 2 && kind === "edit" && version && !frozen ? (
-            <Button variant="ghost" onClick={() => applyRow(formToDetail(), true)}>Add this car again</Button>
-          ) : <span />}
+        <div className="mt-3 flex items-center justify-end gap-2">
           <div className="flex gap-2">
             {step === 2 ? <Button variant="secondary" onClick={() => setStep(1)}>Back</Button> : null}
             {step === 1 ? <Button onClick={() => setStep(2)}>Next</Button> : null}
@@ -226,14 +228,4 @@ export function CarDialog({
       </div>
     </>
   );
-
-  function formToDetail(): FairentalDetail {
-    return {
-      ...draft(form.isListed),
-      coverUrl: "",
-      images,
-      version,
-      description: form.description,
-    };
-  }
 }

@@ -46,7 +46,7 @@ export function StatusMenu({
         </svg>
       </button>
       <div
-        className={`absolute bottom-full left-0 z-20 mb-1 w-40 origin-bottom rounded-[12px] border border-hairline bg-surface p-1 shadow-lg transition duration-150 ease-out ${open ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-1 opacity-0"}`}
+        className={`absolute left-0 top-full z-20 mt-1 w-40 origin-top rounded-[12px] border border-hairline bg-surface p-1 shadow-lg transition duration-150 ease-out ${open ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-1 opacity-0"}`}
       >
         {STATUS_OPTIONS.map((option) => (
           <button

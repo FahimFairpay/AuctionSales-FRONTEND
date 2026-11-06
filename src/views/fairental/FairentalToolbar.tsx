@@ -141,7 +141,23 @@ function FilterDialog({
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 id="fairental-filter-title" className="font-serif text-xl text-ink">Filters</h2>
+            <div className="flex flex-wrap items-center gap-3">
+              <h2 id="fairental-filter-title" className="font-serif text-xl text-ink">Filters</h2>
+              {admin ? (
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={filters.includeHidden}
+                  onClick={() => onChange({ ...filters, includeHidden: !filters.includeHidden })}
+                  className="inline-flex items-center gap-2 text-sm text-ink"
+                >
+                  <span className={`relative h-6 w-10 rounded-full ${filters.includeHidden ? "bg-ink" : "bg-hairline"}`}>
+                    <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-surface shadow-sm ${filters.includeHidden ? "left-4" : "left-0.5"}`} />
+                  </span>
+                  Sold and unlisted
+                </button>
+              ) : null}
+            </div>
             <p className="mt-0.5 text-sm text-muted">Narrow the cars on this page.</p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -196,16 +212,6 @@ function FilterDialog({
             />
           </div>
         </div>
-        {admin ? (
-          <label className="mt-4 flex items-center gap-2 text-sm text-ink">
-            <input
-              type="checkbox"
-              checked={filters.includeHidden}
-              onChange={(event) => onChange({ ...filters, includeHidden: event.target.checked })}
-            />
-            Include sold and unlisted
-          </label>
-        ) : null}
       </div>
     </>
   );
