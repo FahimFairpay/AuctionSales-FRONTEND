@@ -32,12 +32,14 @@ export function StatusMenu({
   }, []);
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className="relative space-y-1.5">
+      <span className="block text-sm font-medium text-ink">Status</span>
       <button
         type="button"
         disabled={disabled}
         aria-expanded={open}
-        className="inline-flex h-9 items-center gap-2 rounded-full border border-hairline bg-surface px-3 text-sm text-ink hover:bg-surface-muted disabled:opacity-60"
+        aria-label="Status"
+        className="flex h-10 w-full min-w-0 items-center justify-between rounded-[8px] border border-hairline bg-surface px-3 text-left text-sm text-ink hover:bg-surface-muted disabled:opacity-60"
         onClick={() => setOpen((current) => !current)}
       >
         {label}

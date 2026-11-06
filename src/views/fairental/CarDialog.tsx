@@ -188,12 +188,15 @@ export function CarDialog({
         {error ? <p className="mb-2 text-sm text-danger">{error}</p> : null}
         {locked ? <p className="mb-2 text-sm text-muted">This version is sold and cannot be changed.</p> : null}
         {step === 1 ? (
-          <div className="space-y-3">
-            {creating ? null : (
+          <DetailsStep
+            form={form}
+            locked={frozen}
+            vinLocked={kind === "edit"}
+            onChange={setForm}
+            status={creating ? null : (
               <StatusMenu value={statusOf(form)} disabled={frozen} onChange={chooseStatus} />
             )}
-            <DetailsStep form={form} locked={frozen} vinLocked={kind === "edit"} onChange={setForm} />
-          </div>
+          />
         ) : (
           <div className="space-y-3">
             <PhotoPicker

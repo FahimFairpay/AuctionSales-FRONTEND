@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { Field } from "@/components/Field";
 import { Input } from "@/components/Input";
 import type { CarForm } from "./form";
@@ -21,11 +22,13 @@ export function DetailsStep({
   locked,
   vinLocked,
   onChange,
+  status,
 }: {
   form: CarForm;
   locked: boolean;
   vinLocked: boolean;
   onChange: (next: CarForm) => void;
+  status?: ReactNode;
 }) {
   return (
     <div>
@@ -41,6 +44,7 @@ export function DetailsStep({
             />
           </Field>
         ))}
+        {status}
       </div>
       <div className="mt-2">
         <Field label="Description" htmlFor="car-description">

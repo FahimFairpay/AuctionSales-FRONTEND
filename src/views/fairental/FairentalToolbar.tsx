@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { IconTool } from "@/components/IconTool";
 import { Input } from "@/components/Input";
 import { RangeSlider } from "@/components/RangeSlider";
-import type { FacetValue, FairentalFacets } from "./fairentalApi";
+import type { FairentalFacets } from "./fairentalApi";
+import { FacetMenu } from "./FacetMenu";
 import {
   EMPTY_FILTERS,
   SORT_FIELDS,
@@ -136,27 +137,28 @@ function FilterDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="fairental-filter-title"
-        className="fixed inset-x-3 bottom-3 z-50 max-h-[calc(100dvh-1.5rem)] overflow-y-auto rounded-[16px] bg-surface p-4 shadow-2xl sm:inset-x-auto sm:left-1/2 sm:top-1/2 sm:bottom-auto sm:w-full sm:max-w-xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[12px] sm:border sm:border-hairline sm:p-5"
+        className="fixed inset-x-3 bottom-3 z-50 max-h-[calc(100dvh-1.5rem)] overflow-visible rounded-[16px] bg-surface p-4 shadow-2xl sm:inset-x-auto sm:left-1/2 sm:top-1/2 sm:bottom-auto sm:w-full sm:max-w-xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[12px] sm:border sm:border-hairline sm:p-5"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-3">
-              <h2 id="fairental-filter-title" className="font-serif text-xl text-ink">Filters</h2>
+            <div className="flex items-center gap-2">
               {admin ? (
                 <button
                   type="button"
                   role="switch"
                   aria-checked={filters.includeHidden}
+                  aria-label="Sold and unlisted"
                   onClick={() => onChange({ ...filters, includeHidden: !filters.includeHidden })}
-                  className="inline-flex items-center gap-2 text-sm text-ink"
+                  className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-hairline bg-canvas px-2 text-xs text-ink"
                 >
-                  <span className={`relative h-6 w-10 rounded-full ${filters.includeHidden ? "bg-ink" : "bg-hairline"}`}>
-                    <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-surface shadow-sm ${filters.includeHidden ? "left-4" : "left-0.5"}`} />
+                  <span className={`relative inline-flex h-4 w-7 items-center rounded-full px-0.5 ${filters.includeHidden ? "bg-ink" : "bg-hairline"}`}>
+                    <span className={`h-3 w-3 rounded-full bg-surface shadow-sm transition-transform ${filters.includeHidden ? "translate-x-3" : "translate-x-0"}`} />
                   </span>
                   Sold and unlisted
                 </button>
               ) : null}
+              <h2 id="fairental-filter-title" className="font-serif text-xl text-ink">Filters</h2>
             </div>
             <p className="mt-0.5 text-sm text-muted">Narrow the cars on this page.</p>
           </div>
@@ -178,13 +180,43 @@ function FilterDialog({
           </div>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <FacetMenu label="Make" options={facets?.makes || []} selected={filters.makes} onToggle={(value) => onChange({ ...filters, makes: toggleValue(filters.makes, value, 5), models: [] })} />
+          <FacetMenu
+            label="Make"
+            options={facets?.makes || []}
+            selected={filters.makes}
+            onToggle={(value) => onChange({ ...filters, makes: toggleValue(filters.makes, value, 5), models: [] })}
+            onClear={() => onChange({ ...filters, makes: [], models: [] })}
+          />
           {filters.makes.length ? (
-            <FacetMenu label="Model" options={facets?.models || []} selected={filters.models} onToggle={(value) => onChange({ ...filters, models: toggleValue(filters.models, value) })} />
+            <FacetMenu
+              label="Model"
+              options={facets?.models || []}
+              selected={filters.models}
+              onToggle={(value) => onChange({ ...filters, models: toggleValue(filters.models, value) })}
+              onClear={() => onChange({ ...filters, models: [] })}
+            />
           ) : null}
-          <FacetMenu label="Body style" options={facets?.bodyStyles || []} selected={filters.bodies} onToggle={(value) => onChange({ ...filters, bodies: toggleValue(filters.bodies, value) })} />
-          <FacetMenu label="Exterior" options={facets?.exteriorColors || []} selected={filters.exteriors} onToggle={(value) => onChange({ ...filters, exteriors: toggleValue(filters.exteriors, value) })} />
-          <FacetMenu label="Interior" options={facets?.interiorColors || []} selected={filters.interiors} onToggle={(value) => onChange({ ...filters, interiors: toggleValue(filters.interiors, value) })} />
+          <FacetMenu
+            label="Body style"
+            options={facets?.bodyStyles || []}
+            selected={filters.bodies}
+            onToggle={(value) => onChange({ ...filters, bodies: toggleValue(filters.bodies, value) })}
+            onClear={() => onChange({ ...filters, bodies: [] })}
+          />
+          <FacetMenu
+            label="Exterior"
+            options={facets?.exteriorColors || []}
+            selected={filters.exteriors}
+            onToggle={(value) => onChange({ ...filters, exteriors: toggleValue(filters.exteriors, value) })}
+            onClear={() => onChange({ ...filters, exteriors: [] })}
+          />
+          <FacetMenu
+            label="Interior"
+            options={facets?.interiorColors || []}
+            selected={filters.interiors}
+            onToggle={(value) => onChange({ ...filters, interiors: toggleValue(filters.interiors, value) })}
+            onClear={() => onChange({ ...filters, interiors: [] })}
+          />
         </div>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
@@ -240,74 +272,6 @@ function writeRange(
     [minKey]: next.lo <= bounds.min ? "" : String(next.lo),
     [maxKey]: next.hi >= bounds.max ? "" : String(next.hi),
   };
-}
-
-function FacetMenu({
-  label,
-  options,
-  selected,
-  onToggle,
-}: {
-  label: string;
-  options: FacetValue[];
-  selected: string[];
-  onToggle: (value: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const summary = selected.length ? selected.join(", ") : "Any";
-
-  useEffect(() => {
-    function onPointer(event: MouseEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
-    }
-    function onKey(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("mousedown", onPointer);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onPointer);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, []);
-
-  return (
-    <div ref={rootRef} className="relative min-w-0">
-      <button
-        type="button"
-        className="flex h-10 w-full items-center justify-between gap-2 rounded-[8px] border border-hairline bg-surface px-3 text-left text-sm text-ink hover:bg-surface-muted"
-        aria-expanded={open}
-        onClick={() => setOpen((current) => !current)}
-      >
-        <span className="min-w-0 truncate">
-          <span className="text-muted">{label}</span>
-          <span className="mx-1 text-muted">·</span>
-          {summary}
-        </span>
-        <Chevron />
-      </button>
-      {open ? (
-        <div className="absolute left-0 right-0 z-30 mt-1 max-h-48 overflow-y-auto rounded-[12px] border border-hairline bg-surface p-1 shadow-lg">
-          {options.length === 0 ? <p className="px-3 py-2 text-sm text-muted">None yet</p> : null}
-          {options.map((option) => {
-            const active = selected.includes(option.value);
-            return (
-              <button
-                key={option.value}
-                type="button"
-                className={`flex w-full items-center justify-between rounded-[8px] px-3 py-2 text-left text-sm ${active ? "bg-surface-muted text-ink" : "text-ink hover:bg-surface-muted"}`}
-                onClick={() => onToggle(option.value)}
-              >
-                <span className="truncate">{option.value}</span>
-                <span className="ml-2 text-muted tabular">{option.count}</span>
-              </button>
-            );
-          })}
-        </div>
-      ) : null}
-    </div>
-  );
 }
 
 function SortMenu({ value, onChange }: { value: string; onChange: (sort: string) => void }) {
@@ -376,14 +340,6 @@ function DirectionGlyph({ down }: { down: boolean }) {
       ) : (
         <path d="M12 19V5M7 10l5-5 5 5" strokeLinecap="round" strokeLinejoin="round" />
       )}
-    </svg>
-  );
-}
-
-function Chevron() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-muted" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
