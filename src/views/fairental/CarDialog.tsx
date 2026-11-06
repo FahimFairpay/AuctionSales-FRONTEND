@@ -122,6 +122,11 @@ export function CarDialog({
       setError("Add at least one photo.");
       return;
     }
+    const selling = !creating && form.isSold;
+    if (selling && (removed.length > 0 || files.length > 0)) {
+      setError("A sold car keeps its photos.");
+      return;
+    }
     setSaving(true);
     setError("");
     try {
@@ -129,7 +134,7 @@ export function CarDialog({
       const wanted = creating ? true : form.isListed && !form.isSold;
       const payload = draft(queued ? false : wanted);
       const saved = kind === "edit" && version
-        ? await patchFairental(form.vin, version, {
+        ? await patchFairental(form.vin, version, selling ? payload : {
           ...payload,
           imageOrder: images.filter((image) => !removed.includes(image.imageId)).map((image) => image.imageId),
         })

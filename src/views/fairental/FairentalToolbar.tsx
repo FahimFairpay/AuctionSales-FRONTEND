@@ -143,6 +143,7 @@ function FilterDialog({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
+              <h2 id="fairental-filter-title" className="font-serif text-xl text-ink">Filters</h2>
               {admin ? (
                 <button
                   type="button"
@@ -158,7 +159,6 @@ function FilterDialog({
                   Sold and unlisted
                 </button>
               ) : null}
-              <h2 id="fairental-filter-title" className="font-serif text-xl text-ink">Filters</h2>
             </div>
             <p className="mt-0.5 text-sm text-muted">Narrow the cars on this page.</p>
           </div>
