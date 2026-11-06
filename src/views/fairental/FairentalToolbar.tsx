@@ -1,22 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/Button";
 import { IconTool } from "@/components/IconTool";
 import { Input } from "@/components/Input";
-import type { FairentalFacets } from "./fairentalApi";
+import { RangeSlider } from "@/components/RangeSlider";
+import type { FacetValue, FairentalFacets } from "./fairentalApi";
 import {
   EMPTY_FILTERS,
+  SORT_FIELDS,
+  dollars,
   filterCount,
-  SORT_OPTIONS,
+  nextSort,
+  sortField,
   toggleValue,
   type FairentalFilters,
 } from "./filters";
-
-const activePill =
-  "inline-flex h-8 items-center rounded-full border border-accent/70 bg-accent/10 px-3 text-[13px] font-medium text-accent";
-const idlePill =
-  "inline-flex h-8 items-center rounded-full border border-hairline/60 bg-surface-muted/40 px-3 text-[13px] font-medium text-muted hover:text-ink";
 
 export function FairentalToolbar({
   filters,
@@ -49,7 +47,7 @@ export function FairentalToolbar({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <label className="relative min-w-[200px] flex-1">
+      <label className="relative min-w-0 flex-1 basis-[12rem]">
         <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted">
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
             <circle cx="11" cy="11" r="6.5" />
@@ -78,20 +76,29 @@ export function FairentalToolbar({
       </label>
       <button
         type="button"
-        className={`inline-flex h-8 items-center gap-1.5 rounded-full border px-2.5 ${open ? "border-accent bg-accent text-canvas" : "border-hairline bg-surface text-muted hover:bg-surface-muted hover:text-ink"}`}
-        aria-label="Filters"
+        className={`relative inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${open ? "border-accent bg-accent text-canvas" : "border-hairline bg-surface text-muted hover:bg-surface-muted hover:text-ink"}`}
+        aria-label={count > 0 ? `Filters, ${count} applied` : "Filters"}
         onClick={() => setOpen((current) => !current)}
       >
         <FunnelGlyph />
         {count > 0 ? (
-          <span className={`min-w-[1.1rem] rounded-full px-1 text-center text-[10px] font-medium tabular ${open ? "bg-canvas/20 text-canvas" : "bg-accent text-canvas"}`}>
+          <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-medium text-canvas tabular">
             {count}
           </span>
         ) : null}
       </button>
       <SortMenu value={filters.sort} onChange={(sort) => onChange({ ...filters, sort })} />
       {admin ? (
-        <Button className="h-8" onClick={onCreate}>Add car</Button>
+        <button
+          type="button"
+          onClick={onCreate}
+          aria-label="Add car"
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-white hover:bg-accent-hover"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+          </svg>
+        </button>
       ) : null}
       {open ? (
         <FilterDialog
@@ -120,6 +127,8 @@ function FilterDialog({
   onClose: () => void;
 }) {
   const count = filterCount(filters);
+  const year = rangeBounds(facets?.year, 1981, new Date().getFullYear() + 1);
+  const price = rangeBounds(facets?.price, 1, 2_000_000);
   return (
     <>
       <div className="fixed inset-0 z-40 bg-scrim backdrop-blur-[8px]" aria-hidden="true" onClick={onClose} />
@@ -127,16 +136,15 @@ function FilterDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="fairental-filter-title"
-        className="fixed bottom-0 left-0 right-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-[16px] bg-surface p-5 shadow-2xl lg:bottom-auto lg:left-1/2 lg:right-auto lg:top-1/2 lg:max-h-[calc(100dvh-4rem)] lg:w-full lg:max-w-3xl lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-[12px] lg:border lg:border-hairline lg:p-6"
+        className="fixed inset-x-3 bottom-3 z-50 max-h-[calc(100dvh-1.5rem)] overflow-y-auto rounded-[16px] bg-surface p-4 shadow-2xl sm:inset-x-auto sm:left-1/2 sm:top-1/2 sm:bottom-auto sm:w-full sm:max-w-xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[12px] sm:border sm:border-hairline sm:p-5"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-hairline lg:hidden" aria-hidden="true" />
         <div className="flex items-start justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             <h2 id="fairental-filter-title" className="font-serif text-xl text-ink">Filters</h2>
             <p className="mt-0.5 text-sm text-muted">Narrow the cars on this page.</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             {count > 0 ? (
               <button
                 type="button"
@@ -153,44 +161,43 @@ function FilterDialog({
             </IconTool>
           </div>
         </div>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <Range label="Price" min={filters.priceMin} max={filters.priceMax} onMin={(priceMin) => onChange({ ...filters, priceMin })} onMax={(priceMax) => onChange({ ...filters, priceMax })} />
-          <Range label="Year" min={filters.yearMin} max={filters.yearMax} onMin={(yearMin) => onChange({ ...filters, yearMin })} onMax={(yearMax) => onChange({ ...filters, yearMax })} />
-          <Input
-            value={filters.exteriors[0] || ""}
-            placeholder="Exterior color"
-            aria-label="Exterior color"
-            onChange={(event) => onChange({ ...filters, exteriors: event.target.value ? [event.target.value] : [] })}
-          />
-          <Input
-            value={filters.interiors[0] || ""}
-            placeholder="Interior color"
-            aria-label="Interior color"
-            onChange={(event) => onChange({ ...filters, interiors: event.target.value ? [event.target.value] : [] })}
-          />
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <FacetMenu label="Make" options={facets?.makes || []} selected={filters.makes} onToggle={(value) => onChange({ ...filters, makes: toggleValue(filters.makes, value, 5), models: [] })} />
+          {filters.makes.length ? (
+            <FacetMenu label="Model" options={facets?.models || []} selected={filters.models} onToggle={(value) => onChange({ ...filters, models: toggleValue(filters.models, value) })} />
+          ) : null}
+          <FacetMenu label="Body style" options={facets?.bodyStyles || []} selected={filters.bodies} onToggle={(value) => onChange({ ...filters, bodies: toggleValue(filters.bodies, value) })} />
+          <FacetMenu label="Exterior" options={facets?.exteriorColors || []} selected={filters.exteriors} onToggle={(value) => onChange({ ...filters, exteriors: toggleValue(filters.exteriors, value) })} />
+          <FacetMenu label="Interior" options={facets?.interiorColors || []} selected={filters.interiors} onToggle={(value) => onChange({ ...filters, interiors: toggleValue(filters.interiors, value) })} />
         </div>
-        <Pills
-          label="Make"
-          options={facets?.makes || []}
-          selected={filters.makes}
-          onToggle={(value) => onChange({ ...filters, makes: toggleValue(filters.makes, value, 5), models: [] })}
-        />
-        {filters.makes.length ? (
-          <Pills
-            label="Model"
-            options={facets?.models || []}
-            selected={filters.models}
-            onToggle={(value) => onChange({ ...filters, models: toggleValue(filters.models, value) })}
-          />
-        ) : null}
-        <Pills
-          label="Body style"
-          options={facets?.bodyStyles || []}
-          selected={filters.bodies}
-          onToggle={(value) => onChange({ ...filters, bodies: toggleValue(filters.bodies, value) })}
-        />
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <p className="mb-1 text-sm font-medium text-ink">Price</p>
+            <RangeSlider
+              label="Price"
+              min={price.min}
+              max={price.max}
+              step={price.max - price.min > 500 ? 100 : 1}
+              lo={numberOr(filters.priceMin, price.min)}
+              hi={numberOr(filters.priceMax, price.max)}
+              format={dollars}
+              onChange={(next) => onChange(writeRange(filters, "priceMin", "priceMax", next, price))}
+            />
+          </div>
+          <div>
+            <p className="mb-1 text-sm font-medium text-ink">Year</p>
+            <RangeSlider
+              label="Year"
+              min={year.min}
+              max={year.max}
+              lo={numberOr(filters.yearMin, year.min)}
+              hi={numberOr(filters.yearMax, year.max)}
+              onChange={(next) => onChange(writeRange(filters, "yearMin", "yearMax", next, year))}
+            />
+          </div>
+        </div>
         {admin ? (
-          <label className="mt-5 flex items-center gap-2 text-sm text-ink">
+          <label className="mt-4 flex items-center gap-2 text-sm text-ink">
             <input
               type="checkbox"
               checked={filters.includeHidden}
@@ -204,57 +211,95 @@ function FilterDialog({
   );
 }
 
-function Range({
-  label,
-  min,
-  max,
-  onMin,
-  onMax,
-}: {
-  label: string;
-  min: string;
-  max: string;
-  onMin: (value: string) => void;
-  onMax: (value: string) => void;
-}) {
-  return (
-    <div>
-      <p className="mb-2 text-xs font-medium text-ink">{label}</p>
-      <div className="grid grid-cols-2 gap-2">
-        <Input value={min} placeholder="Min" aria-label={`${label} minimum`} onChange={(event) => onMin(event.target.value.replace(/[^\d]/g, ""))} />
-        <Input value={max} placeholder="Max" aria-label={`${label} maximum`} onChange={(event) => onMax(event.target.value.replace(/[^\d]/g, ""))} />
-      </div>
-    </div>
-  );
+function rangeBounds(pair: { min: number; max: number } | undefined, fallbackMin: number, fallbackMax: number) {
+  if (!pair || pair.min <= 0 || pair.max < pair.min) return { min: fallbackMin, max: fallbackMax };
+  if (pair.min === pair.max) return { min: fallbackMin, max: Math.max(fallbackMax, pair.max) };
+  return { min: pair.min, max: pair.max };
 }
 
-function Pills({
+function numberOr(value: string, fallback: number) {
+  const parsed = Number(value);
+  return value && Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function writeRange(
+  filters: FairentalFilters,
+  minKey: "priceMin" | "yearMin",
+  maxKey: "priceMax" | "yearMax",
+  next: { lo: number; hi: number },
+  bounds: { min: number; max: number },
+): FairentalFilters {
+  return {
+    ...filters,
+    [minKey]: next.lo <= bounds.min ? "" : String(next.lo),
+    [maxKey]: next.hi >= bounds.max ? "" : String(next.hi),
+  };
+}
+
+function FacetMenu({
   label,
   options,
   selected,
   onToggle,
 }: {
   label: string;
-  options: { value: string; count: number }[];
+  options: FacetValue[];
   selected: string[];
   onToggle: (value: string) => void;
 }) {
-  if (!options.length) return null;
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const summary = selected.length ? selected.join(", ") : "Any";
+
+  useEffect(() => {
+    function onPointer(event: MouseEvent) {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
   return (
-    <div className="mt-5">
-      <p className="mb-2 text-xs font-medium text-ink">{label}</p>
-      <div className="flex flex-wrap gap-2">
-        {options.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            className={selected.includes(option.value) ? activePill : idlePill}
-            onClick={() => onToggle(option.value)}
-          >
-            {option.value} {option.count}
-          </button>
-        ))}
-      </div>
+    <div ref={rootRef} className="relative min-w-0">
+      <button
+        type="button"
+        className="flex h-10 w-full items-center justify-between gap-2 rounded-[8px] border border-hairline bg-surface px-3 text-left text-sm text-ink hover:bg-surface-muted"
+        aria-expanded={open}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <span className="min-w-0 truncate">
+          <span className="text-muted">{label}</span>
+          <span className="mx-1 text-muted">·</span>
+          {summary}
+        </span>
+        <Chevron />
+      </button>
+      {open ? (
+        <div className="absolute left-0 right-0 z-30 mt-1 max-h-48 overflow-y-auto rounded-[12px] border border-hairline bg-surface p-1 shadow-lg">
+          {options.length === 0 ? <p className="px-3 py-2 text-sm text-muted">None yet</p> : null}
+          {options.map((option) => {
+            const active = selected.includes(option.value);
+            return (
+              <button
+                key={option.value}
+                type="button"
+                className={`flex w-full items-center justify-between rounded-[8px] px-3 py-2 text-left text-sm ${active ? "bg-surface-muted text-ink" : "text-ink hover:bg-surface-muted"}`}
+                onClick={() => onToggle(option.value)}
+              >
+                <span className="truncate">{option.value}</span>
+                <span className="ml-2 text-muted tabular">{option.count}</span>
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -262,7 +307,8 @@ function Pills({
 function SortMenu({ value, onChange }: { value: string; onChange: (sort: string) => void }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-  const label = SORT_OPTIONS.find(([id]) => id === value)?.[1] || "Newest";
+  const active = sortField(value);
+  const descending = value !== active.asc;
 
   useEffect(() => {
     function onPointer(event: MouseEvent) {
@@ -283,33 +329,53 @@ function SortMenu({ value, onChange }: { value: string; onChange: (sort: string)
     <div ref={rootRef} className="relative shrink-0">
       <button
         type="button"
-        className="inline-flex h-8 max-w-[11rem] items-center gap-1.5 rounded-full border border-hairline bg-surface px-3 text-[13px] text-ink hover:bg-surface-muted"
+        className="inline-flex h-9 max-w-[11rem] items-center gap-1.5 rounded-full border border-hairline bg-surface px-3 text-sm text-ink hover:bg-surface-muted"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
       >
-        <span className="truncate">{label}</span>
-        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-muted" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <span className="truncate">{active.label}</span>
+        <DirectionGlyph down={descending} />
       </button>
       {open ? (
-        <div className="absolute right-0 z-20 mt-2 w-52 rounded-[12px] border border-hairline bg-surface p-2 shadow-lg">
-          {SORT_OPTIONS.map(([id, name]) => (
-            <button
-              key={id}
-              type="button"
-              className={`block w-full rounded-[8px] px-3 py-2 text-left text-sm ${id === value ? "bg-surface-muted text-ink" : "text-ink hover:bg-surface-muted"}`}
-              onClick={() => {
-                onChange(id);
-                setOpen(false);
-              }}
-            >
-              {name}
-            </button>
-          ))}
+        <div className="absolute right-0 z-20 mt-2 w-44 max-w-[calc(100vw-1.5rem)] rounded-[12px] border border-hairline bg-surface p-1 shadow-lg">
+          {SORT_FIELDS.map((field) => {
+            const selected = field.id === active.id;
+            const down = !selected || value === field.desc;
+            return (
+              <button
+                key={field.id}
+                type="button"
+                className={`flex w-full items-center justify-between rounded-[8px] px-3 py-2 text-left text-sm ${selected ? "bg-surface-muted text-ink" : "text-ink hover:bg-surface-muted"}`}
+                onClick={() => onChange(nextSort(value, field.id))}
+              >
+                {field.label}
+                {selected ? <DirectionGlyph down={down} /> : null}
+              </button>
+            );
+          })}
         </div>
       ) : null}
     </div>
+  );
+}
+
+function DirectionGlyph({ down }: { down: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-muted" fill="none" stroke="currentColor" strokeWidth="1.8">
+      {down ? (
+        <path d="M12 5v14M7 14l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
+      ) : (
+        <path d="M12 19V5M7 10l5-5 5 5" strokeLinecap="round" strokeLinejoin="round" />
+      )}
+    </svg>
+  );
+}
+
+function Chevron() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-muted" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 

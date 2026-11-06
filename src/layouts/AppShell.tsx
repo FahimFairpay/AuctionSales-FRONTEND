@@ -31,8 +31,8 @@ const adminNav = [
 ];
 
 function navClass(active: boolean, collapsed: boolean): string {
-  return `flex items-center gap-2.5 rounded-[10px] text-[13px] ${
-    collapsed ? "justify-center px-0 py-1.5" : "px-3 py-1.5"
+  return `flex w-full items-center gap-3 rounded-[10px] text-[15px] leading-5 ${
+    collapsed ? "justify-center px-0 py-2" : "px-3 py-2"
   } ${active ? "bg-surface-muted text-ink" : "text-muted hover:bg-surface-muted hover:text-ink"}`;
 }
 
@@ -86,12 +86,12 @@ export function AppShell({ children }: { children?: ReactNode } = {}) {
   return (
     <div
       className={`flex h-dvh flex-col overflow-hidden bg-canvas transition-[grid-template-columns] duration-150 ease-out lg:grid ${
-        collapsed ? "lg:grid-cols-[72px_minmax(0,1fr)]" : "lg:grid-cols-[248px_minmax(0,1fr)]"
+        collapsed ? "lg:grid-cols-[72px_minmax(0,1fr)]" : "lg:grid-cols-[260px_minmax(0,1fr)]"
       }`}
     >
       <aside
-        className={`fixed inset-y-0 left-0 z-30 flex h-dvh w-[248px] flex-col overflow-hidden border-r border-hairline bg-surface px-3 py-4 transition-[width,transform] duration-150 ease-out lg:static ${
-          collapsed ? "lg:w-[72px]" : "lg:w-[248px]"
+        className={`fixed inset-y-0 left-0 z-30 flex h-dvh w-[260px] flex-col overflow-hidden border-r border-hairline bg-surface px-3 py-4 transition-[width,transform] duration-150 ease-out lg:static ${
+          collapsed ? "lg:w-[72px]" : "lg:w-[260px]"
         } ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
         <div className={`flex shrink-0 items-center ${collapsed ? "justify-center px-0" : "px-2"}`}>
@@ -127,7 +127,7 @@ export function AppShell({ children }: { children?: ReactNode } = {}) {
                   <p className="sr-only">Admin</p>
                 </>
               ) : (
-                <p className="px-3 pb-0.5 pt-3 text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
+                <p className="px-3 pb-1 pt-3 text-xs font-medium uppercase tracking-[0.08em] text-muted">
                   Admin
                 </p>
               )}

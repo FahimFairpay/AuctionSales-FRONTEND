@@ -170,18 +170,28 @@ export function CarDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="fairental-car-title"
-        className="fixed bottom-0 left-0 right-0 z-50 max-h-[90dvh] overflow-y-auto rounded-t-[16px] bg-surface p-5 shadow-2xl lg:bottom-auto lg:left-1/2 lg:right-auto lg:top-1/2 lg:max-h-[calc(100dvh-4rem)] lg:w-full lg:max-w-3xl lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-[12px] lg:border lg:border-hairline lg:p-6"
+        className="fixed inset-x-3 bottom-3 z-50 overflow-hidden rounded-[16px] bg-surface p-4 shadow-2xl sm:inset-x-auto sm:left-1/2 sm:top-1/2 sm:bottom-auto sm:w-full sm:max-w-3xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[12px] sm:border sm:border-hairline sm:p-5"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-hairline lg:hidden" aria-hidden="true" />
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <h2 id="fairental-car-title" className="font-serif text-xl text-ink">
+          <div className="min-w-0">
+            <h2 id="fairental-car-title" className="truncate font-serif text-xl text-ink">
               {kind === "create" ? "New car" : form.title || "Fairental car"}
             </h2>
-            <p className="mt-0.5 text-sm text-muted">
-              {locked ? "This version is sold and cannot be changed." : "Customers see a listed car after the first photo is ready."}
-            </p>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <Switch
+                label="Listed"
+                on={form.isListed}
+                disabled={locked || form.isSold}
+                onClick={() => setForm({ ...form, isListed: !form.isListed })}
+              />
+              <Switch
+                label="Sold"
+                on={form.isSold}
+                disabled={locked || !version}
+                onClick={() => setForm({ ...form, isSold: !form.isSold, isListed: !form.isSold ? false : form.isListed })}
+              />
+            </div>
           </div>
           <IconTool label="Close" onClick={onClose}>
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -189,8 +199,9 @@ export function CarDialog({
             </svg>
           </IconTool>
         </div>
-        {error ? <p className="mt-4 text-sm text-danger">{error}</p> : null}
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        {error ? <p className="mt-3 text-sm text-danger">{error}</p> : null}
+        {locked ? <p className="mt-2 text-sm text-muted">This version is sold and cannot be changed.</p> : null}
+        <div className="mt-3 grid grid-cols-2 gap-2">
           {field("vin", "VIN")}
           {field("title", "Title")}
           {field("make", "Make")}
@@ -201,18 +212,19 @@ export function CarDialog({
           {field("interiorColor", "Interior")}
           {field("price", "Price")}
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <Field label="Description" htmlFor="car-description">
             <textarea
               id="car-description"
               value={form.description}
               disabled={locked}
+              rows={2}
               onChange={(event) => setForm({ ...form, description: event.target.value })}
-              className="min-h-24 w-full rounded-[8px] border border-hairline bg-surface px-3 py-2 text-sm text-ink disabled:opacity-60"
+              className="h-14 w-full resize-none rounded-[8px] border border-hairline bg-surface px-3 py-2 text-sm text-ink disabled:opacity-60"
             />
           </Field>
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <PhotoPicker
             images={images.filter((image) => !removed.includes(image.imageId))}
             files={files}
@@ -222,29 +234,21 @@ export function CarDialog({
             onRemoveStored={(imageId) => setRemoved((current) => [...current, imageId])}
           />
         </div>
-        <div className="mt-4 flex flex-wrap gap-4 text-sm text-ink">
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={form.isListed} disabled={locked || form.isSold} onChange={(event) => setForm({ ...form, isListed: event.target.checked })} />
-            Listed
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="checkbox" checked={form.isSold} disabled={locked || !version} onChange={(event) => setForm({ ...form, isSold: event.target.checked, isListed: event.target.checked ? false : form.isListed })} />
-            Sold
-          </label>
-        </div>
         {versions && versions.length ? (
-          <ul className="mt-4 space-y-1 text-sm text-muted">
+          <div className="mt-2 flex flex-wrap gap-2">
             {versions.map((row) => (
-              <li key={row.version}>
-                <button type="button" className="text-ink underline" onClick={() => void openVersion(row.version)}>
-                  {row.version}
-                </button>
-                {" "}{row.isSold ? "Sold" : row.isListed ? "Listed" : "Unlisted"} · {row.updatedByName || "Fairental"}
-              </li>
+              <button
+                key={row.version}
+                type="button"
+                className="rounded-full border border-hairline px-2.5 py-1 text-xs text-ink hover:bg-surface-muted"
+                onClick={() => void openVersion(row.version)}
+              >
+                {row.version} · {row.isSold ? "Sold" : row.isListed ? "Listed" : "Unlisted"}
+              </button>
             ))}
-          </ul>
+          </div>
         ) : null}
-        <div className="mt-5 flex items-center justify-between gap-3">
+        <div className="mt-3 flex items-center justify-between gap-3">
           {kind === "edit" && vin && !locked ? (
             <Button variant="ghost" onClick={() => applyRow({ ...formToDetail(), images }, true)}>
               Add this car again
@@ -270,4 +274,32 @@ export function CarDialog({
       description: form.description,
     };
   }
+}
+
+function Switch({
+  on,
+  label,
+  disabled,
+  onClick,
+}: {
+  on: boolean;
+  label: string;
+  disabled?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      disabled={disabled}
+      onClick={onClick}
+      className="inline-flex items-center gap-2 text-sm text-ink disabled:opacity-50"
+    >
+      <span className={`relative h-6 w-10 rounded-full transition-colors ${on ? "bg-accent" : "bg-hairline"}`}>
+        <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-surface shadow-sm ${on ? "left-4" : "left-0.5"}`} />
+      </span>
+      {label}
+    </button>
+  );
 }

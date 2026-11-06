@@ -28,7 +28,23 @@ export const EMPTY_FILTERS: FairentalFilters = {
   includeHidden: false,
 };
 
-const SORTS = new Set(["newest", "priceAsc", "priceDesc", "yearDesc", "yearAsc"]);
+const SORTS = new Set(["newest", "oldest", "priceAsc", "priceDesc", "yearDesc", "yearAsc"]);
+
+export const SORT_FIELDS = [
+  { id: "added", label: "Added time", desc: "newest", asc: "oldest" },
+  { id: "year", label: "Year", desc: "yearDesc", asc: "yearAsc" },
+  { id: "price", label: "Price", desc: "priceDesc", asc: "priceAsc" },
+] as const;
+
+export function sortField(sort: string) {
+  return SORT_FIELDS.find((field) => field.desc === sort || field.asc === sort) || SORT_FIELDS[0];
+}
+
+export function nextSort(current: string, fieldId: string): string {
+  const field = SORT_FIELDS.find((item) => item.id === fieldId) || SORT_FIELDS[0];
+  if (current === field.desc) return field.asc;
+  return field.desc;
+}
 
 export function readFilters(params: { getAll(name: string): string[]; get(name: string): string | null }): FairentalFilters {
   const sort = params.get("sort") || "newest";
@@ -80,14 +96,6 @@ export function filterCount(filters: FairentalFilters): number {
   if (filters.includeHidden) count += 1;
   return count;
 }
-
-export const SORT_OPTIONS: [string, string][] = [
-  ["newest", "Newest"],
-  ["priceAsc", "Price, low to high"],
-  ["priceDesc", "Price, high to low"],
-  ["yearDesc", "Year, newest"],
-  ["yearAsc", "Year, oldest"],
-];
 
 export function dollars(value: number): string {
   return new Intl.NumberFormat("en-US", {
