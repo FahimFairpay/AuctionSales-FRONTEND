@@ -90,22 +90,35 @@ export function FairentalToolbar({
       </button>
       <SortMenu value={filters.sort} onChange={(sort) => onChange({ ...filters, sort })} />
       {admin ? (
-        <button
-          type="button"
-          onClick={onCreate}
-          aria-label="Add car"
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface text-ink hover:bg-surface-muted"
-        >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-          </svg>
-        </button>
+        <>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={filters.includeHidden}
+            onClick={() => onChange({ ...filters, includeHidden: !filters.includeHidden })}
+            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-hairline bg-surface px-2.5 text-xs text-ink hover:bg-surface-muted"
+          >
+            <span className={`relative inline-flex h-4 w-7 items-center rounded-full px-0.5 ${filters.includeHidden ? "bg-ink" : "bg-hairline"}`}>
+              <span className={`h-3 w-3 rounded-full bg-surface shadow-sm transition-transform ${filters.includeHidden ? "translate-x-3" : "translate-x-0"}`} />
+            </span>
+            Sold and unlisted
+          </button>
+          <button
+            type="button"
+            onClick={onCreate}
+            aria-label="Add car"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface text-ink hover:bg-surface-muted"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+            </svg>
+          </button>
+        </>
       ) : null}
       {open ? (
         <FilterDialog
           filters={filters}
           facets={facets}
-          admin={admin}
           onChange={onChange}
           onClose={() => setOpen(false)}
         />
@@ -117,13 +130,11 @@ export function FairentalToolbar({
 function FilterDialog({
   filters,
   facets,
-  admin,
   onChange,
   onClose,
 }: {
   filters: FairentalFilters;
   facets: FairentalFacets | null;
-  admin?: boolean;
   onChange: (next: FairentalFilters) => void;
   onClose: () => void;
 }) {
@@ -142,24 +153,7 @@ function FilterDialog({
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h2 id="fairental-filter-title" className="font-serif text-xl text-ink">Filters</h2>
-              {admin ? (
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={filters.includeHidden}
-                  aria-label="Sold and unlisted"
-                  onClick={() => onChange({ ...filters, includeHidden: !filters.includeHidden })}
-                  className="inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full border border-hairline bg-canvas px-2 text-xs text-ink"
-                >
-                  <span className={`relative inline-flex h-4 w-7 items-center rounded-full px-0.5 ${filters.includeHidden ? "bg-ink" : "bg-hairline"}`}>
-                    <span className={`h-3 w-3 rounded-full bg-surface shadow-sm transition-transform ${filters.includeHidden ? "translate-x-3" : "translate-x-0"}`} />
-                  </span>
-                  Sold and unlisted
-                </button>
-              ) : null}
-            </div>
+            <h2 id="fairental-filter-title" className="font-serif text-xl text-ink">Filters</h2>
             <p className="mt-0.5 text-sm text-muted">Narrow the cars on this page.</p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
