@@ -70,6 +70,14 @@ export function NavGlyph({ name }: { name: string }) {
       </svg>
     );
   }
+  if (name === "fairental") {
+    return (
+      <svg {...common}>
+        <path d="M4 15.5 6.2 9.5h11.6L20 15.5" strokeLinejoin="round" />
+        <path d="M6.5 15.5h11M7.5 18.2a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6ZM16.5 18.2a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6Z" strokeLinecap="round" />
+      </svg>
+    );
+  }
   if (name === "scrape") {
     return (
       <svg {...common}>

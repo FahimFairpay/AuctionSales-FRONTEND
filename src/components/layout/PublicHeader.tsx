@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "@/theme/ThemeProvider";
 import { paths } from "@/routes/paths";
 import "./public-header.css";
@@ -18,6 +19,8 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const isDark = appearance === "dark";
+  const pathname = usePathname();
+  const fairentalCurrent = pathname === "/fairental" || pathname.startsWith("/fairental/");
 
   useEffect(() => {
     setMounted(true);
@@ -80,6 +83,9 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
               <Link href="/#trust" className="opt3-nav-link">
                 About us
               </Link>
+              <Link href={paths.fairental} className="opt3-nav-link" aria-current={fairentalCurrent ? "page" : undefined}>
+                Fairental
+              </Link>
             </>
           ) : (
             <>
@@ -92,6 +98,9 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
               <a href="#trust" className="opt3-nav-link">
                 About us
               </a>
+              <Link href={paths.fairental} className="opt3-nav-link" aria-current={fairentalCurrent ? "page" : undefined}>
+                Fairental
+              </Link>
             </>
           )}
         </nav>

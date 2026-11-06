@@ -27,6 +27,7 @@ const adminNav = [
   { to: paths.adminPresets, label: "Presets", icon: "all" },
   { to: paths.adminFailures, label: "Failures", icon: "fail" },
   { to: paths.adminCrawler, label: "Schedules", icon: "scrape" },
+  { to: paths.adminFairental, label: "Fairental", icon: "fairental" },
 ];
 
 function navClass(active: boolean, collapsed: boolean): string {
