@@ -95,7 +95,7 @@ export function FairentalToolbar({
             type="button"
             role="switch"
             aria-checked={filters.includeHidden}
-            aria-label={filters.includeHidden ? "Showing sold and unlisted cars" : "Show sold and unlisted cars"}
+            aria-label={filters.includeHidden ? "Showing sold cars" : "Show sold cars"}
             onClick={() => onChange({ ...filters, includeHidden: !filters.includeHidden })}
             className="group relative inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface px-2 hover:bg-surface-muted"
           >
@@ -106,7 +106,7 @@ export function FairentalToolbar({
               role="tooltip"
               className="pointer-events-none absolute left-1/2 top-full z-30 mt-2 w-max max-w-[14rem] -translate-x-1/2 rounded-[8px] border border-hairline bg-ink px-2.5 py-1.5 text-center text-xs text-canvas opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100"
             >
-              {filters.includeHidden ? "Showing sold and unlisted cars" : "Show sold and unlisted cars"}
+              {filters.includeHidden ? "Showing sold cars" : "Show sold cars"}
             </span>
           </button>
           <button

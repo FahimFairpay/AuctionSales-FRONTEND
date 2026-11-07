@@ -71,12 +71,19 @@ export function CardPhoto({
           type="button"
           onClick={() => onEdit?.(car)}
           className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-sm hover:bg-surface-muted"
-          aria-label={`Edit ${heading}`}
+          aria-label={car.isSold ? `View ${heading}` : `Edit ${heading}`}
         >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <path d="M4 20h4l10-10-4-4L4 16v4z" strokeLinejoin="round" />
-            <path d="M13 7l4 4" strokeLinecap="round" />
-          </svg>
+          {car.isSold ? (
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M2.5 12s3.4-7 9.5-7 9.5 7 9.5 7-3.4 7-9.5 7-9.5-7-9.5-7z" strokeLinejoin="round" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M4 20h4l10-10-4-4L4 16v4z" strokeLinejoin="round" />
+              <path d="M13 7l4 4" strokeLinecap="round" />
+            </svg>
+          )}
         </button>
       ) : null}
     </div>

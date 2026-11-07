@@ -79,14 +79,9 @@ export function FairentalBrowse({
     setError("");
     try {
       await patchFairental(car.vin, car.version, { isListed: next });
-      setCars((current) => {
-        if (admin && !filters.includeHidden && !next) {
-          return current.filter((item) => item.vin !== car.vin || item.version !== car.version);
-        }
-        return current.map((item) => (
-          item.vin === car.vin && item.version === car.version ? { ...item, isListed: next } : item
-        ));
-      });
+      setCars((current) => current.map((item) => (
+        item.vin === car.vin && item.version === car.version ? { ...item, isListed: next } : item
+      )));
     } catch (err: unknown) {
       setError(err instanceof ApiError ? err.message : "The listing could not be changed");
     }

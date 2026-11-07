@@ -5,7 +5,7 @@ export function versionNumber(version?: string): number {
 
 export function VersionMark({ version }: { version?: string }) {
   const number = versionNumber(version);
-  if (!number) return null;
+  if (number < 2) return null;
   return (
     <sup
       className="ml-0.5 inline-flex h-2.5 min-w-2.5 -translate-y-px items-center justify-center rounded-full border border-current px-px align-super text-[7px] font-medium leading-none text-current"
