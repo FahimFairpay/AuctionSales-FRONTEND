@@ -18,8 +18,8 @@ export function CardPhoto({
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState(false);
   const current = urls[index] || urls[0];
-  const showPrevious = known && index > 0;
-  const showNext = known && index < urls.length - 1;
+  const canPrevious = known && index > 0;
+  const canNext = known && index < urls.length - 1;
 
   useEffect(() => {
     let gone = false;
@@ -58,8 +58,12 @@ export function CardPhoto({
   return (
     <div className="relative h-[168px] bg-surface-muted">
       {image}
-      {showPrevious ? <PhotoStep side="left" onClick={(event) => step(event, -1)} /> : null}
-      {showNext ? <PhotoStep side="right" onClick={(event) => step(event, 1)} /> : null}
+      {current ? (
+        <>
+          <PhotoStep side="left" enabled={canPrevious} onClick={(event) => step(event, -1)} />
+          <PhotoStep side="right" enabled={canNext} onClick={(event) => step(event, 1)} />
+        </>
+      ) : null}
       {admin ? (
         <button
           type="button"
@@ -86,16 +90,19 @@ export function CardPhoto({
 
 function PhotoStep({
   side,
+  enabled,
   onClick,
 }: {
   side: "left" | "right";
+  enabled: boolean;
   onClick: (event: MouseEvent) => void;
 }) {
   return (
     <button
       type="button"
       aria-label={side === "left" ? "Previous photo" : "Next photo"}
-      className={`absolute bottom-2.5 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/55 text-white shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-sm hover:bg-black/75 ${
+      disabled={!enabled}
+      className={`absolute bottom-2.5 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/55 text-white shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-sm hover:bg-black/75 disabled:cursor-default disabled:opacity-45 disabled:blur-[1px] disabled:hover:bg-black/55 ${
         side === "left" ? "left-2.5" : "right-2.5"
       }`}
       onClick={onClick}
