@@ -102,7 +102,7 @@ function PhotoStep({
       type="button"
       aria-label={side === "left" ? "Previous photo" : "Next photo"}
       disabled={!enabled}
-      className={`absolute bottom-2.5 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/55 text-white shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-sm hover:bg-black/75 disabled:cursor-default disabled:opacity-45 disabled:blur-[1px] disabled:hover:bg-black/55 ${
+      className={`absolute bottom-2.5 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/55 text-white shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-sm hover:bg-black/75 disabled:cursor-default disabled:opacity-45 disabled:hover:bg-black/55 ${
         side === "left" ? "left-2.5" : "right-2.5"
       }`}
       onClick={onClick}
