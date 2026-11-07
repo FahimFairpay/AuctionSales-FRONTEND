@@ -31,8 +31,8 @@ const adminNav = [
 ];
 
 function navClass(active: boolean, collapsed: boolean): string {
-  return `flex w-full items-center gap-3 rounded-[10px] text-[15px] leading-5 ${
-    collapsed ? "justify-center px-0 py-2" : "px-3 py-2"
+  return `flex min-h-9 w-full flex-1 items-center rounded-[10px] text-base leading-5 ${
+    collapsed ? "justify-center px-0" : "gap-3 px-3.5"
   } ${active ? "bg-surface-muted text-ink" : "text-muted hover:bg-surface-muted hover:text-ink"}`;
 }
 
@@ -105,29 +105,28 @@ export function AppShell({ children }: { children?: ReactNode } = {}) {
             )}
           </Link>
         </div>
-        <nav className="mt-3 min-h-0 flex-1 space-y-0" aria-label="Primary">
-          {appNav.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              title={item.label}
-              className={({ isActive }) => navClass(isActive, collapsed)}
-              onClick={() => setMobileOpen(false)}
-            >
-              <NavGlyph name={item.icon} />
-              {collapsed ? <span className="sr-only">{item.label}</span> : item.label}
-            </NavLink>
-          ))}
+        <nav className="mt-4 flex min-h-0 flex-1 flex-col overflow-hidden" aria-label="Primary">
+          <div className="flex min-h-0 flex-1 flex-col">
+            {appNav.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                title={item.label}
+                className={({ isActive }) => navClass(isActive, collapsed)}
+                onClick={() => setMobileOpen(false)}
+              >
+                <NavGlyph name={item.icon} />
+                {collapsed ? <span className="sr-only">{item.label}</span> : item.label}
+              </NavLink>
+            ))}
+          </div>
           {auth.isAdmin ? (
-            <>
+            <div className="flex min-h-0 flex-1 flex-col">
               {collapsed ? (
-                <>
-                  <div className="mx-auto my-2 h-px w-6 bg-hairline" />
-                  <p className="sr-only">Admin</p>
-                </>
+                <div className="mx-auto h-px w-6 shrink-0 bg-hairline" />
               ) : (
-                <p className="px-3 pb-1 pt-3 text-xs font-medium uppercase tracking-[0.08em] text-muted">
+                <p className="shrink-0 px-3.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
                   Admin
                 </p>
               )}
@@ -143,7 +142,7 @@ export function AppShell({ children }: { children?: ReactNode } = {}) {
                   {collapsed ? <span className="sr-only">{item.label}</span> : item.label}
                 </NavLink>
               ))}
-            </>
+            </div>
           ) : null}
         </nav>
         <div className="mt-auto shrink-0 border-t border-hairline pt-3">
