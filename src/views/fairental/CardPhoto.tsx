@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, type MouseEvent } from "react";
-import Link from "next/link";
-import { paths } from "@/routes/paths";
+import { useEffect, useState, type MouseEvent } from "react";
 import { adminFairental, publicFairental, type FairentalCard } from "./fairentalApi";
 
 export function CardPhoto({
@@ -19,30 +17,34 @@ export function CardPhoto({
   const [urls, setUrls] = useState<string[]>(car.coverUrl ? [car.coverUrl] : []);
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState(false);
-  const [busy, setBusy] = useState(false);
   const current = urls[index] || urls[0];
-  const showArrows = Boolean(car.coverUrl) && (!known || urls.length > 1);
+  const showPrevious = known && index > 0;
+  const showNext = known && index < urls.length - 1;
 
-  async function step(event: MouseEvent, direction: number) {
+  useEffect(() => {
+    let gone = false;
+    const load = admin ? adminFairental(car.vin, car.version) : publicFairental(car.vin);
+    load.then((detail) => {
+      if (gone) return;
+      const next = (detail.images || []).map((image) => image.url).filter(Boolean);
+      if (next.length) setUrls(next);
+      setKnown(true);
+    }).catch(() => {
+      if (!gone) setKnown(true);
+    });
+    return () => {
+      gone = true;
+    };
+  }, [admin, car.vin, car.version]);
+
+  function step(event: MouseEvent, direction: number) {
     event.preventDefault();
     event.stopPropagation();
-    let list = urls;
-    if (!known) {
-      setBusy(true);
-      try {
-        const detail = admin ? await adminFairental(car.vin, car.version) : await publicFairental(car.vin);
-        const next = (detail.images || []).map((image) => image.url).filter(Boolean);
-        list = next.length ? next : list;
-        setUrls(list);
-        setKnown(true);
-      } catch {
-        setKnown(true);
-      } finally {
-        setBusy(false);
-      }
-    }
-    if (list.length < 2) return;
-    setIndex((currentIndex) => (currentIndex + direction + list.length) % list.length);
+    setIndex((currentIndex) => {
+      const nextIndex = currentIndex + direction;
+      if (nextIndex < 0 || nextIndex >= urls.length) return currentIndex;
+      return nextIndex;
+    });
   }
 
   const image = current ? (
@@ -55,17 +57,9 @@ export function CardPhoto({
 
   return (
     <div className="relative h-[168px] bg-surface-muted">
-      {admin || !car.vin ? image : (
-        <Link href={paths.fairentalItem(car.vin)} className="block h-full text-inherit no-underline">
-          {image}
-        </Link>
-      )}
-      {showArrows ? (
-        <>
-          <PhotoStep side="left" busy={busy} onClick={(event) => void step(event, -1)} />
-          <PhotoStep side="right" busy={busy} onClick={(event) => void step(event, 1)} />
-        </>
-      ) : null}
+      {image}
+      {showPrevious ? <PhotoStep side="left" onClick={(event) => step(event, -1)} /> : null}
+      {showNext ? <PhotoStep side="right" onClick={(event) => step(event, 1)} /> : null}
       {admin ? (
         <button
           type="button"
@@ -92,19 +86,16 @@ export function CardPhoto({
 
 function PhotoStep({
   side,
-  busy,
   onClick,
 }: {
   side: "left" | "right";
-  busy: boolean;
   onClick: (event: MouseEvent) => void;
 }) {
   return (
     <button
       type="button"
       aria-label={side === "left" ? "Previous photo" : "Next photo"}
-      disabled={busy}
-      className={`absolute bottom-2.5 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/55 text-white shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-sm hover:bg-black/75 disabled:opacity-60 ${
+      className={`absolute bottom-2.5 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-black/55 text-white shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-sm hover:bg-black/75 ${
         side === "left" ? "left-2.5" : "right-2.5"
       }`}
       onClick={onClick}

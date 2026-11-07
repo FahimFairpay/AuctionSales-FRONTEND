@@ -29,7 +29,6 @@ export const paths = {
   adminPresets: "/admin/presets",
   adminFailures: "/admin/failures",
   fairental: "/fairental",
-  fairentalItem: (vin: string) => `/fairental/${encodeURIComponent(vin)}`,
   adminFairental: "/admin/fairental",
   adminCrawler: "/admin/schedules",
   adminCrawlerRun: (id: string) => `/admin/schedules/${encodeURIComponent(id)}`,

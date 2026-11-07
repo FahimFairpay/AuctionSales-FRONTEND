@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { paths } from "@/routes/paths";
 import type { FairentalCard } from "./fairentalApi";
 import { VersionMark } from "./car-dialog/VersionMark";
 import { dollars } from "./filters";
@@ -36,6 +34,7 @@ export function VehicleCard({
   const copy = (
     <div className="flex flex-col gap-2 p-3">
       <div className="min-w-0">
+        {car.vin ? <p className="mb-1 font-mono text-[12px] tracking-[0.04em] text-muted">{car.vin}</p> : null}
         <div className="flex items-start justify-between gap-2">
           <h3 className="min-w-0 max-w-[12rem] text-balance text-[15px] font-medium leading-5 tracking-[-0.02em] text-ink">
             {heading}
@@ -65,11 +64,7 @@ export function VehicleCard({
   return (
     <article className="relative h-full overflow-hidden rounded-md border border-hairline bg-surface shadow-sm">
       <CardPhoto car={car} admin={admin} heading={heading} onEdit={onEdit} />
-      {admin ? copy : (
-        <Link href={paths.fairentalItem(car.vin)} className="block text-inherit no-underline">
-          {copy}
-        </Link>
-      )}
+      {copy}
     </article>
   );
 }
