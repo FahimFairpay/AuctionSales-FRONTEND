@@ -83,9 +83,11 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
               <Link href="/#trust" className="opt3-nav-link">
                 About us
               </Link>
-              <Link href={paths.fairental} className="opt3-nav-link" aria-current={fairentalCurrent ? "page" : undefined}>
-                Fairental
-              </Link>
+              {fairentalCurrent ? null : (
+                <Link href={paths.fairental} className="opt3-nav-link">
+                  Fairental
+                </Link>
+              )}
             </>
           ) : (
             <>
@@ -98,9 +100,11 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
               <a href="#trust" className="opt3-nav-link">
                 About us
               </a>
-              <Link href={paths.fairental} className="opt3-nav-link" aria-current={fairentalCurrent ? "page" : undefined}>
-                Fairental
-              </Link>
+              {fairentalCurrent ? null : (
+                <Link href={paths.fairental} className="opt3-nav-link">
+                  Fairental
+                </Link>
+              )}
             </>
           )}
         </nav>
