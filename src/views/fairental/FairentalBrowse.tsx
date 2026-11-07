@@ -9,6 +9,7 @@ import { fairentalFacets, listFairental, type FairentalCard, type FairentalFacet
 import { FairentalToolbar } from "./FairentalToolbar";
 import { readFilters, toSearchParams, type FairentalFilters } from "./filters";
 import { VehicleGrid } from "./VehicleGrid";
+import { FairOrb } from "@/components/orb/FairOrb";
 
 export function FairentalBrowse({
   admin,
@@ -106,7 +107,7 @@ export function FairentalBrowse({
       />
       {error ? <p className="text-sm text-danger">{error}</p> : null}
       {loading && cars.length === 0 ? (
-        <p className="text-sm text-muted">Loading cars</p>
+        <FairOrb state="working" />
       ) : (
         <VehicleGrid cars={cars} admin={admin} onEdit={onEdit} loading={loading} />
       )}

@@ -5,6 +5,7 @@ import { PublicHeader } from "@/components/layout/PublicHeader";
 import { ApiError } from "@/api/errors";
 import { publicFairental, type FairentalDetail } from "./fairentalApi";
 import { VehicleDetail } from "./VehicleDetail";
+import { FairOrb } from "@/components/orb/FairOrb";
 
 export function FairentalDetailPage({ vin }: { vin: string }) {
   const [car, setCar] = useState<FairentalDetail | null>(null);
@@ -36,7 +37,9 @@ export function FairentalDetailPage({ vin }: { vin: string }) {
     return (
       <div className="flex min-h-dvh flex-col bg-canvas text-ink">
         <PublicHeader mode="inventory" />
-        <p className="public-page-frame text-sm text-muted">Loading this car</p>
+        <div className="public-page-frame">
+          <FairOrb state="working" />
+        </div>
       </div>
     );
   }
