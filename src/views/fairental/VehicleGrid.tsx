@@ -19,7 +19,7 @@ export function VehicleGrid({
     return <EmptyState>No cars match these filters.</EmptyState>;
   }
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {cars.map((car) => (
         <VehicleCard key={`${car.vin}-${car.version || "live"}`} car={car} admin={admin} onEdit={onEdit} />
       ))}
