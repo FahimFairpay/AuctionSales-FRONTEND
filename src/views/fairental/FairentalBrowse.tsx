@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { Button } from "@/components/Button";
 import { ApiError } from "@/api/errors";
-import { fairentalFacets, listFairental, type FairentalCard, type FairentalFacets } from "./fairentalApi";
+import { fairentalFacets, listFairental, patchFairental, type FairentalCard, type FairentalFacets } from "./fairentalApi";
 import { FairentalToolbar } from "./FairentalToolbar";
 import { readFilters, toSearchParams, type FairentalFilters } from "./filters";
 import { VehicleGrid } from "./VehicleGrid";
@@ -73,6 +73,25 @@ export function FairentalBrowse({
     router.replace(text ? `${pathname}?${text}` : pathname, { scroll: false });
   }
 
+  async function toggleListed(car: FairentalCard) {
+    if (!car.version || car.isSold) return;
+    const next = !car.isListed;
+    setError("");
+    try {
+      await patchFairental(car.vin, car.version, { isListed: next });
+      setCars((current) => {
+        if (admin && !filters.includeHidden && !next) {
+          return current.filter((item) => item.vin !== car.vin || item.version !== car.version);
+        }
+        return current.map((item) => (
+          item.vin === car.vin && item.version === car.version ? { ...item, isListed: next } : item
+        ));
+      });
+    } catch (err: unknown) {
+      setError(err instanceof ApiError ? err.message : "The listing could not be changed");
+    }
+  }
+
   async function loadMore() {
     if (!cursor) return;
     const page = await listFairental(filters, !!admin, cursor);
@@ -109,7 +128,7 @@ export function FairentalBrowse({
       {loading && cars.length === 0 ? (
         <FairOrb state="working" />
       ) : (
-        <VehicleGrid cars={cars} admin={admin} onEdit={onEdit} loading={loading} />
+        <VehicleGrid cars={cars} admin={admin} onEdit={onEdit} onToggleListed={admin ? toggleListed : undefined} loading={loading} />
       )}
       {cursor ? (
         <Button variant="secondary" onClick={() => void loadMore()}>Load more</Button>
