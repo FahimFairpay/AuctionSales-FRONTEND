@@ -8,7 +8,7 @@ export function VersionMark({ version }: { version?: string }) {
   if (!number) return null;
   return (
     <sup
-      className="ml-0.5 inline-flex h-3.5 min-w-3.5 -translate-y-1 items-center justify-center rounded-full border border-current px-[3px] align-super text-[9px] font-medium leading-none text-current"
+      className="ml-0.5 inline-flex h-2.5 min-w-2.5 -translate-y-px items-center justify-center rounded-full border border-current px-px align-super text-[7px] font-medium leading-none text-current"
       aria-label={`Version ${number}`}
     >
       {number}

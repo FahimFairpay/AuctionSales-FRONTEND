@@ -9,6 +9,7 @@ import {
   createFairental,
   patchFairental,
   uploadFairentalPhoto,
+  type FairentalCard,
   type FairentalDetail,
   type FairentalDraft,
   type FairentalImage,
@@ -29,29 +30,49 @@ const BLANK: CarForm = {
   isListed: true, isSold: false,
 };
 
+function formFromCard(car: FairentalCard): CarForm {
+  return {
+    vin: car.vin,
+    title: car.title || "",
+    make: car.make || "",
+    model: car.model || "",
+    year: car.year ? String(car.year) : "",
+    bodyStyle: car.bodyStyle || "",
+    exteriorColor: car.exteriorColor || "",
+    interiorColor: car.interiorColor || "",
+    price: car.price ? String(car.price) : "",
+    description: "",
+    isListed: !!car.isListed,
+    isSold: !!car.isSold,
+  };
+}
+
 export function CarDialog({
   kind,
   vin,
+  seed,
   onClose,
   onSaved,
 }: {
   kind: Kind;
   vin?: string;
+  seed?: FairentalCard;
   onClose: () => void;
   onSaved: () => void;
 }) {
-  const [form, setForm] = useState(BLANK);
+  const editing = kind === "edit";
+  const [form, setForm] = useState(editing && seed ? formFromCard(seed) : BLANK);
   const [step, setStep] = useState<1 | 2>(1);
-  const [version, setVersion] = useState("");
+  const [version, setVersion] = useState(editing ? seed?.version || "" : "");
   const [images, setImages] = useState<FairentalImage[]>([]);
   const [removed, setRemoved] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-  const [locked, setLocked] = useState(false);
+  const [locked, setLocked] = useState(editing && !!seed?.isSold);
   const [failed, setFailed] = useState<string[]>([]);
   const [confirmSold, setConfirmSold] = useState(false);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
-  const creating = !(kind === "edit" && version);
+  const creating = !editing;
   const frozen = locked || form.isSold;
   const heading = [form.year, form.make, form.model].filter(Boolean).join(" ");
 
@@ -179,8 +200,8 @@ export function CarDialog({
         onClick={(event) => event.stopPropagation()}
       >
         <div className="mb-3 flex items-start justify-between gap-3">
-          <h2 id="fairental-car-title" className="flex min-w-0 items-baseline font-serif text-xl text-ink">
-            <span className="truncate">{creating && !heading ? "New car" : heading || "Fairental car"}</span>
+          <h2 id="fairental-car-title" className="min-w-0 break-words font-serif text-xl leading-tight text-ink">
+            {creating && !heading ? "New car" : heading || "Fairental car"}
             {creating ? null : <VersionMark version={version} />}
           </h2>
           <IconTool label="Close" onClick={onClose}>

@@ -12,7 +12,7 @@ export function VehicleGrid({
 }: {
   cars: FairentalCard[];
   admin?: boolean;
-  onEdit?: (vin: string) => void;
+  onEdit?: (car: FairentalCard) => void;
   loading?: boolean;
 }) {
   if (!loading && cars.length === 0) {

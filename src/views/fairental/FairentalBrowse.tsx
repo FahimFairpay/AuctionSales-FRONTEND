@@ -16,7 +16,7 @@ export function FairentalBrowse({
   onCreate,
 }: {
   admin?: boolean;
-  onEdit?: (vin: string) => void;
+  onEdit?: (car: FairentalCard) => void;
   onCreate?: () => void;
 }) {
   const params = useSearchParams();

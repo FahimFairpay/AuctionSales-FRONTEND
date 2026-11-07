@@ -13,12 +13,17 @@ export function VehicleCard({
 }: {
   car: FairentalCard;
   admin?: boolean;
-  onEdit?: (vin: string) => void;
+  onEdit?: (car: FairentalCard) => void;
 }) {
   const heading = [car.year, car.make, car.model].filter(Boolean).join(" ");
   const showTitle = car.title && car.title.trim().toLowerCase() !== heading.toLowerCase();
   const spec = [car.bodyStyle, car.exteriorColor, car.interiorColor].filter(Boolean).join(" · ");
   const status = car.isSold ? "Sold" : car.isListed ? "Listed" : "Unlisted";
+  const chip = {
+    Listed: "bg-[#C8FF3D] text-[#102400] shadow-[0_0_10px_rgba(198,255,61,0.85)]",
+    Unlisted: "bg-[#FF2D3A] text-white shadow-[0_0_10px_rgba(255,45,58,0.75)]",
+    Sold: "bg-[#D4D4D8] text-[#3F3F46]",
+  }[status];
   const card = (
     <article className="relative h-full overflow-hidden rounded-md border border-hairline bg-surface shadow-sm">
       <div className="relative h-[184px] bg-surface-muted">
@@ -32,7 +37,7 @@ export function VehicleCard({
         {admin ? (
           <button
             type="button"
-            onClick={() => onEdit?.(car.vin)}
+            onClick={() => onEdit?.(car)}
             className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-sm hover:bg-surface-muted"
             aria-label={`Edit ${heading}`}
           >
@@ -45,16 +50,22 @@ export function VehicleCard({
       </div>
       <div className="flex flex-col gap-3 p-4">
         <div className="min-w-0">
-          <h3 className="flex min-w-0 items-baseline text-base font-medium text-ink">
-            <span className="truncate">{heading}</span>
-            {admin ? <VersionMark version={car.version} /> : null}
-          </h3>
-          {showTitle ? <p className="truncate text-sm text-muted">{car.title}</p> : null}
-          {spec ? <p className="mt-1 truncate text-sm text-ink">{spec}</p> : null}
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="min-w-0 break-words text-base font-medium leading-5 text-ink">
+              {heading}
+              {admin ? <VersionMark version={car.version} /> : null}
+            </h3>
+            {admin ? (
+              <span className={`mt-0.5 shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none ${chip}`}>
+                {status}
+              </span>
+            ) : null}
+          </div>
+          {showTitle ? <p className="mt-0.5 break-words text-sm text-muted">{car.title}</p> : null}
+          {spec ? <p className="mt-1 break-words text-sm text-ink">{spec}</p> : null}
         </div>
         <p className="text-2xl font-medium text-ink">{dollars(car.price)}</p>
         <div className="min-h-6" />
-        {admin ? <p className="text-sm text-muted">{status}</p> : null}
       </div>
     </article>
   );
