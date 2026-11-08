@@ -8,11 +8,13 @@ export function CardPhoto({
   admin,
   heading,
   onEdit,
+  progress,
 }: {
   car: FairentalCard;
   admin?: boolean;
   heading: string;
   onEdit?: (car: FairentalCard) => void;
+  progress?: { done: number; total: number; failed: number } | null;
 }) {
   const [urls, setUrls] = useState<string[]>(car.coverUrl ? [car.coverUrl] : []);
   const [index, setIndex] = useState(0);
@@ -58,6 +60,7 @@ export function CardPhoto({
   return (
     <div className="relative h-[168px] bg-surface-muted">
       {image}
+      {progress ? <UploadStatus progress={progress} /> : null}
       {current ? (
         <>
           <PhotoStep side="left" enabled={canPrevious} onClick={(event) => step(event, -1)} />
@@ -85,6 +88,18 @@ export function CardPhoto({
         </button>
       ) : null}
     </div>
+  );
+}
+
+function UploadStatus({ progress }: { progress: { done: number; total: number; failed: number } }) {
+  const finished = progress.done + progress.failed >= progress.total;
+  const label = finished
+    ? `${progress.failed} ${progress.failed === 1 ? "photo" : "photos"} failed`
+    : `Uploading photos ${progress.done} / ${progress.total}`;
+  return (
+    <p className="absolute inset-x-2 bottom-12 z-20 rounded-full bg-black/70 px-2 py-1 text-center text-[11px] font-medium text-white">
+      {label}
+    </p>
   );
 }
 

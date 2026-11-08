@@ -112,18 +112,12 @@ export function patchFairental(vin: string, version: string, draft: Partial<Fair
   return apiSend(`/admin/fairental/${encodeURIComponent(vin)}/versions/${encodeURIComponent(version)}`, "PATCH", draft);
 }
 
-export async function uploadFairentalPhoto(vin: string, version: string, file: File): Promise<string> {
-  const ticket = await apiSend<{ imageId: string; upload: { url: string; fields: Record<string, string> } }>(
-    `/admin/fairental/${encodeURIComponent(vin)}/versions/${encodeURIComponent(version)}/images`,
-    "POST",
-    { contentType: file.type },
-  );
-  const form = new FormData();
-  Object.entries(ticket.upload.fields).forEach(([key, value]) => form.append(key, value));
-  form.append("file", file);
-  const response = await fetch(ticket.upload.url, { method: "POST", body: form });
-  if (!response.ok) {
-    throw new Error("The photo could not be uploaded");
-  }
-  return ticket.imageId;
+export type PhotoTicket = { imageId: string; upload: { url: string; fields: Record<string, string> } };
+
+export function issueFairentalPhotos(
+  vin: string,
+  version: string,
+  files: { contentType: string; bytes: number }[],
+): Promise<{ uploads: PhotoTicket[] }> {
+  return apiSend(`/admin/fairental/${encodeURIComponent(vin)}/versions/${encodeURIComponent(version)}/images`, "POST", { files });
 }

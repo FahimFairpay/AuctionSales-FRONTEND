@@ -1,6 +1,7 @@
 "use client";
 
 import type { FairentalCard } from "./fairentalApi";
+import type { PhotoUploadProgress } from "./photoUploadQueue";
 import { VersionMark } from "./car-dialog/VersionMark";
 import { dollars } from "./filters";
 import { CardPhoto } from "./CardPhoto";
@@ -16,13 +17,18 @@ export function VehicleCard({
   admin,
   onEdit,
   onToggleListed,
+  upload,
 }: {
   car: FairentalCard;
   admin?: boolean;
   onEdit?: (car: FairentalCard) => void;
   onToggleListed?: (car: FairentalCard) => void;
+  upload?: PhotoUploadProgress | null;
 }) {
   const heading = [car.year, car.make, car.model].filter(Boolean).join(" ");
+  const photoProgress = upload && (upload.done + upload.failed < upload.total || upload.failed > 0)
+    ? { done: upload.done, total: upload.total, failed: upload.failed }
+    : null;
   const showTitle = car.title && car.title.trim().toLowerCase() !== heading.toLowerCase();
   const spec = [car.bodyStyle, car.exteriorColor, car.interiorColor].filter(Boolean).join(" · ");
   const status = car.isSold ? "Sold" : car.isListed ? "Listed" : "Unlisted";
@@ -63,7 +69,7 @@ export function VehicleCard({
 
   return (
     <article className="relative h-full overflow-hidden rounded-md border border-hairline bg-surface shadow-sm">
-      <CardPhoto car={car} admin={admin} heading={heading} onEdit={onEdit} />
+      <CardPhoto car={car} admin={admin} heading={heading} onEdit={onEdit} progress={photoProgress} />
       {copy}
     </article>
   );

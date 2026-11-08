@@ -8,7 +8,6 @@ import {
   adminFairental,
   createFairental,
   patchFairental,
-  uploadFairentalPhoto,
   type FairentalCard,
   type FairentalDetail,
   type FairentalDraft,
@@ -23,6 +22,13 @@ import { VersionMark } from "./car-dialog/VersionMark";
 import { statusOf, type CarForm, type CarStatus } from "./car-dialog/form";
 
 type Kind = "create" | "edit";
+
+const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MIN_PHOTO = 1024;
+const MAX_PHOTO = 12_582_912;
+const MAX_PHOTOS = 20;
+
+export type SavedCar = { vin: string; version: string; files: File[] };
 
 const BLANK: CarForm = {
   vin: "", title: "", make: "", model: "", year: "", bodyStyle: "",
@@ -58,7 +64,7 @@ export function CarDialog({
   vin?: string;
   seed?: FairentalCard;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: (saved: SavedCar) => void;
 }) {
   const editing = kind === "edit";
   const [form, setForm] = useState(editing && seed ? formFromCard(seed) : BLANK);
@@ -68,7 +74,7 @@ export function CarDialog({
   const [removed, setRemoved] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [locked, setLocked] = useState(editing && !!seed?.isSold);
-  const [failed, setFailed] = useState<string[]>([]);
+  const [failed] = useState<string[]>([]);
   const [confirmSold, setConfirmSold] = useState(false);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -138,55 +144,43 @@ export function CarDialog({
     };
   }
 
-  async function save() {
-    if (creating && files.length === 0) {
-      setError("Add at least one photo.");
-      return;
+  function photoError(): string {
+    const kept = images.filter((image) => !removed.includes(image.imageId)).length;
+    if (creating && files.length === 0) return "Add at least one photo.";
+    if (kept + files.length > MAX_PHOTOS) return "A car can hold 20 photos.";
+    for (const file of files) {
+      if (!PHOTO_TYPES.includes(file.type)) return "Photos must be JPEG, PNG, or WebP.";
+      if (file.size < MIN_PHOTO || file.size > MAX_PHOTO) return "Each photo must be between 1 KB and 12 MB.";
     }
+    return "";
+  }
+
+  async function save() {
     const selling = !creating && form.isSold;
     if (selling && (removed.length > 0 || files.length > 0)) {
       setError("A sold car keeps its photos.");
       return;
     }
+    const invalid = photoError();
+    if (invalid) {
+      setError(invalid);
+      return;
+    }
     setSaving(true);
     setError("");
     try {
-      const queued = files.length > 0;
-      const wanted = creating ? true : form.isListed && !form.isSold;
-      const payload = draft(queued ? false : wanted);
+      const payload = draft(form.isListed && !form.isSold);
       const saved = kind === "edit" && version
         ? await patchFairental(form.vin, version, selling ? payload : {
           ...payload,
           imageOrder: images.filter((image) => !removed.includes(image.imageId)).map((image) => image.imageId),
         })
         : await createFairental(payload);
-      for (const file of files) {
-        await uploadFairentalPhoto(saved.vin, saved.version, file);
-      }
-      if (queued) await waitForReady(saved.vin, saved.version, wanted);
-      onSaved();
+      onSaved({ vin: saved.vin, version: saved.version, files });
     } catch (err: unknown) {
       setError(err instanceof ApiError || err instanceof Error ? err.message : "Save failed");
-    } finally {
       setSaving(false);
     }
-  }
-
-  async function waitForReady(savedVin: string, savedVersion: string, wanted: boolean) {
-    const started = Date.now();
-    while (Date.now() - started < 120000) {
-      const row = await adminFairental(savedVin, savedVersion);
-      const pending = (row.images || []).filter((image) => !image.ready);
-      setImages(row.images || []);
-      setFailed(pending.filter(() => Date.now() - started >= 120000).map((image) => image.imageId));
-      if (!pending.length) {
-        if (wanted) await patchFairental(savedVin, savedVersion, { isListed: true });
-        return;
-      }
-      await new Promise((resolve) => window.setTimeout(resolve, 3000));
-    }
-    const row = await adminFairental(savedVin, savedVersion);
-    setFailed((row.images || []).filter((image) => !image.ready).map((image) => image.imageId));
   }
 
   return (
