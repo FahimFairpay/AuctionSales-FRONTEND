@@ -9,7 +9,7 @@ export function proxy(request: NextRequest) {
   response.headers.set("X-XSS-Protection", "1; mode=block");
   response.headers.set(
     "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=(), browsing-topics=()"
+    "camera=(), microphone=(), geolocation=()"
   );
   response.headers.set(
     "Content-Security-Policy",

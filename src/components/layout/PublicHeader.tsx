@@ -62,7 +62,7 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
     >
       <div className="opt3-bar-inner">
         {/* Brand Logo Pod */}
-        <Link
+        <Link prefetch={false}
           href="/"
           className="brand-container"
           aria-label="FairAutos Home"
@@ -74,24 +74,24 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
         <nav className="opt3-nav-group" aria-label="Main Navigation">
           {mode === "inventory" ? (
             <>
-              <Link href="/" className="opt3-nav-link font-medium">
+              <Link prefetch={false} href="/" className="opt3-nav-link font-medium">
                 Home
               </Link>
-              <Link href="/#journey" className="opt3-nav-link">
+              <Link prefetch={false} href="/#journey" className="opt3-nav-link">
                 How it works
               </Link>
-              <Link href="/#trust" className="opt3-nav-link">
+              <Link prefetch={false} href="/#trust" className="opt3-nav-link">
                 About us
               </Link>
               {fairentalCurrent ? null : (
-                <Link href={paths.fairental} className="opt3-nav-link">
+                <Link prefetch={false} href={paths.fairental} className="opt3-nav-link">
                   Fairental
                 </Link>
               )}
             </>
           ) : (
             <>
-              <Link href={paths.publicInventory} className="opt3-nav-link">
+              <Link prefetch={false} href={paths.publicInventory} className="opt3-nav-link">
                 Browse Cars
               </Link>
               <a href="#journey" className="opt3-nav-link">
@@ -101,7 +101,7 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
                 About us
               </a>
               {fairentalCurrent ? null : (
-                <Link href={paths.fairental} className="opt3-nav-link">
+                <Link prefetch={false} href={paths.fairental} className="opt3-nav-link">
                   Fairental
                 </Link>
               )}
@@ -141,7 +141,7 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
           </button>
 
           {/* Unified Sign In entry point */}
-          <Link href={paths.signIn} className="opt3-signin-btn">
+          <Link prefetch={false} href={paths.signIn} className="opt3-signin-btn">
             Login / Register
           </Link>
         </div>

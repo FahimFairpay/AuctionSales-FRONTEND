@@ -11,6 +11,7 @@ describe("security proxy middleware", () => {
     expect(res.headers.get("X-Content-Type-Options")).toBe("nosniff");
     expect(res.headers.get("Referrer-Policy")).toBe("strict-origin-when-cross-origin");
     expect(res.headers.get("Permissions-Policy")).toContain("camera=()");
+    expect(res.headers.get("Permissions-Policy")).not.toContain("browsing-topics");
 
     const csp = res.headers.get("Content-Security-Policy");
     expect(csp).toBeDefined();

@@ -20,11 +20,12 @@ export interface LinkProps
   to?: string;
   href?: string;
   replace?: boolean;
+  prefetch?: boolean;
 }
 
-export function Link({ to, href, replace, ...props }: LinkProps) {
+export function Link({ to, href, replace, prefetch, ...props }: LinkProps) {
   const target = to || href || "#";
-  return <NextLink href={target} replace={replace} {...props} />;
+  return <NextLink href={target} replace={replace} prefetch={prefetch} {...props} />;
 }
 
 export interface NavLinkProps extends Omit<LinkProps, "className"> {
@@ -37,6 +38,7 @@ export function NavLink({
   href,
   className,
   end = false,
+  prefetch,
   ...props
 }: NavLinkProps) {
   const pathname = useNextPathname() || "";
@@ -55,6 +57,7 @@ export function NavLink({
   return (
     <NextLink
       href={target}
+      prefetch={prefetch}
       className={computedClassName}
       aria-current={isActive ? "page" : undefined}
       {...props}
