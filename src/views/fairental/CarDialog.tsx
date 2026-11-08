@@ -80,6 +80,7 @@ export function CarDialog({
   const [saving, setSaving] = useState(false);
   const creating = !editing;
   const frozen = locked || form.isSold;
+  const sellHere = editing && form.isSold && !locked && step === 1;
   const heading = [form.year, form.make, form.model].filter(Boolean).join(" ");
 
   useEffect(() => {
@@ -233,8 +234,8 @@ export function CarDialog({
         <div className="mt-3 flex items-center justify-end gap-2">
           <div className="flex gap-2">
             {step === 2 ? <Button variant="secondary" onClick={() => setStep(1)}>Back</Button> : null}
-            {step === 1 ? <Button onClick={() => setStep(2)}>Next</Button> : null}
-            {step === 2 && !locked ? (
+            {step === 1 && !sellHere ? <Button onClick={() => setStep(2)}>Next</Button> : null}
+            {(step === 2 && !locked) || sellHere ? (
               <Button disabled={saving} onClick={() => void save()}>{saving ? "Saving" : "Save"}</Button>
             ) : null}
           </div>
