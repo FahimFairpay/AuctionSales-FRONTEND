@@ -29,7 +29,7 @@ export async function publicApiRequest<T>(path: string, init: RequestInit = {}):
     headers.set("Content-Type", "application/json");
   }
 
-  const response = await fetch(`${resolveApiBase(path)}${path}`, { ...init, headers });
+  const response = await fetch(`${resolveApiBase(path)}${path}`, { ...init, headers, cache: "no-store" });
   const envelope = await parseBody(response);
 
   if (!response.ok || envelope.success === false) {

@@ -39,7 +39,7 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
   if (init.body !== undefined && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
-  const response = await fetch(`${base}${path}`, { ...init, headers });
+  const response = await fetch(`${base}${path}`, { ...init, headers, cache: "no-store" });
   if (response.status === 401) {
     await signOut();
     const next = encodeURIComponent(`${window.location.pathname}${window.location.search}`);

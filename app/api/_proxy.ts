@@ -61,6 +61,7 @@ export async function proxyApiRequest(
     });
 
     responseHeaders.set("x-handled-by", "nextjs-route-ts");
+    responseHeaders.set("Cache-Control", "no-store");
 
     return new NextResponse(res.body, {
       status: res.status,
