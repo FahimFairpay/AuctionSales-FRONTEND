@@ -11,7 +11,7 @@ type Open = { kind: "create" } | { kind: "edit"; car: FairentalCard } | null;
 export function AdminFairentalPage() {
   const [open, setOpen] = useState<Open>(null);
   const [stamp, setStamp] = useState(0);
-  const { progress, enqueue } = usePhotoUploadQueue();
+  const { progress, enqueue, settle } = usePhotoUploadQueue();
 
   function saved(row: SavedCar) {
     enqueue(row.vin, row.version, row.files);
@@ -24,6 +24,7 @@ export function AdminFairentalPage() {
       <FairentalBrowse
         admin
         uploads={progress}
+        onUploadShown={(row) => settle(row.vin, row.version)}
         onCreate={() => setOpen({ kind: "create" })}
         onEdit={(car) => setOpen({ kind: "edit", car })}
       />

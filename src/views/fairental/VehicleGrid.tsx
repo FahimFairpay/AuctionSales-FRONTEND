@@ -12,6 +12,7 @@ export function VehicleGrid({
   onToggleListed,
   loading,
   uploads,
+  onUploadShown,
 }: {
   cars: FairentalCard[];
   admin?: boolean;
@@ -19,6 +20,7 @@ export function VehicleGrid({
   onToggleListed?: (car: FairentalCard) => void;
   loading?: boolean;
   uploads?: PhotoUploadProgress[];
+  onUploadShown?: (upload: PhotoUploadProgress) => void;
 }) {
   if (!loading && cars.length === 0) {
     return <EmptyState>No cars match these filters.</EmptyState>;
@@ -33,6 +35,7 @@ export function VehicleGrid({
           onEdit={onEdit}
           onToggleListed={onToggleListed}
           upload={uploads?.find((row) => row.vin === car.vin && row.version === (car.version || row.version))}
+          onUploadShown={onUploadShown}
         />
       ))}
     </div>

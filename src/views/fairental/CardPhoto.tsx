@@ -1,7 +1,11 @@
 "use client";
 
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { adminFairental, publicFairental, type FairentalCard } from "./fairentalApi";
+import type { PhotoUploadProgress } from "./photoUploadQueue";
+
+const POLL_WAIT_MS = 1000;
+const POLL_TRIES = 20;
 
 export function CardPhoto({
   car,
@@ -9,42 +13,113 @@ export function CardPhoto({
   heading,
   onEdit,
   progress,
+  onShown,
 }: {
   car: FairentalCard;
   admin?: boolean;
   heading: string;
   onEdit?: (car: FairentalCard) => void;
-  progress?: { done: number; total: number; failed: number } | null;
+  progress?: PhotoUploadProgress | null;
+  onShown?: () => void;
 }) {
   const [urls, setUrls] = useState<string[]>(car.coverUrl ? [car.coverUrl] : []);
+  const [previews, setPreviews] = useState<string[]>([]);
+  const [live, setLive] = useState(false);
   const [index, setIndex] = useState(0);
   const [known, setKnown] = useState(false);
-  const current = urls[index] || urls[0];
-  const canPrevious = known && index > 0;
-  const canNext = known && index < urls.length - 1;
+  const baseline = useRef<number | null>(null);
+  const progressRef = useRef(progress);
+  const onShownRef = useRef(onShown);
+  progressRef.current = progress;
+  onShownRef.current = onShown;
+
+  const gallery = !live && previews.length ? [...urls, ...previews] : urls;
+  const current = gallery[index] || gallery[0];
+  const canStep = known || previews.length > 0;
+  const canPrevious = canStep && index > 0;
+  const canNext = canStep && index < gallery.length - 1;
+
+  useEffect(() => {
+    const created = (progress?.files ?? []).map((file) => URL.createObjectURL(file));
+    setPreviews(created);
+    setLive(false);
+    return () => created.forEach((url) => URL.revokeObjectURL(url));
+  }, [progress?.files]);
+
+  useEffect(() => {
+    setIndex((currentIndex) => Math.min(currentIndex, Math.max(gallery.length - 1, 0)));
+  }, [gallery.length]);
 
   useEffect(() => {
     let gone = false;
     const load = admin ? adminFairental(car.vin, car.version) : publicFairental(car.vin);
     load.then((detail) => {
       if (gone) return;
-      const next = (detail.images || []).map((image) => image.url).filter(Boolean);
-      if (next.length) setUrls(next);
+      const next = readyUrls(detail.images);
+      const row = progressRef.current;
+      rememberBaseline(baseline, next.length, row);
+      const finished = !!row && row.done > 0 && row.done + row.failed >= row.total;
+      const target = (baseline.current ?? 0) + (finished ? row.done : 0);
+      if (finished && next.length >= target && next.length > 0) {
+        setUrls(next);
+        setLive(true);
+        if (row.failed === 0) onShownRef.current?.();
+      } else if (next.length) {
+        setUrls((currentUrls) => (next.length >= currentUrls.length ? next : currentUrls));
+      }
       setKnown(true);
     }).catch(() => {
-      if (!gone) setKnown(true);
+      if (gone) return;
+      if (baseline.current === null) baseline.current = 0;
+      setKnown(true);
     });
     return () => {
       gone = true;
     };
   }, [admin, car.vin, car.version]);
 
+  useEffect(() => {
+    const row = progress;
+    if (!admin || !row || row.done === 0 || row.done + row.failed < row.total) return;
+    let gone = false;
+    let tries = 0;
+    let timer = 0;
+
+    const tick = () => {
+      adminFairental(car.vin, car.version).then((detail) => {
+        if (gone) return;
+        const next = readyUrls(detail.images);
+        const target = (baseline.current ?? 0) + row.done;
+        if (next.length >= target && next.length > 0) {
+          setUrls(next);
+          setLive(true);
+          if (row.failed === 0) onShownRef.current?.();
+          return;
+        }
+        tries += 1;
+        if (tries >= POLL_TRIES) return;
+        timer = window.setTimeout(tick, POLL_WAIT_MS);
+      }).catch(() => {
+        if (gone) return;
+        tries += 1;
+        if (tries >= POLL_TRIES) return;
+        timer = window.setTimeout(tick, POLL_WAIT_MS);
+      });
+    };
+
+    tick();
+    return () => {
+      gone = true;
+      window.clearTimeout(timer);
+    };
+  }, [admin, car.vin, car.version, progress?.done, progress?.failed, progress?.total]);
+
   function step(event: MouseEvent, direction: number) {
     event.preventDefault();
     event.stopPropagation();
     setIndex((currentIndex) => {
       const nextIndex = currentIndex + direction;
-      if (nextIndex < 0 || nextIndex >= urls.length) return currentIndex;
+      if (nextIndex < 0 || nextIndex >= gallery.length) return currentIndex;
       return nextIndex;
     });
   }
@@ -91,8 +166,19 @@ export function CardPhoto({
   );
 }
 
-function UploadStatus({ progress }: { progress: { done: number; total: number; failed: number } }) {
-  const finished = progress.done + progress.failed >= progress.total;
+function readyUrls(images: { url?: string }[] | undefined): string[] {
+  return (images || []).map((image) => image.url || "").filter(Boolean);
+}
+
+function rememberBaseline(baseline: { current: number | null }, count: number, row?: PhotoUploadProgress | null) {
+  if (baseline.current !== null) return;
+  const added = row?.done ?? 0;
+  const finished = !!row && row.done + row.failed >= row.total;
+  baseline.current = finished && added > 0 && count >= added ? count - added : count;
+}
+
+function UploadStatus({ progress }: { progress: PhotoUploadProgress }) {
+  const finished = progress.done + progress.failed >= progress.total && progress.failed > 0;
   const label = finished
     ? `${progress.failed} ${progress.failed === 1 ? "photo" : "photos"} failed`
     : `Uploading photos ${progress.done} / ${progress.total}`;

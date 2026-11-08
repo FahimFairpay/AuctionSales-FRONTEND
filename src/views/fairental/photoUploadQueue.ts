@@ -9,6 +9,7 @@ export type PhotoUploadProgress = {
   total: number;
   done: number;
   failed: number;
+  files: File[];
 };
 
 const PREPARE_SLOTS = 4;
@@ -38,7 +39,7 @@ export function usePhotoUploadQueue() {
     if (!files.length) return;
     setProgress((current) => [
       ...current.filter((row) => row.vin !== vin || row.version !== version),
-      { vin, version, total: files.length, done: 0, failed: 0 },
+      { vin, version, total: files.length, done: 0, failed: 0, files },
     ]);
     void run(vin, version, files, (done, failed) => {
       setProgress((current) => current.map((row) => (
@@ -47,7 +48,11 @@ export function usePhotoUploadQueue() {
     });
   }
 
-  return { progress, enqueue };
+  function settle(vin: string, version: string) {
+    setProgress((current) => current.filter((row) => row.vin !== vin || row.version !== version));
+  }
+
+  return { progress, enqueue, settle };
 }
 
 async function run(

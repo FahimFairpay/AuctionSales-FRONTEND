@@ -17,11 +17,13 @@ export function FairentalBrowse({
   onEdit,
   onCreate,
   uploads,
+  onUploadShown,
 }: {
   admin?: boolean;
   onEdit?: (car: FairentalCard) => void;
   onCreate?: () => void;
   uploads?: PhotoUploadProgress[];
+  onUploadShown?: (upload: PhotoUploadProgress) => void;
 }) {
   const params = useSearchParams();
   const router = useRouter();
@@ -126,7 +128,7 @@ export function FairentalBrowse({
       {loading && cars.length === 0 ? (
         <FairOrb state="working" />
       ) : (
-        <VehicleGrid cars={cars} admin={admin} onEdit={onEdit} onToggleListed={admin ? toggleListed : undefined} loading={loading} uploads={uploads} />
+        <VehicleGrid cars={cars} admin={admin} onEdit={onEdit} onToggleListed={admin ? toggleListed : undefined} loading={loading} uploads={uploads} onUploadShown={onUploadShown} />
       )}
       {cursor ? (
         <Button variant="secondary" onClick={() => void loadMore()}>Load more</Button>
