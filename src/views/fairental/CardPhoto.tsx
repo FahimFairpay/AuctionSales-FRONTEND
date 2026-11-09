@@ -148,32 +148,36 @@ export function CardPhoto({
         </>
       ) : null}
       {admin ? (
-        <div className="absolute right-2 top-2 z-30 flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              onEdit?.(car);
-            }}
-            className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/40 bg-black/55 text-white shadow-[0_4px_14px_rgba(0,0,0,0.35)] backdrop-blur-sm hover:bg-black/75"
-            aria-label={car.isSold ? `View ${heading}` : `Edit ${heading}`}
-          >
-            {car.isSold ? (
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M2.5 12s3.4-7 9.5-7 9.5 7 9.5 7-3.4 7-9.5 7-9.5-7-9.5-7z" strokeLinejoin="round" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M4 20h4l10-10-4-4L4 16v4z" strokeLinejoin="round" />
-                <path d="M13 7l4 4" strokeLinecap="round" />
-              </svg>
-            )}
-          </button>
-          {status ? (
-            <StatusMark status={status} onToggle={status === "Sold" ? undefined : onToggleListed} />
-          ) : null}
+        <button
+          type="button"
+          onMouseDown={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onEdit?.(car);
+          }}
+          className="absolute left-2 top-2 z-30 inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white shadow-[0_4px_14px_rgba(0,0,0,0.28)] backdrop-blur-md transition-colors hover:bg-black/70"
+          aria-label={car.isSold ? `View ${heading}` : `Edit ${heading}`}
+        >
+          {car.isSold ? (
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M2.5 12s3.4-7 9.5-7 9.5 7 9.5 7-3.4 7-9.5 7-9.5-7-9.5-7z" strokeLinejoin="round" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M4 20h4l10-10-4-4L4 16v4z" strokeLinejoin="round" />
+              <path d="M13 7l4 4" strokeLinecap="round" />
+            </svg>
+          )}
+        </button>
+      ) : null}
+      {status ? (
+        <div className="absolute right-2 top-2 z-30">
+          <StatusMark status={status} onToggle={status === "Sold" ? undefined : onToggleListed} />
         </div>
       ) : null}
     </div>

@@ -3,9 +3,9 @@
 import type { MouseEvent } from "react";
 
 const CHIP = {
-  Listed: "bg-[#C6FF3D] text-[#102000] shadow-[0_0_0_1px_#C6FF3D,0_0_12px_rgba(198,255,61,0.9)]",
-  Unlisted: "bg-[#FF2A38] text-white shadow-[0_0_0_1px_#FF2A38,0_0_12px_rgba(255,42,56,0.8)]",
-  Sold: "bg-[#E4E4EA] text-[#2A2A32] shadow-[0_0_0_1px_rgba(255,255,255,0.45)]",
+  Listed: "bg-[#00E25B] text-[#04210E] shadow-[0_1px_2px_rgba(0,0,0,0.4),0_0_16px_rgba(0,226,91,0.95)]",
+  Unlisted: "bg-[#FF3142] text-white shadow-[0_1px_2px_rgba(0,0,0,0.4),0_0_14px_rgba(255,49,66,0.8)]",
+  Sold: "bg-[#E4E4EA] text-[#2E2E36] shadow-[0_1px_2px_rgba(0,0,0,0.35)]",
 };
 
 export type CarStatus = keyof typeof CHIP;
@@ -21,28 +21,23 @@ export function StatusMark({
   status: CarStatus;
   onToggle?: () => void;
 }) {
-  const look = `inline-flex h-5 items-center gap-1 whitespace-nowrap rounded-full px-2 text-[11px] font-semibold leading-none tracking-[0.01em] ${CHIP[status]}`;
-  const dot = <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current" aria-hidden="true" />;
-  if (!onToggle) {
-    return (
-      <span className={look}>
-        {dot}
-        {status}
-      </span>
-    );
-  }
+  const look = `inline-flex h-[22px] items-center whitespace-nowrap rounded-full px-2.5 text-[11px] font-semibold leading-none transition-[background-color,box-shadow,color] duration-200 ease-out ${CHIP[status]}`;
+  if (!onToggle) return <span className={look}>{status}</span>;
   return (
     <button
       type="button"
       className={look}
       aria-label={status === "Listed" ? "Unlist this car" : "List this car"}
+      onMouseDown={(event: MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+      }}
       onClick={(event: MouseEvent) => {
         event.preventDefault();
         event.stopPropagation();
         onToggle();
       }}
     >
-      {dot}
       {status}
     </button>
   );

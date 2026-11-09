@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PublicHeader } from "@/components/layout/PublicHeader";
 import { Button } from "@/components/Button";
@@ -36,6 +36,8 @@ export function FairentalBrowse({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const filterKey = toSearchParams(filters, !!admin).toString();
+  const held = useRef(new Map<string, boolean>());
+  const busy = useRef(new Set<string>());
 
   useEffect(() => {
     setQuery(filters.q);
@@ -55,10 +57,13 @@ export function FairentalBrowse({
     let gone = false;
     setLoading(true);
     setError("");
+    for (const key of [...held.current.keys()]) {
+      if (!busy.current.has(key)) held.current.delete(key);
+    }
     Promise.all([listFairental(filters, !!admin), fairentalFacets(filters, !!admin)])
       .then(([page, nextFacets]) => {
         if (gone) return;
-        setCars(page.items);
+        setCars(page.items.map(keepHeld));
         setCursor(page.nextCursor);
         setFacets(nextFacets);
       })
@@ -78,24 +83,38 @@ export function FairentalBrowse({
     router.replace(text ? `${pathname}?${text}` : pathname, { scroll: false });
   }
 
+  function carKey(car: { vin: string; version?: string }) {
+    return `${car.vin}:${car.version || ""}`;
+  }
+
+  function keepHeld(item: FairentalCard): FairentalCard {
+    const next = held.current.get(carKey(item));
+    return next === undefined ? item : { ...item, isListed: next };
+  }
+
   async function toggleListed(car: FairentalCard) {
-    if (!car.version || car.isSold) return;
+    const key = carKey(car);
+    if (!car.version || car.isSold || busy.current.has(key)) return;
     const next = !car.isListed;
+    busy.current.add(key);
+    held.current.set(key, next);
     setError("");
+    setCars((current) => current.map((item) => (carKey(item) === key ? { ...item, isListed: next } : item)));
     try {
       await patchFairental(car.vin, car.version, { isListed: next });
-      setCars((current) => current.map((item) => (
-        item.vin === car.vin && item.version === car.version ? { ...item, isListed: next } : item
-      )));
     } catch (err: unknown) {
+      held.current.delete(key);
+      setCars((current) => current.map((item) => (carKey(item) === key ? { ...item, isListed: !next } : item)));
       setError(err instanceof ApiError ? err.message : "The listing could not be changed");
+    } finally {
+      busy.current.delete(key);
     }
   }
 
   async function loadMore() {
     if (!cursor) return;
     const page = await listFairental(filters, !!admin, cursor);
-    setCars((current) => [...current, ...page.items]);
+    setCars((current) => [...current, ...page.items.map(keepHeld)]);
     setCursor(page.nextCursor);
   }
 
