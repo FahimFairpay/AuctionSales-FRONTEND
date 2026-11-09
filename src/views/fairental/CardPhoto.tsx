@@ -146,7 +146,7 @@ export function CardPhoto({
         <button
           type="button"
           onClick={() => onEdit?.(car)}
-          className="absolute right-2 top-2 inline-flex h-8 w-8 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-sm hover:bg-surface-muted"
+          className="absolute right-2 top-2 z-30 inline-flex h-8 w-8 items-center justify-center rounded-full border border-hairline bg-surface text-ink shadow-sm hover:bg-surface-muted"
           aria-label={car.isSold ? `View ${heading}` : `Edit ${heading}`}
         >
           {car.isSold ? (

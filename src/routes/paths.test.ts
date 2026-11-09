@@ -21,6 +21,13 @@ describe("inventory paths", () => {
   });
 });
 
+describe("fairental paths", () => {
+  it("encodes the VIN", () => {
+    expect(paths.fairentalItem("1HG CM")).toBe("/fairental/1HG%20CM");
+    expect(paths.adminFairentalItem("1HG CM")).toBe("/admin/fairental/1HG%20CM");
+  });
+});
+
 describe("recipe redirect", () => {
   it("sends settings bookmarks toward crawler runs", () => {
     expect(paths.adminSettings).toBe("/admin/settings");

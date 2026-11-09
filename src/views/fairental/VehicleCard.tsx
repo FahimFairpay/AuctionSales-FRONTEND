@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { FairentalCard } from "./fairentalApi";
 import type { PhotoUploadProgress } from "./photoUploadQueue";
 import { VersionMark } from "./car-dialog/VersionMark";
@@ -19,6 +20,7 @@ export function VehicleCard({
   onToggleListed,
   upload,
   onUploadShown,
+  href,
 }: {
   car: FairentalCard;
   admin?: boolean;
@@ -26,6 +28,7 @@ export function VehicleCard({
   onToggleListed?: (car: FairentalCard) => void;
   upload?: PhotoUploadProgress | null;
   onUploadShown?: (upload: PhotoUploadProgress) => void;
+  href?: string;
 }) {
   const heading = [car.year, car.make, car.model].filter(Boolean).join(" ");
   const showTitle = car.title && car.title.trim().toLowerCase() !== heading.toLowerCase();
@@ -49,7 +52,7 @@ export function VehicleCard({
             car.isSold ? chip : (
               <button
                 type="button"
-                className="shrink-0"
+                className="relative z-20 shrink-0"
                 aria-label={car.isListed ? "Unlist this car" : "List this car"}
                 onClick={() => onToggleListed?.(car)}
               >
@@ -68,6 +71,7 @@ export function VehicleCard({
 
   return (
     <article className="relative h-full overflow-hidden rounded-md border border-hairline bg-surface shadow-sm">
+      {href ? <Link href={href} className="absolute inset-0 z-10" aria-label={heading || car.vin} /> : null}
       <CardPhoto
         car={car}
         admin={admin}

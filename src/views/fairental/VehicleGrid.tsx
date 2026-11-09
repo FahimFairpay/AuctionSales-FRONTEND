@@ -1,6 +1,7 @@
 "use client";
 
 import { EmptyState } from "@/components/EmptyState";
+import { paths } from "@/routes/paths";
 import type { FairentalCard } from "./fairentalApi";
 import type { PhotoUploadProgress } from "./photoUploadQueue";
 import { VehicleCard } from "./VehicleCard";
@@ -36,6 +37,7 @@ export function VehicleGrid({
           onToggleListed={onToggleListed}
           upload={uploads?.find((row) => row.vin === car.vin && row.version === (car.version || row.version))}
           onUploadShown={onUploadShown}
+          href={admin ? paths.adminFairentalItem(car.vin) : paths.fairentalItem(car.vin)}
         />
       ))}
     </div>
