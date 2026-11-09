@@ -30,7 +30,11 @@ export function DetailGallery({ urls, status }: { urls: string[]; status?: CarSt
           <div className="flex h-full items-center justify-center text-sm text-muted">No photo yet</div>
         )}
       </div>
-      {status ? <StatusMark status={status} className="absolute left-3 top-3 z-20" /> : null}
+      {status ? (
+        <div className="absolute right-3 top-3 z-20">
+          <StatusMark status={status} />
+        </div>
+      ) : null}
       {current ? (
         <>
           <PhotoStep side="left" enabled={canPrevious} onClick={(event) => step(event, -1)} />

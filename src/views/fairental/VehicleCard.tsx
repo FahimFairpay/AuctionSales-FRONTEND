@@ -6,7 +6,7 @@ import type { PhotoUploadProgress } from "./photoUploadQueue";
 import { VersionMark } from "./car-dialog/VersionMark";
 import { dollars } from "./filters";
 import { CardPhoto } from "./CardPhoto";
-import { StatusMark, carStatus } from "./StatusMark";
+import { carStatus } from "./StatusMark";
 
 export function VehicleCard({
   car,
@@ -45,14 +45,9 @@ export function VehicleCard({
         onEdit={onEdit}
         progress={upload}
         onShown={upload && onUploadShown ? () => onUploadShown(upload) : undefined}
+        status={admin ? status : undefined}
+        onToggleListed={onToggleListed ? () => onToggleListed(car) : undefined}
       />
-      {admin ? (
-        <StatusMark
-          status={status}
-          className="absolute left-2 top-2 z-20"
-          onToggle={status === "Sold" || !onToggleListed ? undefined : () => onToggleListed(car)}
-        />
-      ) : null}
       <div className="flex flex-col gap-3 p-3.5">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
