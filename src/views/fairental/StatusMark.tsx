@@ -3,9 +3,9 @@
 import type { MouseEvent } from "react";
 
 const CHIP = {
-  Listed: "bg-[#2BFF6A] text-[#04210E] shadow-[0_1px_2px_rgba(0,0,0,0.35),0_0_14px_rgba(43,255,106,0.9)]",
-  Unlisted: "bg-[#FF2D3A] text-white shadow-[0_1px_2px_rgba(0,0,0,0.35),0_0_14px_rgba(255,45,58,0.85)]",
-  Sold: "bg-[#E4E4EE] text-[#2A2A32] shadow-[0_1px_2px_rgba(0,0,0,0.28),0_0_14px_rgba(228,228,238,0.95)]",
+  Listed: "bg-[#30D158] text-[#04210C] shadow-[0_0_0_1px_#30D158,0_0_16px_rgba(48,209,88,0.95)]",
+  Unlisted: "bg-[#FF453A] text-white shadow-[0_0_0_1px_#FF453A,0_0_16px_rgba(255,69,58,0.9)]",
+  Sold: "bg-[#D1D1D6] text-[#1C1C1E] shadow-[0_0_0_1px_#F2F2F7,0_0_16px_rgba(242,242,247,0.95)]",
 };
 
 const TYPE = {
