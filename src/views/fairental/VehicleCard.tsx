@@ -1,20 +1,12 @@
 "use client";
 
-import type { MouseEvent } from "react";
 import Link from "next/link";
 import type { FairentalCard } from "./fairentalApi";
 import type { PhotoUploadProgress } from "./photoUploadQueue";
 import { VersionMark } from "./car-dialog/VersionMark";
 import { dollars } from "./filters";
 import { CardPhoto } from "./CardPhoto";
-
-const CHIP = {
-  Listed: "bg-[#C8FF3D] text-[#102400] shadow-[0_0_10px_rgba(198,255,61,0.85)]",
-  Unlisted: "bg-[#FF2D3A] text-white shadow-[0_0_10px_rgba(255,45,58,0.75)]",
-  Sold: "bg-[#E4E4EA] text-[#2A2A32] shadow-[0_0_10px_rgba(228,228,234,0.95)]",
-};
-
-type Status = keyof typeof CHIP;
+import { StatusMark, carStatus } from "./StatusMark";
 
 export function VehicleCard({
   car,
@@ -35,7 +27,7 @@ export function VehicleCard({
 }) {
   const heading = [car.year, car.make, car.model].filter(Boolean).join(" ");
   const showTitle = car.title && car.title.trim().toLowerCase() !== heading.toLowerCase();
-  const status: Status = car.isSold ? "Sold" : car.isListed ? "Listed" : "Unlisted";
+  const status = carStatus(car);
   const facts = [
     ["VIN", car.vin],
     ["Body", car.bodyStyle],
@@ -55,8 +47,9 @@ export function VehicleCard({
         onShown={upload && onUploadShown ? () => onUploadShown(upload) : undefined}
       />
       {admin ? (
-        <StatusPill
+        <StatusMark
           status={status}
+          className="absolute left-2 top-2 z-20"
           onToggle={status === "Sold" || !onToggleListed ? undefined : () => onToggleListed(car)}
         />
       ) : null}
@@ -87,24 +80,5 @@ export function VehicleCard({
         ) : null}
       </div>
     </article>
-  );
-}
-
-function StatusPill({ status, onToggle }: { status: Status; onToggle?: () => void }) {
-  const className = `absolute left-2.5 top-2.5 z-20 rounded-full px-2 py-1 text-[10px] font-semibold leading-none ${CHIP[status]}`;
-  if (!onToggle) return <span className={className}>{status}</span>;
-  return (
-    <button
-      type="button"
-      className={className}
-      aria-label={status === "Listed" ? "Unlist this car" : "List this car"}
-      onClick={(event: MouseEvent) => {
-        event.preventDefault();
-        event.stopPropagation();
-        onToggle();
-      }}
-    >
-      {status}
-    </button>
   );
 }

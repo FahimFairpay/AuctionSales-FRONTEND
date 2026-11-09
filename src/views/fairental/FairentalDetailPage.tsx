@@ -11,6 +11,7 @@ import { EMPTY_FILTERS } from "./filters";
 import { DetailFacts } from "./DetailFacts";
 import { DetailGallery } from "./DetailGallery";
 import { MoreCars } from "./MoreCars";
+import { carStatus } from "./StatusMark";
 
 export function FairentalDetailPage({ admin }: { admin?: boolean }) {
   const params = useParams();
@@ -66,7 +67,11 @@ export function FairentalDetailPage({ admin }: { admin?: boolean }) {
     <div className="space-y-6">
       <BackLink href={list} />
       <div className="grid min-h-0 gap-5 lg:grid-cols-[minmax(24rem,0.95fr)_minmax(0,1.05fr)] lg:items-start">
-        <DetailGallery key={car.vin} urls={(car.images || []).map((image) => image.url).filter(Boolean)} />
+        <DetailGallery
+          key={car.vin}
+          urls={(car.images || []).map((image) => image.url).filter(Boolean)}
+          status={admin ? carStatus(car) : undefined}
+        />
         <DetailFacts car={car} admin={admin} />
       </div>
       <MoreCars cars={others} admin={admin} />

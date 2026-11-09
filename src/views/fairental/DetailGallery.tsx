@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, type MouseEvent } from "react";
+import { StatusMark, type CarStatus } from "./StatusMark";
 
-export function DetailGallery({ urls }: { urls: string[] }) {
+export function DetailGallery({ urls, status }: { urls: string[]; status?: CarStatus }) {
   const [index, setIndex] = useState(0);
   const current = urls[index] || urls[0];
   const canPrevious = index > 0;
@@ -29,6 +30,7 @@ export function DetailGallery({ urls }: { urls: string[] }) {
           <div className="flex h-full items-center justify-center text-sm text-muted">No photo yet</div>
         )}
       </div>
+      {status ? <StatusMark status={status} className="absolute left-3 top-3 z-20" /> : null}
       {current ? (
         <>
           <PhotoStep side="left" enabled={canPrevious} onClick={(event) => step(event, -1)} />
