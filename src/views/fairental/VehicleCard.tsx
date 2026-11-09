@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import Link from "next/link";
 import type { FairentalCard } from "./fairentalApi";
 import type { PhotoUploadProgress } from "./photoUploadQueue";
@@ -12,6 +13,8 @@ const CHIP = {
   Unlisted: "bg-[#FF2D3A] text-white shadow-[0_0_10px_rgba(255,45,58,0.75)]",
   Sold: "bg-[#E4E4EA] text-[#2A2A32] shadow-[0_0_10px_rgba(228,228,234,0.95)]",
 };
+
+type Status = keyof typeof CHIP;
 
 export function VehicleCard({
   car,
@@ -32,42 +35,13 @@ export function VehicleCard({
 }) {
   const heading = [car.year, car.make, car.model].filter(Boolean).join(" ");
   const showTitle = car.title && car.title.trim().toLowerCase() !== heading.toLowerCase();
-  const spec = [car.bodyStyle, car.exteriorColor, car.interiorColor].filter(Boolean).join(" · ");
-  const status = car.isSold ? "Sold" : car.isListed ? "Listed" : "Unlisted";
-  const chip = (
-    <span className={`mt-0.5 shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none ${CHIP[status]}`}>
-      {status}
-    </span>
-  );
-  const copy = (
-    <div className="flex flex-col gap-2 p-3">
-      <div className="min-w-0">
-        {car.vin ? <p className="mb-1 font-mono text-[12px] tracking-[0.04em] text-muted">{car.vin}</p> : null}
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="min-w-0 max-w-[12rem] text-balance text-[15px] font-medium leading-5 tracking-[-0.02em] text-ink">
-            {heading}
-            {admin ? <VersionMark version={car.version} /> : null}
-          </h3>
-          {admin ? (
-            car.isSold ? chip : (
-              <button
-                type="button"
-                className="relative z-20 shrink-0"
-                aria-label={car.isListed ? "Unlist this car" : "List this car"}
-                onClick={() => onToggleListed?.(car)}
-              >
-                {chip}
-              </button>
-            )
-          ) : null}
-        </div>
-        {showTitle ? <p className="mt-0.5 max-w-[14rem] text-balance text-[13px] leading-5 text-muted">{car.title}</p> : null}
-        {spec ? <p className="mt-1 max-w-[14rem] truncate text-[13px] leading-5 text-ink">{spec}</p> : null}
-      </div>
-      <p className="text-xl font-medium text-ink">{dollars(car.price)}</p>
-      <div className="min-h-5" />
-    </div>
-  );
+  const status: Status = car.isSold ? "Sold" : car.isListed ? "Listed" : "Unlisted";
+  const facts = [
+    ["VIN", car.vin],
+    ["Body", car.bodyStyle],
+    ["Exterior", car.exteriorColor],
+    ["Interior", car.interiorColor],
+  ].filter((row) => row[1]);
 
   return (
     <article className="relative h-full overflow-hidden rounded-md border border-hairline bg-surface shadow-sm">
@@ -80,7 +54,57 @@ export function VehicleCard({
         progress={upload}
         onShown={upload && onUploadShown ? () => onUploadShown(upload) : undefined}
       />
-      {copy}
+      {admin ? (
+        <StatusPill
+          status={status}
+          onToggle={status === "Sold" || !onToggleListed ? undefined : () => onToggleListed(car)}
+        />
+      ) : null}
+      <div className="flex flex-col gap-3 p-3.5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h3 className="text-balance text-[15px] font-medium leading-5 tracking-[-0.02em] text-ink">
+              {heading || "Fairental car"}
+              {admin ? <VersionMark version={car.version} /> : null}
+            </h3>
+            {showTitle ? <p className="mt-0.5 text-balance text-[13px] leading-5 text-muted">{car.title}</p> : null}
+          </div>
+          <p className="shrink-0 text-right text-lg font-medium leading-5 tracking-[-0.03em] text-ink tabular-nums">
+            {dollars(car.price)}
+          </p>
+        </div>
+        {facts.length ? (
+          <dl className="grid grid-cols-[max-content_minmax(0,1fr)] items-baseline gap-x-4 gap-y-1.5 text-[13px] leading-5">
+            {facts.map(([label, value]) => (
+              <div key={label} className="contents">
+                <dt className="text-muted">{label}</dt>
+                <dd className={`min-w-0 text-right text-ink ${label === "VIN" ? "font-mono text-[12px] tracking-[0.03em]" : ""}`}>
+                  {value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+      </div>
     </article>
+  );
+}
+
+function StatusPill({ status, onToggle }: { status: Status; onToggle?: () => void }) {
+  const className = `absolute left-2.5 top-2.5 z-20 rounded-full px-2 py-1 text-[10px] font-semibold leading-none ${CHIP[status]}`;
+  if (!onToggle) return <span className={className}>{status}</span>;
+  return (
+    <button
+      type="button"
+      className={className}
+      aria-label={status === "Listed" ? "Unlist this car" : "List this car"}
+      onClick={(event: MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        onToggle();
+      }}
+    >
+      {status}
+    </button>
   );
 }
