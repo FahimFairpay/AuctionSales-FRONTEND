@@ -62,6 +62,7 @@ export function HeartCheckbox({
 export function InventoryToolbar({
   search,
   onSearch,
+  summary,
   recipe,
   query,
   onChange,
@@ -74,6 +75,7 @@ export function InventoryToolbar({
 }: {
   search: string;
   onSearch: (value: string) => void;
+  summary?: string;
   recipe?: RecipeFilters;
   query: InventoryQuery;
   onChange: (next: InventoryQuery) => void;
@@ -109,7 +111,7 @@ export function InventoryToolbar({
             className="h-9 w-full pl-9 pr-8 text-sm"
             value={search}
             onChange={(event) => onSearch(event.target.value)}
-            placeholder="Search make, model, year, or fuel"
+            placeholder="Try Honda Accord under 100k miles hybrid"
             aria-label="Search inventory"
           />
           {search ? (
@@ -163,6 +165,9 @@ export function InventoryToolbar({
           </div>
         </div>
       </div>
+      {summary ? (
+        <p className="px-1 text-[13px] leading-5 text-muted">{summary}</p>
+      ) : null}
     </div>
   );
 }

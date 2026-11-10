@@ -252,6 +252,7 @@ export type SmartIntentApplied = {
   yearMin?: number;
   yearMax?: number;
   odoMax?: number;
+  bidMax?: number;
   cleanTitleOnly?: boolean;
   modelContains?: string;
   source?: string;

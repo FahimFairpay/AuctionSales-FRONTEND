@@ -170,6 +170,7 @@ export function InventoryListPage() {
       <InventoryToolbar
         search={smartSearch.draft}
         onSearch={smartSearch.setDraft}
+        summary={page.data?.summary}
         recipe={recipe.data?.filters}
         query={query}
         onChange={replaceQuery}
