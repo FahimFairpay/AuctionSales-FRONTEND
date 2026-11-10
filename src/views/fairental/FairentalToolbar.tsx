@@ -60,7 +60,7 @@ export function FairentalToolbar({
           value={search}
           onChange={(event) => onSearch(event.target.value)}
           placeholder="Search make, model, year, or VIN"
-          aria-label="Search Fairental"
+          aria-label="Search Car Sales"
         />
         {search ? (
           <button

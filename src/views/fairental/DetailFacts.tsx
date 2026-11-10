@@ -17,7 +17,7 @@ export function DetailFacts({ car, admin }: { car: FairentalDetail; admin?: bool
       <div className="flex items-start justify-between gap-6">
         <div className="min-w-0">
           <h1 className="text-balance font-serif text-[28px] leading-9 tracking-[-0.03em] text-ink lg:text-[34px] lg:leading-10">
-            {heading || "Fairental car"}
+            {heading || "Car"}
             {admin ? <VersionMark version={car.version} /> : null}
           </h1>
           {showTitle ? <p className="mt-1 text-balance text-[15px] leading-6 text-muted">{car.title}</p> : null}

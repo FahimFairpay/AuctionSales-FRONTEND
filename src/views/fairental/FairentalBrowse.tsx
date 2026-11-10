@@ -122,7 +122,7 @@ export function FairentalBrowse({
   const heading = (
     <div className="min-w-0">
       <h1 className="font-serif text-[28px] leading-9 tracking-[-0.03em] text-ink lg:text-[34px] lg:leading-10">
-        Fairental
+        Car Sales
         {typeof count === "number" ? (
           <span className="ml-2 text-muted tabular">({count.toLocaleString("en-US")})</span>
         ) : null}

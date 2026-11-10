@@ -196,7 +196,7 @@ export function CarDialog({
       >
         <div className="mb-3 flex items-start justify-between gap-3">
           <h2 id="fairental-car-title" className="min-w-0 break-words font-serif text-xl leading-tight text-ink">
-            {creating && !heading ? "New car" : heading || "Fairental car"}
+            {creating && !heading ? "New car" : heading || "Car"}
             {creating ? null : <VersionMark version={version} />}
           </h2>
           <IconTool label="Close" onClick={onClose}>

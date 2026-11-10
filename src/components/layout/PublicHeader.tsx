@@ -20,7 +20,7 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
 
   const isDark = appearance === "dark";
   const pathname = usePathname();
-  const fairentalCurrent = pathname === "/fairental" || pathname.startsWith("/fairental/");
+  const fairentalCurrent = pathname === "/car-sales" || pathname.startsWith("/car-sales/");
 
   useEffect(() => {
     setMounted(true);
@@ -85,7 +85,7 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
               </Link>
               {fairentalCurrent ? null : (
                 <Link prefetch={false} href={paths.fairental} className="opt3-nav-link">
-                  Fairental
+                  Car Sales
                 </Link>
               )}
             </>
@@ -102,7 +102,7 @@ export function PublicHeader({ mode = "landing" }: PublicHeaderProps) {
               </a>
               {fairentalCurrent ? null : (
                 <Link prefetch={false} href={paths.fairental} className="opt3-nav-link">
-                  Fairental
+                  Sales
                 </Link>
               )}
             </>

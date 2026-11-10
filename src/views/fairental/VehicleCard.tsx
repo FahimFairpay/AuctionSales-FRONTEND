@@ -52,7 +52,7 @@ export function VehicleCard({
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h3 className="text-balance text-[15px] font-medium leading-5 tracking-[-0.02em] text-ink">
-              {heading || "Fairental car"}
+              {heading || "Car"}
               {admin ? <VersionMark version={car.version} /> : null}
             </h3>
             {showTitle ? <p className="mt-0.5 text-balance text-[13px] leading-5 text-muted">{car.title}</p> : null}
