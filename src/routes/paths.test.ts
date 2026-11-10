@@ -23,8 +23,8 @@ describe("inventory paths", () => {
 
 describe("fairental paths", () => {
   it("encodes the VIN", () => {
-    expect(paths.fairentalItem("1HG CM")).toBe("/car-sales/1HG%20CM");
-    expect(paths.adminFairentalItem("1HG CM")).toBe("/admin/car-sales/1HG%20CM");
+    expect(paths.fairentalItem("1HG CM")).toBe("/sales/1HG%20CM");
+    expect(paths.adminFairentalItem("1HG CM")).toBe("/admin/sales/1HG%20CM");
   });
 });
 

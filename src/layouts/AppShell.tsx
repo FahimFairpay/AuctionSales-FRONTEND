@@ -23,7 +23,7 @@ const appNav = [
 ];
 
 const adminNav = [
-  { to: paths.adminFairental, label: "Car Sales", icon: "fairental" },
+  { to: paths.adminFairental, label: "Sales", icon: "fairental" },
   { to: paths.adminUsers, label: "Users", icon: "users" },
   { to: paths.adminPresets, label: "Presets", icon: "all" },
   { to: paths.adminFailures, label: "Failures", icon: "fail" },

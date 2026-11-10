@@ -33,10 +33,14 @@ const nextConfig: NextConfig & { agentRules?: boolean } = {
       { source: "/admin/scrape-runs", destination: "/admin/schedules", permanent: true },
       { source: "/admin/scrape-runs/:scrapeRunId", destination: "/admin/schedules/:scrapeRunId", permanent: true },
       { source: "/admin/scrape-recipe", destination: "/admin/settings", permanent: true },
-      { source: "/fairental", destination: "/car-sales", permanent: true },
-      { source: "/fairental/:vin", destination: "/car-sales/:vin", permanent: true },
-      { source: "/admin/fairental", destination: "/admin/car-sales", permanent: true },
-      { source: "/admin/fairental/:vin", destination: "/admin/car-sales/:vin", permanent: true },
+      { source: "/fairental", destination: "/sales", permanent: true },
+      { source: "/fairental/:vin", destination: "/sales/:vin", permanent: true },
+      { source: "/car-sales", destination: "/sales", permanent: true },
+      { source: "/car-sales/:vin", destination: "/sales/:vin", permanent: true },
+      { source: "/admin/fairental", destination: "/admin/sales", permanent: true },
+      { source: "/admin/fairental/:vin", destination: "/admin/sales/:vin", permanent: true },
+      { source: "/admin/car-sales", destination: "/admin/sales", permanent: true },
+      { source: "/admin/car-sales/:vin", destination: "/admin/sales/:vin", permanent: true },
     ];
   },
 };
