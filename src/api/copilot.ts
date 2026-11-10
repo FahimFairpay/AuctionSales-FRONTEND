@@ -17,6 +17,12 @@ export interface MatchedVehicle {
   series?: string;
   currentBid?: number;
   acv?: number;
+  onRoadLow?: number;
+  onRoadHigh?: number;
+  marketLow?: number;
+  marketHigh?: number;
+  savingsLow?: number;
+  savingsHigh?: number;
   spread?: number;
   spreadPct?: string;
   hasActiveBids?: boolean;

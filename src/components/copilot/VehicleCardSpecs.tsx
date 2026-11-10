@@ -3,49 +3,41 @@
 import type { MatchedVehicle } from "../../api/copilot";
 import { formatCrispAuctionDateTime, formatCrispYard } from "./vehicleFormat";
 
+function dollars(value?: number): string | null {
+  if (typeof value !== "number" || !Number.isFinite(value)) return null;
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
+}
+
+function priceRange(low?: number, high?: number): string {
+  const left = dollars(low);
+  const right = dollars(high);
+  if (left && right && low !== high) return `${left}–${right}`;
+  return left || right || "Unavailable";
+}
+
+function PriceRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
+      <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">{label}</span>
+      <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">{value}</span>
+    </div>
+  );
+}
+
 export function VehicleCardSpecs({
   activeTab,
   vehicle,
-  bid,
-  acv,
-  calculatedSpread,
-  spreadPct,
 }: {
   activeTab: "overview" | "salvage" | "condition";
   vehicle: MatchedVehicle;
-  bid: number;
-  acv: number;
-  calculatedSpread: number;
-  spreadPct: string;
 }) {
   return (
               <div className="flex flex-col gap-1.5 p-3 min-h-[110px]">
                 {activeTab === "overview" && (
                   <>
-                    <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                      <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">
-                        {vehicle.hasActiveBids ? "Current Bid" : "Opening Bid"}
-                      </span>
-                      <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                        ${bid.toLocaleString()} {vehicle.hasActiveBids === false ? "(Pre-Bid)" : ""}
-                      </span>
-                    </div>
-  
-                    <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                      <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Est. ACV</span>
-                      <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                        ${acv.toLocaleString()}
-                      </span>
-                    </div>
-  
-                    <div className="flex items-center justify-between gap-3 text-[11.5px] pb-1 border-b border-dashed border-black/[0.07] dark:border-white/10">
-                      <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5]">Arbitrage Spread</span>
-                      <span className="font-semibold text-[#141413] dark:text-[#f7f6f2] text-right">
-                        {calculatedSpread > 0
-                          ? `+$${calculatedSpread.toLocaleString()} (${spreadPct})`
-                          : "N/A"}
-                      </span>
-                    </div>
+                    <PriceRow label="On road" value={priceRange(vehicle.onRoadLow, vehicle.onRoadHigh)} />
+                    <PriceRow label="Market" value={priceRange(vehicle.marketLow, vehicle.marketHigh)} />
+                    <PriceRow label="Savings" value={priceRange(vehicle.savingsLow, vehicle.savingsHigh)} />
   
                     <div className="flex items-center justify-between gap-2 text-[11.5px]">
                       <span className="text-[11px] font-medium text-[#64748b] dark:text-[#8e94a5] shrink-0">Date & Yard</span>

@@ -73,14 +73,6 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
   const makeModel = `${vehicle.year ? vehicle.year + " " : ""}${vehicle.make || ""} ${vehicle.model || ""}`.trim().toUpperCase() || `LOT #${vehicle.stockNumber}`;
   const trimSubtitle = `${vehicle.series || "Base"} • #${vehicle.stockNumber}`;
 
-  // Valuation Spread calculations
-  const bid = Number(vehicle.currentBid || 0);
-  const acv = Number(vehicle.acv || 0);
-  const calculatedSpread = acv > bid && bid > 0 ? acv - bid : vehicle.spread || 0;
-  const spreadPct = acv > 0 && calculatedSpread > 0 
-    ? `${Math.round((calculatedSpread / acv) * 100)}% under ACV`
-    : vehicle.spreadPct || "";
-
   // Image resolution & VIS gallery candidates
   const heroImage = vehicle.imageUrl || vehicle.imageThumbnailUrl || (vehicle.imageUrls && vehicle.imageUrls[0]) || "";
   
@@ -380,14 +372,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({
             </div>
 
 
-            <VehicleCardSpecs
-              activeTab={activeTab}
-              vehicle={vehicle}
-              bid={bid}
-              acv={acv}
-              calculatedSpread={calculatedSpread}
-              spreadPct={spreadPct}
-            />
+            <VehicleCardSpecs activeTab={activeTab} vehicle={vehicle} />
 
             {/* Action CTA: Circular Edges & Enhanced Glassmorphism */}
             <div className="p-3 pt-0">

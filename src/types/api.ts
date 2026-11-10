@@ -253,6 +253,9 @@ export type SmartIntentApplied = {
   yearMax?: number;
   odoMax?: number;
   bidMax?: number;
+  onRoadMax?: number;
+  marketMax?: number;
+  savingsMax?: number;
   cleanTitleOnly?: boolean;
   modelContains?: string;
   source?: string;
