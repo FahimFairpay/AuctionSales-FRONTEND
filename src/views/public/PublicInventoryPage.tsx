@@ -221,7 +221,6 @@ export function PublicInventoryPage() {
         <InventoryToolbar
           search={smartSearch.draft}
           onSearch={smartSearch.setDraft}
-          summary={page.data?.summary}
           recipe={DEFAULT_PUBLIC_RECIPE}
           query={query}
           onChange={replaceQuery}
