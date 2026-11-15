@@ -213,21 +213,21 @@ export function StepCreateAccount({
 
         {/* Live Password Hints: Compact horizontal badge indicators */}
         {password.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 text-[10.5px] py-0.5">
-            <span className={`px-2 py-0.5 rounded-full border ${passCheck.minLength ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-white/5 border-white/10 text-white/50"}`}>
+          <div className="flex flex-nowrap items-center gap-1 overflow-x-auto py-0.5 text-[9.5px] [scrollbar-width:none] sm:flex-wrap sm:gap-1.5 sm:overflow-visible sm:text-[10.5px] [&::-webkit-scrollbar]:hidden">
+            <span className={`whitespace-nowrap rounded-full border px-1.5 py-0.5 sm:px-2 ${passCheck.minLength ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-white/5 border-white/10 text-white/50"}`}>
               {passCheck.minLength ? "✓" : "·"} 10+ chars
             </span>
-            <span className={`px-2 py-0.5 rounded-full border ${passCheck.upper && passCheck.lower ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-white/5 border-white/10 text-white/50"}`}>
+            <span className={`whitespace-nowrap rounded-full border px-1.5 py-0.5 sm:px-2 ${passCheck.upper && passCheck.lower ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-white/5 border-white/10 text-white/50"}`}>
               {passCheck.upper && passCheck.lower ? "✓" : "·"} Upper & lower
             </span>
-            <span className={`px-2 py-0.5 rounded-full border ${passCheck.number ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-white/5 border-white/10 text-white/50"}`}>
+            <span className={`whitespace-nowrap rounded-full border px-1.5 py-0.5 sm:px-2 ${passCheck.number ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-white/5 border-white/10 text-white/50"}`}>
               {passCheck.number ? "✓" : "·"} Number
             </span>
-            <span className={`px-2 py-0.5 rounded-full border ${passCheck.symbol ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-white/5 border-white/10 text-white/50"}`}>
+            <span className={`whitespace-nowrap rounded-full border px-1.5 py-0.5 sm:px-2 ${passCheck.symbol ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-white/5 border-white/10 text-white/50"}`}>
               {passCheck.symbol ? "✓" : "·"} Symbol
             </span>
             {confirmPassword.length > 0 && (
-              <span className={`px-2 py-0.5 rounded-full border ${passwordsMatch ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-rose-500/15 border-rose-500/30 text-rose-400"}`}>
+              <span className={`whitespace-nowrap rounded-full border px-1.5 py-0.5 sm:px-2 ${passwordsMatch ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400" : "bg-rose-500/15 border-rose-500/30 text-rose-400"}`}>
                 {passwordsMatch ? "✓ Match" : "Mismatched"}
               </span>
             )}
